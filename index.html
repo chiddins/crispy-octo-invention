@@ -2573,7 +2573,7 @@ function renderList(){
     grab.querySelector(".gminus").addEventListener("click",()=>setGot(set,g,got-1));
     grab.querySelector(".gplus").addEventListener("click",()=>setGot(set,g,got+1));
     grab.querySelector(".gall").addEventListener("click",()=>setGot(set,g,grand));
-    grab.querySelector(".gqty").addEventListener("click",()=>setGot(set,g,done?0:got+selNeed));
+    grab.querySelector(".gqty").addEventListener("click",()=>setGot(set,g,done?got-selNeed:got+selNeed));
     const gi=grab.querySelector(".ginput");
     gi.addEventListener("change",()=>setGot(set,g,gi.value));
     gi.addEventListener("keydown",ev=>{if(ev.key==="Enter"){ev.preventDefault();setGot(set,g,gi.value);}});
