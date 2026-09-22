@@ -1,0 +1,2675 @@
+<title>Brick Bag Merge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&display=swap">
+<style>
+:root{
+  --bg:#eceef1; --surface:#ffffff; --surface-2:#f5f6f8; --surface-3:#eef0f3;
+  --ink:#1b1d22; --muted:#5c6270; --faint:#8b91a0; --line:#dde0e6;
+  --accent:#c8102e; --accent-ink:#ffffff; --accent-soft:#fbe6ea;
+  --sel:#ffc72c; --sel-ink:#3a2c00; --sel-line:#e6a400;
+  --grab:#2e7d32; --grab-soft:#e6f2e6;
+  --shadow:0 1px 2px rgba(20,22,28,.06), 0 6px 20px rgba(20,22,28,.06);
+  --radius:12px; --radius-sm:8px;
+  --font-ui:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --font-head:"Archivo",var(--font-ui);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#141519; --surface:#1e2025; --surface-2:#25272d; --surface-3:#2b2e35;
+    --ink:#ecedef; --muted:#9aa0ac; --faint:#717784; --line:#31343b;
+    --accent:#f04058; --accent-ink:#1b0308; --accent-soft:#33141a;
+    --sel:#ffcf3f; --sel-ink:#231900; --sel-line:#c99a12;
+    --grab:#54b95f; --grab-soft:#16281a;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 26px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#141519; --surface:#1e2025; --surface-2:#25272d; --surface-3:#2b2e35;
+  --ink:#ecedef; --muted:#9aa0ac; --faint:#717784; --line:#31343b;
+  --accent:#f04058; --accent-ink:#1b0308; --accent-soft:#33141a;
+  --sel:#ffcf3f; --sel-ink:#231900; --sel-line:#c99a12;
+  --grab:#54b95f; --grab-soft:#16281a;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 26px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-ui);font-size:14px;line-height:1.45;-webkit-text-size-adjust:100%}
+h1,h2,h3{font-family:var(--font-head);margin:0;line-height:1.15;text-wrap:balance}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+::selection{background:var(--sel);color:var(--sel-ink)}
+a{color:var(--accent)}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:16px}
+
+header.app{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.hbar{display:flex;align-items:center;gap:14px;padding-block:12px}
+.brand{display:flex;align-items:center;gap:11px;min-width:0}
+.logo{width:34px;height:34px;flex:none;border-radius:8px;background:var(--accent);display:grid;place-items:center;box-shadow:var(--shadow)}
+.logo span{display:block;width:7px;height:7px;border-radius:50%;background:var(--accent-ink);box-shadow:11px 0 0 var(--accent-ink),0 11px 0 var(--accent-ink),11px 11px 0 var(--accent-ink);margin:-9px 0 0 -9px}
+.brand h1{font-size:18px;font-weight:800;letter-spacing:-.01em}
+.brand .tag{font-size:11.5px;color:var(--muted);font-weight:600;letter-spacing:.02em}
+.hspace{flex:1}
+.iconbtn{background:var(--surface);border:1px solid var(--line);border-radius:9px;width:38px;height:38px;display:grid;place-items:center;color:var(--ink);box-shadow:var(--shadow)}
+.iconbtn:hover{border-color:var(--faint)}
+
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding-block:14px}
+select,input[type=text],input[type=search]{background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:9px 11px;color:var(--ink);box-shadow:var(--shadow)}
+select:hover,input:hover{border-color:var(--faint)}
+.setsel{font-weight:700;min-width:170px;max-width:100%}
+.btn{background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:9px 14px;font-weight:600;box-shadow:var(--shadow);display:inline-flex;align-items:center;gap:7px}
+.btn:hover{border-color:var(--faint)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(1.05)}
+.btn svg{width:16px;height:16px}
+.iconbtn.sm{width:34px;height:34px}
+
+.stats{display:flex;flex-wrap:wrap;gap:8px;padding-bottom:4px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 13px;box-shadow:var(--shadow);display:flex;align-items:baseline;gap:7px}
+.stat b{font-family:var(--font-head);font-size:17px;font-weight:800;font-variant-numeric:tabular-nums}
+.stat span{font-size:11.5px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+
+.grid{display:grid;grid-template-columns:262px 1fr;gap:18px;padding-block:16px 40px;align-items:start}
+@media (max-width:820px){.grid{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.panel .phead{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:13px 15px;border-bottom:1px solid var(--line)}
+.panel .phead h2{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700}
+.panel .pbody{padding:14px 15px}
+
+aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
+@media (max-width:820px){aside{position:static}}
+.bag-tools{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.minibtn{background:var(--surface-2);border:1px solid var(--line);border-radius:7px;padding:5px 9px;font-size:12px;font-weight:600}
+.minibtn:hover{border-color:var(--faint)}
+.rangewrap{display:flex;gap:6px;margin-bottom:12px}
+.rangewrap input{flex:1;min-width:0;padding:7px 10px;font-size:13px}
+.bag-list{display:flex;flex-direction:column;gap:6px;max-height:min(52vh,520px);overflow:auto}
+@media (max-width:820px){.bag-list{max-height:none}}
+.bagchip{display:flex;align-items:center;gap:10px;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:var(--surface-2);text-align:left;font-weight:600;transition:background .12s,border-color .12s}
+.bagchip:hover{border-color:var(--faint)}
+.bagchip .box{width:20px;height:20px;flex:none;border-radius:6px;border:2px solid var(--faint);display:grid;place-items:center}
+.bagchip .box svg{width:12px;height:12px;opacity:0;color:var(--sel)}
+.bagchip .nm{flex:1;min-width:0}
+.bagchip .ct{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.bagchip.on{background:var(--sel);border-color:var(--sel-line);color:var(--sel-ink)}
+.bagchip.on .box{background:var(--sel-ink);border-color:var(--sel-ink)}
+.bagchip.on .box svg{opacity:1}
+.bagchip.on .ct{color:var(--sel-ink);opacity:.75}
+
+.listhead{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.listhead .search{flex:1;min-width:150px}
+.listhead .search input{width:100%}
+.chk{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--muted);user-select:none}
+.chk input{width:16px;height:16px;accent-color:var(--accent)}
+
+.parts{display:flex;flex-direction:column}
+.catrow{padding:14px 15px 6px;font-family:var(--font-head);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);border-top:1px solid var(--line)}
+.catrow:first-child{border-top:0}
+.row{display:grid;grid-template-columns:26px 52px 54px 1fr auto;gap:12px;align-items:center;padding:10px 15px;border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.row.grabbed{opacity:.5}
+.row.grabbed .pname{text-decoration:line-through;text-decoration-color:var(--muted)}
+.gbox{width:22px;height:22px;border:2px solid var(--faint);border-radius:7px;background:var(--surface);display:grid;place-items:center;justify-self:center;transition:background .12s,border-color .12s}
+.gbox:hover{border-color:var(--grab)}
+.gbox svg{width:13px;height:13px;color:var(--grab);opacity:0}
+.row.grabbed .gbox{background:var(--grab-soft);border-color:var(--grab)}
+.row.grabbed .gbox svg{opacity:1}
+.thumb{width:52px;height:52px;border-radius:8px;background:#fff;border:1px solid var(--line);object-fit:contain;padding:3px}
+.qty{font-family:var(--font-head);font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;text-align:right;letter-spacing:-.02em}
+.qty small{font-size:12px;font-weight:700;color:var(--muted)}
+.pinfo{min-width:0}
+.pname{font-weight:600;word-break:break-word}
+.pmeta{display:flex;flex-wrap:wrap;gap:6px 10px;margin-top:3px;font-size:12px;color:var(--muted)}
+.swatch{display:inline-flex;align-items:center;gap:6px}
+.dot{width:12px;height:12px;border-radius:50%;border:1px solid rgba(0,0,0,.25);flex:none}
+.pill{background:var(--surface-2);border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-variant-numeric:tabular-nums}
+.pid{font-variant-numeric:tabular-nums}
+.balink{color:var(--accent);text-decoration:none;font-weight:600;white-space:nowrap}
+.balink:hover{text-decoration:underline}
+.bags-b{display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end;max-width:190px}
+.bb{font-size:11px;font-weight:700;background:var(--surface-2);border:1px solid var(--line);border-radius:6px;padding:2px 6px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+@media (max-width:560px){
+  .row{grid-template-columns:24px 44px 46px 1fr;row-gap:6px}
+  .thumb{width:44px;height:44px}
+  .bags-b{grid-column:2/-1;justify-content:flex-start;max-width:none;margin-left:56px}
+  .qty{font-size:18px}
+}
+.empty{padding:40px 22px;text-align:center;color:var(--muted)}
+.empty h3{font-size:16px;color:var(--ink);margin-bottom:6px}
+.empty .btn{margin-top:12px}
+
+.overlay{position:fixed;inset:0;z-index:60;background:rgba(10,12,16,.55);display:flex;align-items:flex-start;justify-content:center;padding:24px 16px;overflow:auto}
+.modal{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.4);width:100%;max-width:720px;margin:auto}
+.modal .mhead{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--line)}
+.modal .mhead h2{font-size:17px;font-weight:800}
+.tabs{display:flex;gap:4px;padding:10px 12px 0;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+.tab{background:transparent;border:0;border-bottom:2px solid transparent;padding:8px 12px;font-weight:700;color:var(--muted);border-radius:6px 6px 0 0}
+.tab.on{color:var(--ink);border-bottom-color:var(--accent);background:var(--surface-2)}
+.tabpane{padding:16px 18px}
+.tabpane p.hint{color:var(--muted);margin:0 0 12px}
+textarea{width:100%;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:11px;color:var(--ink);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;line-height:1.5;resize:vertical}
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.field label{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.mactions{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;margin-top:12px}
+.previewbox{background:var(--surface-2);border:1px dashed var(--line);border-radius:10px;padding:11px 13px;font-size:13px;margin-top:12px;color:var(--muted)}
+.previewbox b{color:var(--ink)}
+.etable{width:100%;border-collapse:collapse;font-size:13px}
+.etable th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);padding:6px 6px;border-bottom:1px solid var(--line)}
+.etable td{padding:4px 6px;border-bottom:1px solid var(--line);vertical-align:middle}
+.etable input{width:100%;padding:6px 8px;font-size:12.5px}
+.etable input.w-bag{width:56px}.etable input.w-qty{width:56px}
+.etable .del{background:var(--surface-2);border:1px solid var(--line);border-radius:6px;width:28px;height:28px;display:grid;place-items:center;color:var(--accent)}
+.escroll{max-height:340px;overflow:auto;border:1px solid var(--line);border-radius:10px}
+.setbar{display:flex;flex-wrap:wrap;gap:8px;align-items:end;margin-bottom:14px}
+.setbar .field{margin:0;flex:1;min-width:150px}
+.hide{display:none!important}
+small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px;font-size:12px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+#printHead{display:none}
+@media print{
+  header.app,.toolbar,aside,.listhead,.overlay,small.foot,.stats{display:none!important}
+  body{background:#fff;color:#000;font-size:12px}
+  .wrap{max-width:none;padding:0}
+  .grid{display:block;padding:0}
+  .panel{border:0;box-shadow:none}
+  .panel .phead{display:none}
+  #printHead{display:block;margin-bottom:10px}
+  #printHead h2{font-size:18px}
+  #printHead .pmeta{color:#333;font-size:12px;margin-top:2px}
+  .row{grid-template-columns:22px 46px 1fr auto;break-inside:avoid;border-color:#ccc;padding:6px 0}
+  .thumb{border-color:#ccc}.row.grabbed{opacity:1}.gbox{border-color:#000}
+  .catrow{color:#000;border-color:#000}.bb{border-color:#bbb;color:#333}.balink{display:none}
+}
+</style>
+
+<header class="app">
+  <div class="wrap hbar">
+    <div class="brand">
+      <span class="logo" aria-hidden="true"><span></span></span>
+      <div style="min-width:0">
+        <h1>Brick Bag Merge</h1>
+        <div class="tag">Pick bags &middot; sum the parts &middot; one pick&#8209;list</div>
+      </div>
+    </div>
+    <div class="hspace"></div>
+    <button class="iconbtn" id="themeBtn" title="Toggle light / dark" aria-label="Toggle theme">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg>
+    </button>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="toolbar">
+    <select class="setsel" id="setSel" aria-label="Choose set"></select>
+    <button class="iconbtn sm" id="renameSetBtn" title="Rename this set" aria-label="Rename set">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
+    </button>
+    <button class="iconbtn sm" id="deleteSetBtn" title="Delete this set" aria-label="Delete set">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+    </button>
+    <button class="btn primary" id="importBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+      Import (.BSX)
+    </button>
+    <div class="hspace" style="flex:1"></div>
+    <button class="btn" id="printBtn" title="Print the current combined list">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2M6 14h12v7H6z"/></svg>
+      Print
+    </button>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="grid">
+    <aside>
+      <div class="panel">
+        <div class="phead"><h2>Bags</h2><span class="ct" id="bagSummary" style="font-size:11.5px;color:var(--muted)"></span></div>
+        <div class="pbody">
+          <div class="bag-tools">
+            <button class="minibtn" data-all="1">All</button>
+            <button class="minibtn" data-all="0">None</button>
+            <button class="minibtn" id="invertBtn">Invert</button>
+          </div>
+          <div class="rangewrap">
+            <input type="text" id="rangeInp" placeholder="e.g. 1-4, 6" aria-label="Select bag range">
+            <button class="minibtn" id="rangeBtn">Select</button>
+          </div>
+          <div class="bag-list" id="bagList"></div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="panel">
+      <div class="phead" style="flex-wrap:wrap">
+        <h2>Combined parts</h2>
+        <div class="listhead" style="flex:1;justify-content:flex-end">
+          <div class="search"><input type="search" id="searchInp" placeholder="Search parts…" aria-label="Search parts"></div>
+          <select id="sortSel" aria-label="Sort by">
+            <option value="cat">Sort: Category (bin order)</option>
+            <option value="name">Sort: Name A–Z</option>
+            <option value="qty">Sort: Quantity (high→low)</option>
+            <option value="color">Sort: Colour</option>
+            <option value="bag">Sort: First bag</option>
+          </select>
+          <label class="chk"><input type="checkbox" id="hideGrab"> Hide grabbed</label>
+          <button class="minibtn" id="resetGrab">Reset ✓</button>
+        </div>
+      </div>
+      <div id="printHead"></div>
+      <div class="parts" id="parts"></div>
+    </main>
+  </div>
+
+  <small class="foot">Brick Bag Merge — a personal build helper. Part names/photos © BrickLink &amp; Rebrickable data; your inventories stay in your browser.</small>
+</div>
+
+<div class="overlay hide" id="overlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Import and manage data">
+    <div class="mhead">
+      <h2>Import &amp; edit</h2>
+      <button class="iconbtn" id="closeModal" aria-label="Close">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="tabs" id="tabs">
+      <button class="tab on" data-tab="bsx">.BSX</button>
+      <button class="tab" data-tab="edit">Edit rows</button>
+      <button class="tab" data-tab="backup">Backup</button>
+    </div>
+
+    <div class="tabpane" data-pane="bsx">
+      <p class="hint">In <b>BrickStore</b>, export each bag as a <b>.bsx</b> file (one per bag). Pick them all here — the app reads the real parts, colours and quantities from your files. Filenames like <code>…bag-3.bsx</code> set the bag number automatically.</p>
+      <div class="field">
+        <label for="bsxFiles">Choose your .bsx bag files (pick several at once)</label>
+        <input type="file" id="bsxFiles" accept=".bsx,.xml,text/xml" multiple>
+      </div>
+      <div class="mactions" style="justify-content:flex-start;margin-top:-4px;margin-bottom:4px">
+        <button class="btn" id="bsxDemoBtn">📦 Load example: 76178 (bags 0–4)</button>
+      </div>
+      <div class="field">
+        <label for="bsxSetName">Set name</label>
+        <input type="text" id="bsxSetName" placeholder="e.g. 76178 Daily Bugle">
+      </div>
+      <div class="previewbox" id="bsxPreview" hidden></div>
+      <div class="mactions">
+        <button class="btn" id="bsxAddBtn">Add to current set</button>
+        <button class="btn primary" id="bsxNewBtn">Import as new set</button>
+      </div>
+      <details style="margin-top:14px">
+        <summary style="cursor:pointer;font-weight:700;color:var(--muted)">Phone won’t let you pick files? Paste one bag’s BSX text</summary>
+        <div class="field" style="margin-top:10px"><label for="bsxPasteBag">Bag number</label><input type="text" id="bsxPasteBag" placeholder="1" style="max-width:120px"></div>
+        <textarea id="bsxPasteText" rows="6" placeholder="Open a .bsx file, copy everything, paste here"></textarea>
+        <div class="mactions"><button class="btn" id="bsxPasteBtn">Add this bag</button></div>
+      </details>
+    </div>
+
+    <div class="tabpane hide" data-pane="edit">
+      <div class="setbar">
+        <div class="field"><label for="setName">Set name</label><input type="text" id="setName" placeholder="Set name"></div>
+        <button class="btn" id="newSetBtn">＋ New set</button>
+        <button class="btn" id="delSetBtn">Delete set</button>
+      </div>
+      <p class="hint">Fix or add rows by hand (part number, colour number, quantity). One row = one part in one bag; duplicates merge automatically.</p>
+      <div class="escroll">
+        <table class="etable">
+          <thead><tr><th>Bag</th><th>Qty</th><th>Part&nbsp;#</th><th>Colour&nbsp;#</th><th></th></tr></thead>
+          <tbody id="editBody"></tbody>
+        </table>
+      </div>
+      <div class="mactions"><button class="btn primary" id="addRowBtn">＋ Add row</button></div>
+    </div>
+
+    <div class="tabpane hide" data-pane="backup">
+      <p class="hint">Your sets live in this browser only. Save a backup file to keep them safe or move them to another device (e.g. via Google Drive), then load it there.</p>
+      <div class="mactions" style="justify-content:flex-start">
+        <button class="btn primary" id="backupDownload">⬇ Save backup file</button>
+        <label class="btn" for="backupFile" style="margin:0">⬆ Load backup file</label>
+        <input type="file" id="backupFile" accept=".json,application/json" class="hide">
+      </div>
+      <details style="margin-top:14px">
+        <summary style="cursor:pointer;font-weight:700;color:var(--muted)">Or copy / paste as text</summary>
+        <textarea id="backupText" rows="8" spellcheck="false" style="margin-top:10px"></textarea>
+        <div class="mactions"><button class="btn" id="backupCopy">Copy</button><button class="btn" id="backupRestore">Restore from text</button></div>
+      </details>
+    </div>
+  </div>
+</div>
+
+<!-- 76178 example (real BSX bags 0-4) -->
+<script type="application/xml" class="seedbsx" data-bag="0">
+<?xml version="1.0" encoding="UTF-8"?>
+<BrickStoreXML>
+  <Inventory>
+    <Item>
+      <ItemID>35032</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>98</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>36083</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>1</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3811</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>85</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>76178stk01</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>0</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>76178stk02</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>0</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>79994</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>1</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>90498</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>11</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>96874</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>39</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+  </Inventory>
+</BrickStoreXML>
+</script>
+<script type="application/xml" class="seedbsx" data-bag="1">
+<?xml version="1.0" encoding="UTF-8"?>
+<BrickStoreXML>
+  <Inventory>
+    <Item>
+      <ItemID>14719</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>85</ColorID>
+      <Qty>7</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>15573</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>36</ColorID>
+      <Qty>14</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>15573</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>85</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>15573</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>4</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>18674</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>1</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>20482</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>2412b</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>95</ColorID>
+      <Qty>4</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>2489</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>120</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>25269</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>85</ColorID>
+      <Qty>24</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>26604</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>11</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>27263</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>85</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>27263</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3003</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>150</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3004</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3005</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>4</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3008</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>5</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3009</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3010</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3023</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>150</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3023</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>3</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3062</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>11</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3068pb1152</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>3</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3068</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>150</ColorID>
+      <Qty>3</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3068</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>36</ColorID>
+      <Qty>44</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3068</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>85</ColorID>
+      <Qty>57</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3069pb0436</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>3</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3069</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>150</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3069</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>36</ColorID>
+      <Qty>13</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3069</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>85</ColorID>
+      <Qty>27</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3069</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>4</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3069</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>88</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3070</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>1</ColorID>
+      <Qty>19</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3070</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>11</ColorID>
+      <Qty>17</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3070</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>36</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3070</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>85</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3070</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>34103</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>1</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>35700</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>150</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3626pb1636</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>90</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>36756pb01</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>69</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3700</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>150</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3700</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>3</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3700</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>88</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3710</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>89</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>4073</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>150</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>4073</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>67</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>4162</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>4</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>44728</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>3</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>60479</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>61780</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>88</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>63864</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>36</ColorID>
+      <Qty>4</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>63864</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>85</ColorID>
+      <Qty>3</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>6636</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>67095</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>85861</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>11</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>87580</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>85</ColorID>
+      <Qty>10</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>93217</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>970c00</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>63</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>973pb3921c01</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>98138pb014</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>150</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+  </Inventory>
+</BrickStoreXML>
+</script>
+<script type="application/xml" class="seedbsx" data-bag="2">
+<?xml version="1.0" encoding="UTF-8"?>
+<BrickStoreXML>
+  <Inventory>
+    <Item>
+      <ItemID>11476</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>14704</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>14716</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>14718</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>5</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>19220</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>11</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>22885</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>6</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>2335</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>2357</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>5</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>2357</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>68</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>2412b</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>95</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>2431</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>88</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>2454</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>8</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>2524</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>88</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>2540</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>11</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>26603</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>5</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>26604</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>27507</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>88</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3001</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>3</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3003</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3004</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>5</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3004</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>3</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3005</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>12</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3005</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>5</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3005</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>12</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3008</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>3</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3009</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>4</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3010</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>10</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3020</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>150</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3020</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3023</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>150</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3023</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>5</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3023</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>6</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3024</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>20</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3024</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>8</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>30414</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>11</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3062</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>153</ColorID>
+      <Qty>4</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3069</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>150</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3070pb130</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>98</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3070pb174</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3070</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>5</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3070</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>32028</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>22</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>32952</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>28</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>34103</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>68</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3460</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3622</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>68</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3622</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3626pb1419</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>90</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3626pb2832</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>88</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3666</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3710</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>68</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3710</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>7</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3901</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>11</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3937</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>150</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>4032</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>85</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>4070</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>5</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>4070</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>4</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>4073</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>95</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>4079</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>11</ColorID>
+      <Qty>4</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>4345</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>44728</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>5</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>44728</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>3</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>54200</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>12</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>54200</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>17</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>54200</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>68</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>54200</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>60475b</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>150</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>60596</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>55</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>60616</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>6134</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>88</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>61482</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>6231</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>5</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>69729</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>85</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>87079</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>5</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>87087</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>68</ColorID>
+      <Qty>4</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>87087</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>85</ColorID>
+      <Qty>5</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>87552</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>12</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>87990</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>103</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>90398</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>115</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>970c00</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>42</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>970c00</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>69</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>973pb3899c02</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>39</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>973pb3978c02</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>5</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>98138pb033</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>95</ColorID>
+      <Qty>4</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>98138</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>59</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>99780</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>5</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>99781</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>5</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+  </Inventory>
+</BrickStoreXML>
+</script>
+<script type="application/xml" class="seedbsx" data-bag="3">
+<?xml version="1.0" encoding="UTF-8"?>
+<BrickStoreXML>
+  <Inventory>
+    <Item>
+      <ItemID>11090</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>11</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>11090</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>5</ColorID>
+      <Qty>4</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>13564</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>5</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>18395</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>5</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>21268</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>11</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>2357</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>4</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>2431</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>2449</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>2454</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>4</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>2465</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>26604</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>3</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3004</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>4</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3005</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>7</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3009</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>5</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3010</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>4</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>30162</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>11</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3024</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>7</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3035</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>11</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>30586</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>32028</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>30</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>32952</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>38</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>33909</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>34103</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3622</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>7</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3623</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3626pb2336</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>5</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3626pb2826</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>90</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>36452</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>11</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3665</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>5</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3666</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3710</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>6</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>40379</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>5</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>4085d</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>4286</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>4287</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>4460b</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>49668</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>59349</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>12</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>62885</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>11</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>79194</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>11</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>85861</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>5</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>87087</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>85</ColorID>
+      <Qty>4</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>87552</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>12</ColorID>
+      <Qty>48</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>87747</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>5</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>95199</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>11</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>970c00pb0938</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>5</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>970c00pb0965</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>11</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>973pb3463c01</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>5</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>973pb4344c01</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>11</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+  </Inventory>
+</BrickStoreXML>
+</script>
+<script type="application/xml" class="seedbsx" data-bag="4">
+<?xml version="1.0" encoding="UTF-8"?>
+<BrickStoreXML>
+  <Inventory>
+    <Item>
+      <ItemID>10202</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>11</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>11212</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>85</ColorID>
+      <Qty>3</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>12885</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>11</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>14417</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>85</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>14716</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>15395</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>59</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>15573</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>1</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>15712</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>19119</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>6</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>20482</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>85</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>2412b</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>95</ColorID>
+      <Qty>5</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>2431</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>2449</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>24866</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>105</ColorID>
+      <Qty>4</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>24866</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>6</ColorID>
+      <Qty>12</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>25264</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>5</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>25269</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>11</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>2654</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>12</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>26603</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>6</ColorID>
+      <Qty>6</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>2921</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3004</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>6</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3004</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3005</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>3</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3009</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3010</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>6</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3020</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>1</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3021</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>85</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3023</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>11</ColorID>
+      <Qty>4</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3023</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>6</ColorID>
+      <Qty>6</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3024</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>5</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3031</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>2</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3040</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3062</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>12</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3068</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>11</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3069</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>1</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3069</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>3</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3069</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>7</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>32028</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3228c</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>17</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>32607</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>6</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>32803</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>32952</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>11</ColorID>
+      <Qty>4</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>32952</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>34103</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>1</ColorID>
+      <Qty>4</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>35480</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>11</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>35660pb01</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>88</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3622</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>4</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3623</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>6</ColorID>
+      <Qty>4</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3626pb2362</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>150</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3626pb2829</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>5</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3700</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>6</ColorID>
+      <Qty>3</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3710</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>1</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3710</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>5</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>3937</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>6</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>4070</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>1</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>4070</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>6</ColorID>
+      <Qty>3</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>4085d</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>85</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>4162</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>8</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>41740</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>4</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>41835pb01</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>1</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>4274</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>7</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>4286</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>4287</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>4460b</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>4477</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>8</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>49668</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>54200</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>12</ColorID>
+      <Qty>3</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>6134</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>63864</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>6</ColorID>
+      <Qty>5</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>63864</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>4</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>63965</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>65578</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>12</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>6636</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>85861</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>88</ColorID>
+      <Qty>4</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>87079</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>11</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>87079</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>3</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>87087</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>85</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>87552</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>11</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>87994</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>5</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>970c00</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>5</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>970c00</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>7</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>973pb3902c02</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>55</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>973pb4348c01</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>5</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>98100</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>86</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>98280</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>6</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>99206</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>1</ColorID>
+      <Qty>2</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>99207</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>1</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+    <Item>
+      <ItemID>99207</ItemID>
+      <ItemTypeID>P</ItemTypeID>
+      <ColorID>11</ColorID>
+      <Qty>1</Qty>
+      <Condition>N</Condition>
+    </Item>
+  </Inventory>
+</BrickStoreXML>
+</script>
+
+
+<script>
+"use strict";
+(function(){
+const LS="brickBagMerge.v2";
+const $=(s,el)=>(el||document).querySelector(s);
+const $$=(s,el)=>[...(el||document).querySelectorAll(s)];
+const norm=s=>(s||"").toLowerCase().replace(/\s+/g," ").trim();
+const uid=()=>"s"+Math.random().toString(36).slice(2,9);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+/* colour swatches for named colours (numeric BrickLink ids show as "Colour N") */
+const COLORS={"white":"#f4f4f4","black":"#1b1b1b","red":"#b40000","blue":"#0057a6","yellow":"#f7c000","green":"#237841","tan":"#e4cd9e","reddish brown":"#5b3927","dark bluish gray":"#6c6e68","light bluish gray":"#a0a5a9","medium nougat":"#cc8e57","orange":"#fe8a18","trans-clear":"#eeeeee"};
+function colorHex(c){if(!c)return null;const k=norm(c);if(COLORS[k])return COLORS[k];for(const key in COLORS){if(k.includes(key))return COLORS[key];}return null;}
+
+/* Rebrickable part names + categories, loaded at runtime (works on a normal web page) */
+let PARTS=null;
+function loadParts(){try{fetch("parts.json").then(r=>r.ok?r.json():null).then(d=>{if(d&&d.parts){PARTS=d;render();}}).catch(()=>{});}catch(e){}}
+function lookupPart(id){
+  if(!PARTS||!id)return null;const P=PARTS.parts;
+  if(P[id])return P[id];
+  for(const s of ["a","b","c","d","e"])if(P[id+s])return P[id+s];
+  const base=id.replace(/(p[brx]\w+|c\d\d.*)$/i,"");
+  if(base&&base!==id){if(P[base])return P[base];for(const s of ["a","b","c","d"])if(P[base+s])return P[base+s];}
+  return null;
+}
+function partName(id){const p=lookupPart(id);return p?p[0]:null;}
+function partCat(id){const p=lookupPart(id);return p&&PARTS.cats[p[1]]?PARTS.cats[p[1]]:null;}
+function baLink(id){return "https://brickarchitect.com/parts/"+encodeURIComponent(id);}
+
+/* keyword fallback categories when the parts DB isn't loaded */
+const CATS=[["Technic",/technic|liftarm|beam|axle|\bpin\b|bush|gear/i],["Bricks, Round & Modified",/round brick|modified brick|headlight|snot/i],["Bricks",/\bbrick\b/i],["Plates, Round & Modified",/round plate|modified plate|jumper/i],["Plates",/\bplate\b/i],["Tiles",/\btile\b/i],["Slopes",/\bslope\b|wedge|cheese/i],["Panels & Walls",/panel|wall|fence/i],["Windows & Doors",/window|door|glass|windscreen/i],["Plants & Nature",/plant|flower|leaf|stem|tree/i],["Minifigs & Accessories",/minifig|torso|\bhead\b|\blegs?\b|helmet|hair|utensil/i]];
+function catFallback(name){const n=name||"";for(let i=0;i<CATS.length;i++)if(CATS[i][1].test(n))return CATS[i][0];return "Other parts";}
+
+let DB={sets:{},order:[],current:null,theme:"system",seeded:false};
+function save(){try{localStorage.setItem(LS,JSON.stringify(DB));}catch(e){}}
+function load(){try{const r=localStorage.getItem(LS);if(r)DB=JSON.parse(r);}catch(e){}}
+function curSet(){return DB.sets[DB.current]||null;}
+function bagKeyNum(b){const m=String(b).match(/\d+/);return m?parseInt(m[0],10):9999;}
+function sortBags(bags){return bags.slice().sort((a,b)=>bagKeyNum(a)-bagKeyNum(b)||String(a).localeCompare(String(b)));}
+function bagsOf(set){const s=new Set();set.entries.forEach(e=>s.add(String(e.bag)));return sortBags([...s]);}
+function groupKey(e){const base=e.id&&String(e.id).trim()?("#"+norm(e.id)):norm(e.name||"");return base+"|"+norm(String(e.color));}
+function defaultSelect(set){bagsOf(set).forEach(b=>{if(!(b in set.selected))set.selected[b]=true;});}
+function newSet(name){const id=uid();DB.sets[id]={id,name:name||"New set",entries:[],selected:{},grabbed:{},hideGrab:false,sort:"cat",search:""};DB.order.push(id);DB.current=id;return DB.sets[id];}
+
+const PLACE="data:image/svg+xml;utf8,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><rect x="6" y="16" width="36" height="24" rx="3" fill="#c9ccd2"/><rect x="12" y="10" width="8" height="8" rx="4" fill="#b4b8bf"/><rect x="28" y="10" width="8" height="8" rx="4" fill="#b4b8bf"/></svg>');
+
+/* ---------- BSX ---------- */
+function parseBsx(xml){
+  const doc=new DOMParser().parseFromString(String(xml||""),"application/xml");
+  if(doc.getElementsByTagName("parsererror").length)throw new Error("that isn't valid BSX/XML");
+  return [...doc.getElementsByTagName("Item")].map(it=>{
+    const g=t=>{const n=it.getElementsByTagName(t)[0];return n?(n.textContent||"").trim():"";};
+    return {itemId:g("ItemID"),colorId:g("ColorID"),qty:parseInt(g("Qty")||"1",10)||1,type:g("ItemTypeID")||"P"};
+  }).filter(x=>x.itemId);
+}
+function blImg(itemId,colorId,type){const t=(type==="M")?"MN":"PN";return "https://img.bricklink.com/ItemImage/"+t+"/"+(colorId||"0")+"/"+encodeURIComponent(itemId)+".png";}
+function bsxToEntries(items,bag){return items.map(it=>({bag:String(bag),qty:it.qty,name:"",color:String(it.colorId||""),id:it.itemId,img:blImg(it.itemId,it.colorId,it.type)}));}
+function bagFromName(name,idx){const m=String(name||"").match(/bag[^0-9]*(\d+)/i);return m?m[1]:String(idx+1);}
+function readFileText(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result||""));r.onerror=()=>rej(r.error||new Error("read failed"));r.readAsText(file);});}
+function seedEntries(){let e=[];$$(".seedbsx").forEach(b=>{try{const items=parseBsx(b.textContent);const bag=b.getAttribute("data-bag")||"1";if(items.length)e=e.concat(bsxToEntries(items,bag));}catch(x){}});return e;}
+
+/* ---------- commit ---------- */
+function cleanupBlank(){/* no-op placeholder for future */}
+function commit(entries,replace,setName){
+  let set=curSet();
+  if(!set)set=newSet(setName||"Imported set");
+  if(replace){set.entries=[];set.grabbed={};set.selected={};}
+  if(setName&&(replace||!set.entries.length))set.name=setName;
+  set.entries=set.entries.concat(entries);
+  defaultSelect(set);save();render();
+}
+function commitNew(entries,setName){const set=newSet(setName||"Imported set");set.entries=entries.slice();defaultSelect(set);save();render();}
+
+/* ---------- aggregate ---------- */
+function aggregate(set){
+  const groups=new Map();
+  for(const e of set.entries){
+    if(!set.selected[String(e.bag)])continue;
+    const k=groupKey(e);let g=groups.get(k);
+    if(!g){g={key:k,name:e.name,color:String(e.color||""),id:e.id||"",img:e.img||"",total:0,byBag:{}};groups.set(k,g);}
+    const q=Number(e.qty)||0;g.total+=q;g.byBag[String(e.bag)]=(g.byBag[String(e.bag)]||0)+q;
+    if(!g.img&&e.img)g.img=e.img;
+  }
+  let arr=[...groups.values()];
+  arr.forEach(g=>{g.dispName=partName(g.id)||g.name||g.id||"(part)";g.catLabel=partCat(g.id)||catFallback(g.dispName);});
+  const s=set.sort||"cat";
+  const byName=(a,b)=>a.dispName.localeCompare(b.dispName);
+  if(s==="name")arr.sort(byName);
+  else if(s==="qty")arr.sort((a,b)=>b.total-a.total||byName(a,b));
+  else if(s==="color")arr.sort((a,b)=>String(a.color).localeCompare(String(b.color),undefined,{numeric:true})||byName(a,b));
+  else if(s==="bag")arr.sort((a,b)=>Math.min(...Object.keys(a.byBag).map(bagKeyNum))-Math.min(...Object.keys(b.byBag).map(bagKeyNum))||byName(a,b));
+  else arr.sort((a,b)=>a.catLabel.localeCompare(b.catLabel)||byName(a,b));
+  return arr;
+}
+
+/* ---------- render ---------- */
+function render(){renderSetSel();renderBags();renderStats();renderList();}
+function renderSetSel(){
+  const sel=$("#setSel");sel.innerHTML="";
+  DB.order.forEach(id=>{const s=DB.sets[id];if(!s)return;const o=document.createElement("option");o.value=id;o.textContent=s.name+" ("+s.entries.length+")";if(id===DB.current)o.selected=true;sel.appendChild(o);});
+  if(!DB.order.length){const o=document.createElement("option");o.textContent="No sets yet";sel.appendChild(o);}
+}
+function renderBags(){
+  const set=curSet();const wrap=$("#bagList");wrap.innerHTML="";
+  if(!set){$("#bagSummary").textContent="";return;}
+  const bags=bagsOf(set);const counts={};set.entries.forEach(e=>{counts[String(e.bag)]=(counts[String(e.bag)]||0)+(Number(e.qty)||0);});
+  let on=0;
+  bags.forEach(b=>{
+    const active=!!set.selected[b];if(active)on++;
+    const btn=document.createElement("button");btn.className="bagchip"+(active?" on":"");btn.type="button";
+    btn.innerHTML='<span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg></span><span class="nm">Bag '+esc(b)+'</span><span class="ct">'+counts[b]+' pcs</span>';
+    btn.addEventListener("click",()=>{set.selected[b]=!set.selected[b];save();renderBags();renderStats();renderList();});
+    wrap.appendChild(btn);
+  });
+  $("#bagSummary").textContent=on+" / "+bags.length+" on";
+  if(!bags.length)wrap.innerHTML='<div style="color:var(--muted);font-size:13px">No bags yet — import a set.</div>';
+}
+function renderStats(){
+  const set=curSet();const box=$("#stats");box.innerHTML="";if(!set)return;
+  const bags=bagsOf(set);const selCount=bags.filter(b=>set.selected[b]).length;
+  const agg=aggregate(set);const pieces=agg.reduce((a,g)=>a+g.total,0);const grabbed=agg.filter(g=>set.grabbed[g.key]).length;
+  [[selCount+" / "+bags.length,"bags selected"],[agg.length,"part types"],[pieces,"total pieces"],[grabbed+" / "+agg.length,"grabbed"]].forEach(d=>{const el=document.createElement("div");el.className="stat";el.innerHTML="<b>"+d[0]+"</b><span>"+d[1]+"</span>";box.appendChild(el);});
+}
+function colorChip(color){
+  if(color===""||color==null)return "";
+  if(/^\d+$/.test(String(color)))return '<span class="pill">Colour '+esc(color)+'</span>';
+  const hex=colorHex(color);
+  return '<span class="swatch">'+(hex?'<span class="dot" style="background:'+hex+'"></span>':'')+esc(color)+'</span>';
+}
+function renderList(){
+  const set=curSet();const box=$("#parts");box.innerHTML="";
+  if(!set||!set.entries.length){box.innerHTML='<div class="empty"><h3>Nothing here yet</h3>Tap <b>Import (.BSX)</b> to add a set — or load the 76178 example.<br><button class="btn primary" id="emptyImport">Import (.BSX)</button></div>';const b=$("#emptyImport");if(b)b.addEventListener("click",()=>openModal("bsx"));renderPrintHead();return;}
+  let agg=aggregate(set);
+  const q=norm(set.search);
+  if(q)agg=agg.filter(g=>norm(g.dispName).includes(q)||norm(String(g.color)).includes(q)||norm(g.id).includes(q));
+  if(set.hideGrab)agg=agg.filter(g=>!set.grabbed[g.key]);
+  if(!agg.length){box.innerHTML='<div class="empty"><h3>No matching parts</h3>Turn on more bags, clear the search, or unhide grabbed parts.</div>';renderPrintHead();return;}
+  const showCats=(set.sort||"cat")==="cat";let lastCat=null;
+  agg.forEach(g=>{
+    if(showCats&&g.catLabel!==lastCat){lastCat=g.catLabel;const c=document.createElement("div");c.className="catrow";c.textContent=g.catLabel;box.appendChild(c);}
+    const row=document.createElement("div");row.className="row"+(set.grabbed[g.key]?" grabbed":"");
+    const meta=[];const cc=colorChip(g.color);if(cc)meta.push(cc);
+    if(g.id)meta.push('<span class="pid">#'+esc(g.id)+'</span>');
+    if(g.id)meta.push('<a class="balink" href="'+baLink(g.id)+'" target="_blank" rel="noopener">Brick Architect ↗</a>');
+    const bagBadges=sortBags(Object.keys(g.byBag)).map(b=>'<span class="bb">b'+esc(b)+'·'+g.byBag[b]+'</span>').join("");
+    row.innerHTML=
+      '<button class="gbox" aria-label="Mark grabbed" aria-pressed="'+(set.grabbed[g.key]?"true":"false")+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg></button>'+
+      '<img class="thumb" loading="lazy" alt="" src="'+esc(g.img||PLACE)+'" onerror="this.onerror=null;this.src=\''+PLACE+'\'">'+
+      '<div class="qty">'+g.total+'<small>×</small></div>'+
+      '<div class="pinfo"><div class="pname">'+esc(g.dispName)+'</div><div class="pmeta">'+meta.join("")+'</div></div>'+
+      '<div class="bags-b">'+bagBadges+'</div>';
+    row.querySelector(".gbox").addEventListener("click",()=>{if(set.grabbed[g.key])delete set.grabbed[g.key];else set.grabbed[g.key]=true;save();renderStats();renderList();});
+    box.appendChild(row);
+  });
+  renderPrintHead();
+}
+function renderPrintHead(){const set=curSet();const el=$("#printHead");if(!set){el.innerHTML="";return;}const bags=bagsOf(set).filter(b=>set.selected[b]);el.innerHTML="<h2>"+esc(set.name)+"</h2><div class='pmeta'>Bags: "+(bags.length?bags.map(b=>"#"+esc(b)).join(", "):"none")+" &middot; "+new Date().toLocaleDateString()+"</div>";}
+
+/* ---------- edit rows ---------- */
+function renderEdit(){
+  const set=curSet();const body=$("#editBody");body.innerHTML="";$("#setName").value=set?set.name:"";if(!set)return;
+  set.entries.forEach((e,i)=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML='<td><input class="w-bag" value="'+esc(e.bag)+'" data-f="bag"></td><td><input class="w-qty" type="number" min="0" value="'+(Number(e.qty)||0)+'" data-f="qty"></td><td><input value="'+esc(e.id||"")+'" data-f="id"></td><td><input class="w-qty" value="'+esc(e.color||"")+'" data-f="color"></td><td><button class="del" aria-label="Delete row">✕</button></td>';
+    $$("input",tr).forEach(inp=>inp.addEventListener("change",()=>{const f=inp.dataset.f;e[f]=f==="qty"?(Number(inp.value)||0):inp.value.trim();if(f==="id")e.img=blImg(e.id,e.color,"P");if(f==="color")e.img=blImg(e.id,e.color,"P");if(f==="bag"&&!(e.bag in set.selected))set.selected[e.bag]=true;save();renderBags();renderStats();renderList();}));
+    tr.querySelector(".del").addEventListener("click",()=>{set.entries.splice(i,1);save();renderEdit();renderBags();renderStats();renderList();});
+    body.appendChild(tr);
+  });
+}
+
+/* ---------- modal ---------- */
+function openModal(tab){$("#overlay").classList.remove("hide");if(tab)switchTab(tab);document.body.style.overflow="hidden";}
+function closeModal(){$("#overlay").classList.add("hide");document.body.style.overflow="";}
+function switchTab(name){$$(".tab").forEach(t=>t.classList.toggle("on",t.dataset.tab===name));$$(".tabpane").forEach(p=>p.classList.toggle("hide",p.dataset.pane!==name));if(name==="edit")renderEdit();if(name==="backup"){try{$("#backupText").value=JSON.stringify(DB,null,2);}catch(e){}}}
+
+/* ---------- range / theme ---------- */
+function applyRange(str){const set=curSet();if(!set)return;const bags=bagsOf(set);const want=new Set();String(str).split(/[,\s]+/).filter(Boolean).forEach(tok=>{const m=tok.match(/^(\d+)\s*-\s*(\d+)$/);if(m){for(let i=Math.min(+m[1],+m[2]);i<=Math.max(+m[1],+m[2]);i++)want.add(i);}else if(/^\d+$/.test(tok))want.add(+tok);});bags.forEach(b=>{set.selected[b]=want.has(bagKeyNum(b));});save();renderBags();renderStats();renderList();}
+function applyTheme(){const t=DB.theme;if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);else document.documentElement.removeAttribute("data-theme");}
+function toggleTheme(){const cur=document.documentElement.getAttribute("data-theme");const isDark=cur?cur==="dark":matchMedia("(prefers-color-scheme: dark)").matches;DB.theme=isDark?"light":"dark";applyTheme();save();}
+
+/* ---------- backup ---------- */
+function downloadText(filename,text){try{const blob=new Blob([text],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=filename;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(url);a.remove();},500);return true;}catch(e){return false;}}
+
+/* ---------- set management ---------- */
+function renameCurrent(){const s=curSet();if(!s)return;const n=prompt("Rename set:",s.name);if(n!=null){s.name=n.trim()||s.name;save();render();}}
+function deleteCurrent(){const s=curSet();if(!s)return;if(!confirm("Delete “"+s.name+"”? This can’t be undone."))return;delete DB.sets[s.id];DB.order=DB.order.filter(x=>x!==s.id);DB.current=DB.order[0]||null;save();render();}
+
+/* ---------- init ---------- */
+function init(){
+  load();
+  if(!DB||!DB.sets)DB={sets:{},order:[],current:null,theme:"system",seeded:false};
+  DB.order=(DB.order||[]).filter(id=>DB.sets[id]);
+  // migrate away from the old fake sample
+  DB.order.filter(id=>DB.sets[id]&&DB.sets[id].sample).forEach(id=>delete DB.sets[id]);
+  DB.order=DB.order.filter(id=>DB.sets[id]);
+  // seed the real 76178 example once, on a fresh install
+  if(!DB.order.length&&!DB.seeded){const e=seedEntries();if(e.length){const s=newSet("76178 Daily Bugle (bags 0–4)");s.entries=e;defaultSelect(s);}DB.seeded=true;}
+  if(!DB.current||!DB.sets[DB.current])DB.current=DB.order[0]||null;
+  const cs=curSet();if(cs)defaultSelect(cs);
+  applyTheme();save();render();loadParts();
+
+  $("#themeBtn").addEventListener("click",toggleTheme);
+  $("#importBtn").addEventListener("click",()=>openModal("bsx"));
+  $("#closeModal").addEventListener("click",closeModal);
+  $("#overlay").addEventListener("click",e=>{if(e.target===$("#overlay"))closeModal();});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#overlay").classList.contains("hide"))closeModal();});
+  $("#printBtn").addEventListener("click",()=>window.print());
+  $("#renameSetBtn").addEventListener("click",renameCurrent);
+  $("#deleteSetBtn").addEventListener("click",deleteCurrent);
+  $("#setSel").addEventListener("change",e=>{DB.current=e.target.value;save();render();});
+  $$(".tab").forEach(t=>t.addEventListener("click",()=>switchTab(t.dataset.tab)));
+
+  $$(".minibtn[data-all]").forEach(b=>b.addEventListener("click",()=>{const set=curSet();if(!set)return;bagsOf(set).forEach(bag=>set.selected[bag]=b.dataset.all==="1");save();renderBags();renderStats();renderList();}));
+  $("#invertBtn").addEventListener("click",()=>{const set=curSet();if(!set)return;bagsOf(set).forEach(bag=>set.selected[bag]=!set.selected[bag]);save();renderBags();renderStats();renderList();});
+  $("#rangeBtn").addEventListener("click",()=>applyRange($("#rangeInp").value));
+  $("#rangeInp").addEventListener("keydown",e=>{if(e.key==="Enter")applyRange(e.target.value);});
+  $("#searchInp").addEventListener("input",e=>{const s=curSet();if(s){s.search=e.target.value;save();renderList();}});
+  $("#sortSel").addEventListener("change",e=>{const s=curSet();if(s){s.sort=e.target.value;save();renderList();}});
+  $("#hideGrab").addEventListener("change",e=>{const s=curSet();if(s){s.hideGrab=e.target.checked;save();renderList();}});
+  $("#resetGrab").addEventListener("click",()=>{const s=curSet();if(s){s.grabbed={};save();renderStats();renderList();}});
+
+  // BSX
+  let staged=[];
+  function afterImport(){const s=curSet();if(s){s.sort="cat";save();}$("#sortSel").value="cat";render();}
+  $("#bsxFiles").addEventListener("change",async e=>{
+    const files=[...(e.target.files||[])];if(!files.length)return;
+    files.sort((a,b)=>a.name.localeCompare(b.name,undefined,{numeric:true,sensitivity:"base"}));
+    staged=[];const bags=new Set();let ok=0,err=0;
+    for(let i=0;i<files.length;i++){try{const txt=await readFileText(files[i]);const items=parseBsx(txt);if(items.length){const bag=bagFromName(files[i].name,i);staged=staged.concat(bsxToEntries(items,bag));bags.add(bag);ok++;}else err++;}catch(x){err++;}}
+    if(!$("#bsxSetName").value){const m=files[0].name.match(/^(.*?)[-_ ]*bag/i);$("#bsxSetName").value=((m&&m[1])?m[1]:files[0].name.replace(/\.(bsx|xml)$/i,"")).replace(/[-_]+/g," ").trim();}
+    const box=$("#bsxPreview");box.hidden=false;box.innerHTML=staged.length?("Read <b>"+ok+"</b> file(s): <b>"+staged.length+"</b> part lines across bags <b>"+sortBags([...bags]).join(", ")+"</b>"+(err?(" — "+err+" skipped"):"")+". Tap <b>Import as new set</b>."):"Couldn’t read any parts — are these BrickStore .bsx files?";
+  });
+  $("#bsxNewBtn").addEventListener("click",()=>{if(!staged.length)return alert("Choose your .bsx files first (or use the paste box).");commitNew(staged.slice(),$("#bsxSetName").value.trim()||"Imported set");afterImport();closeModal();});
+  $("#bsxAddBtn").addEventListener("click",()=>{if(!staged.length)return alert("Choose your .bsx files first (or use the paste box).");commit(staged.slice(),false,$("#bsxSetName").value.trim());afterImport();closeModal();});
+  $("#bsxPasteBtn").addEventListener("click",()=>{try{const items=parseBsx($("#bsxPasteText").value);if(!items.length)return alert("No parts found in that text.");const bag=$("#bsxPasteBag").value.trim()||"1";commit(bsxToEntries(items,bag),false);afterImport();$("#bsxPasteText").value="";alert("Added bag "+bag+" ("+items.length+" parts).");}catch(x){alert("Couldn’t read that as BSX: "+x.message);}});
+  $("#bsxDemoBtn").addEventListener("click",()=>{const e=seedEntries();if(!e.length)return alert("No example data embedded.");commitNew(e,"76178 Daily Bugle (bags 0–4)");afterImport();closeModal();});
+
+  // edit / sets
+  $("#setName").addEventListener("change",e=>{const s=curSet();if(s){s.name=e.target.value.trim()||"Untitled set";save();renderSetSel();}});
+  $("#newSetBtn").addEventListener("click",()=>{newSet("New set");save();render();renderEdit();$("#setName").focus();$("#setName").select();});
+  $("#delSetBtn").addEventListener("click",()=>{deleteCurrent();renderEdit();});
+  $("#addRowBtn").addEventListener("click",()=>{let s=curSet();if(!s)s=newSet("New set");const bags=bagsOf(s);const bag=bags[bags.length-1]||"1";s.entries.push({bag,qty:1,name:"",color:"",id:"",img:""});if(!(bag in s.selected))s.selected[bag]=true;save();renderEdit();renderBags();renderStats();});
+
+  // backup
+  $("#backupDownload").addEventListener("click",()=>{const ok=downloadText("brick-bag-merge-backup.json",JSON.stringify(DB));if(!ok){switchTab("backup");$("#backupText").value=JSON.stringify(DB,null,2);alert("Download blocked here — copy the text backup instead (opened below).");}});
+  $("#backupFile").addEventListener("change",async e=>{const f=(e.target.files||[])[0];if(!f)return;try{const d=JSON.parse(await readFileText(f));if(!d.sets||!d.order)throw new Error("not a backup");if(!confirm("Replace everything with this backup file?"))return;DB=d;save();applyTheme();render();alert("Restored.");closeModal();}catch(x){alert("Couldn’t read that backup: "+x.message);}e.target.value="";});
+  $("#backupCopy").addEventListener("click",()=>{const t=$("#backupText");t.focus();t.select();try{document.execCommand("copy");}catch(e){}try{navigator.clipboard&&navigator.clipboard.writeText(t.value);}catch(e){}});
+  $("#backupRestore").addEventListener("click",()=>{try{const d=JSON.parse($("#backupText").value);if(!d.sets||!d.order)throw new Error("not a backup");if(!confirm("Replace everything with this backup?"))return;DB=d;save();applyTheme();render();alert("Restored.");closeModal();}catch(x){alert("Couldn’t restore: "+x.message);}});
+
+  const s0=curSet();if(s0){$("#sortSel").value=s0.sort||"cat";$("#searchInp").value=s0.search||"";$("#hideGrab").checked=!!s0.hideGrab;}
+}
+document.addEventListener("DOMContentLoaded",init);
+})();
+</script>
