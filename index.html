@@ -2548,7 +2548,7 @@ function renderList(){
     const bagLine=sortBags(Object.keys(g.byBag)).map(b=>"bag "+esc(b)+": "+g.byBag[b]).join(", ");
     const progCls=done?"done":(remaining>0&&remaining<10?"low":"");
     let prog='<span>'+got+'/'+grand+' grabbed</span>';
-    if(otherTotal>0)prog+=' <span class="other">&middot; also in bag'+(otherBags.length>1?"s":"")+' '+otherBags.join(", ")+' (+'+otherTotal+')</span>';
+    if(otherTotal>0)prog+=' <span class="other">&middot; '+otherTotal+' more in bag'+(otherBags.length>1?"s":"")+' '+otherBags.join(", ")+'</span>';
     row.innerHTML=
       '<img class="thumb r-thumb" loading="lazy" alt="" src="'+esc(g.img||PLACE)+'" onerror="this.onerror=null;this.src=\''+PLACE+'\'">'+
       '<div class="qty r-qty">'+selNeed+'<small>×</small></div>'+
