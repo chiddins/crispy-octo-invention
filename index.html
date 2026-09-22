@@ -9,7 +9,8 @@
   --accent:#f2c200; --accent-ink:#1b1d22; --accent-soft:#fff4cc; --accent-line:#d9ad00;
   --danger:#c8102e; --danger-soft:#fbe6ea;
   --link:#1667d6;
-  --grab:#2e7d32; --grab-soft:#e6f2e6;
+  --grab:#2e7d32; --grab-soft:#e6f2e6; --grab-bright:#12b23a; --grab-bright-ink:#ffffff;
+  --warn:#b8860b;
   --shadow:0 1px 2px rgba(20,22,28,.06), 0 6px 20px rgba(20,22,28,.06);
   --radius:12px; --ctl:40px; --thumb:64px;
   --font-ui:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
@@ -21,7 +22,8 @@
     --ink:#ecedef; --muted:#9aa0ac; --faint:#717784; --line:#31343b;
     --accent:#ffcf3f; --accent-ink:#231900; --accent-soft:#332b12; --accent-line:#c99a12;
     --danger:#f04058; --danger-soft:#33141a; --link:#78b0ff;
-    --grab:#54b95f; --grab-soft:#16281a;
+    --grab:#54b95f; --grab-soft:#16281a; --grab-bright:#2fbf4c; --grab-bright-ink:#08210d;
+    --warn:#e8b23a;
     --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 26px rgba(0,0,0,.35);
   }
 }
@@ -30,7 +32,8 @@
   --ink:#ecedef; --muted:#9aa0ac; --faint:#717784; --line:#31343b;
   --accent:#ffcf3f; --accent-ink:#231900; --accent-soft:#332b12; --accent-line:#c99a12;
   --danger:#f04058; --danger-soft:#33141a; --link:#78b0ff;
-  --grab:#54b95f; --grab-soft:#16281a;
+  --grab:#54b95f; --grab-soft:#16281a; --grab-bright:#2fbf4c; --grab-bright-ink:#08210d;
+  --warn:#e8b23a;
   --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 26px rgba(0,0,0,.35);
 }
 *{box-sizing:border-box}
@@ -52,7 +55,7 @@ header.app{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;backgroun
 .brand .tag{font-size:11.5px;color:var(--muted);font-weight:600;letter-spacing:.02em}
 .hspace{flex:1}
 
-.btn,.iconbtn,.setsel,select.ctl,input.ctl{height:var(--ctl);box-sizing:border-box}
+.btn,.iconbtn,.setsel,select.ctl,input.ctl,.toggle{height:var(--ctl);box-sizing:border-box}
 .iconbtn{background:var(--surface);border:1px solid var(--line);border-radius:9px;width:var(--ctl);display:inline-grid;place-items:center;color:var(--ink);box-shadow:var(--shadow)}
 .iconbtn:hover{border-color:var(--faint)}
 .btn{background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:0 14px;font-weight:600;box-shadow:var(--shadow);display:inline-flex;align-items:center;gap:7px}
@@ -102,42 +105,56 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
 
 .listhead{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .listhead .search{flex:1;min-width:150px}
-.listhead .search input{width:100%}
-.chk{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--muted);user-select:none;height:var(--ctl)}
-.chk input{width:16px;height:16px;accent-color:var(--accent-line)}
+.listhead .search input{width:100%;height:var(--ctl)}
+.toggle{display:inline-flex;align-items:center;gap:7px;padding:0 12px;border:1px solid var(--line);border-radius:9px;background:var(--surface);box-shadow:var(--shadow);font-weight:600;font-size:13px;color:var(--ink);cursor:pointer;user-select:none;white-space:nowrap}
+.toggle:hover{border-color:var(--faint)}
+.toggle input{width:16px;height:16px;accent-color:var(--accent-line)}
+.toggle:has(input:checked){background:var(--accent-soft);border-color:var(--accent-line)}
+
+/* multi-select */
+.ms{position:relative;display:flex;flex-wrap:wrap;align-items:center;gap:5px;background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:4px 8px;box-shadow:var(--shadow);min-width:160px;min-height:var(--ctl);cursor:text}
+.ms:hover{border-color:var(--faint)}
+.ms-input{flex:1;min-width:70px;border:0;background:transparent;color:var(--ink);height:26px;padding:0}
+.ms-input:focus{outline:none}
+.ms-input::placeholder{color:var(--muted)}
+.ms-chip{display:inline-flex;align-items:center;gap:5px;background:var(--surface-2);border:1px solid var(--line);border-radius:6px;padding:1px 3px 1px 8px;font-size:12px;font-weight:600;white-space:nowrap}
+.ms-chip button{border:0;background:transparent;color:var(--muted);font-size:15px;line-height:1;padding:0 3px}
+.ms-chip button:hover{color:var(--danger)}
+.ms-menu{position:absolute;top:calc(100% + 4px);left:0;min-width:100%;max-width:300px;max-height:250px;overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:9px;box-shadow:0 12px 34px rgba(0,0,0,.28);z-index:40}
+.ms-opt{padding:8px 11px;font-size:13px;cursor:pointer;white-space:nowrap}
+.ms-opt:hover,.ms-opt.hi{background:var(--surface-2)}
 
 .parts{display:flex;flex-direction:column}
 .catrow{padding:14px 15px 6px;font-family:var(--font-head);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);border-top:1px solid var(--line)}
 .catrow:first-child{border-top:0}
 .row{display:grid;gap:8px 12px;align-items:center;padding:11px 15px;border-top:1px solid var(--line);grid-template-columns:var(--thumb) 54px 1fr auto;grid-template-areas:"thumb qty info ctrl"}
 .row:first-child{border-top:0}
-.row.grabbed{opacity:.55}
+.row.grabbed{opacity:.6}
 .row.grabbed .pname{text-decoration:line-through;text-decoration-color:var(--muted)}
 .r-thumb{grid-area:thumb}.r-qty{grid-area:qty}.r-info{grid-area:info;min-width:0}.r-ctrl{grid-area:ctrl;justify-self:end}
 .thumb{width:var(--thumb);height:var(--thumb);border-radius:8px;background:#fff;border:1px solid var(--line);object-fit:contain;padding:3px;cursor:zoom-in}
 .qty{font-family:var(--font-head);font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;text-align:right;letter-spacing:-.02em}
 .qty small{font-size:12px;font-weight:700;color:var(--muted)}
 .pname{font-weight:600;word-break:break-word}
-.pmeta{display:flex;flex-wrap:wrap;align-items:center;gap:3px 14px;margin-top:4px;font-size:12px;color:var(--muted)}
-.swatch{display:inline-flex;align-items:center;gap:6px}
-.dot{width:12px;height:12px;border-radius:50%;border:1px solid rgba(0,0,0,.25);flex:none}
-.pid{font-variant-numeric:tabular-nums}
-.lnk{color:var(--link);text-decoration:none;font-weight:600;white-space:nowrap}
-.lnk:hover{text-decoration:underline}
-.bags-b{display:flex;flex-wrap:wrap;gap:2px 12px;margin-top:5px;font-size:11.5px;color:var(--faint);font-variant-numeric:tabular-nums}
-.bags-b .bb{white-space:nowrap}
-.other{margin-top:5px;font-size:11.5px;color:var(--muted)}
-.other b{color:var(--ink);font-variant-numeric:tabular-nums;font-weight:800}
+.pmeta{margin-top:3px;font-size:12px;color:var(--muted);line-height:1.7}
+.pmeta .sep{color:var(--faint);margin:0 7px}
+.pmeta .dot{display:inline-block;width:11px;height:11px;border-radius:50%;border:1px solid rgba(0,0,0,.25);vertical-align:-1px;margin-right:5px}
+.pmeta .lnk{color:var(--link);text-decoration:none}
+.pmeta .lnk:hover{text-decoration:underline}
+.bagline{margin-top:3px;font-size:11.5px;color:var(--faint);font-variant-numeric:tabular-nums}
+.prog{margin-top:4px;font-size:12px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+.prog.low{color:var(--warn)}
+.prog.done{color:var(--grab-bright)}
+.prog .other{color:var(--faint);font-weight:600}
 .grab{display:inline-flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:6px}
-.gmain{border:1px solid var(--line);background:var(--surface);border-radius:9px;height:34px;padding:0 14px;font-weight:700;font-size:13px;white-space:nowrap;box-shadow:var(--shadow);color:var(--ink)}
-.gmain:hover{border-color:var(--faint)}
-.grab[data-state="partial"] .gmain{background:var(--accent-soft);border-color:var(--accent-line)}
-.grab[data-state="done"] .gmain{background:var(--grab-soft);border-color:var(--grab);color:var(--grab)}
 .gstep{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:9px;background:var(--surface);overflow:hidden;box-shadow:var(--shadow)}
 .gstep button{width:30px;height:34px;border:0;background:transparent;font-size:18px;font-weight:700;color:var(--muted);display:grid;place-items:center}
 .gstep button:hover{background:var(--surface-2);color:var(--ink)}
-.ginput{width:44px;height:34px;border:0;border-left:1px solid var(--line);border-right:1px solid var(--line);text-align:center;font-weight:700;font-variant-numeric:tabular-nums;background:var(--surface);color:var(--ink);-moz-appearance:textfield;border-radius:0}
+.ginput{width:46px;height:34px;border:0;border-left:1px solid var(--line);border-right:1px solid var(--line);text-align:center;font-weight:700;font-variant-numeric:tabular-nums;background:var(--surface);color:var(--ink);-moz-appearance:textfield;border-radius:0}
 .ginput::-webkit-outer-spin-button,.ginput::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.gmain{border:1px solid var(--accent-line);background:var(--accent);color:var(--accent-ink);border-radius:9px;height:34px;padding:0 14px;font-weight:700;font-size:13px;white-space:nowrap;box-shadow:var(--shadow)}
+.gmain:hover{filter:brightness(1.04)}
+.grab[data-state="done"] .gmain{background:var(--grab-bright);border-color:var(--grab-bright);color:var(--grab-bright-ink)}
 @media (max-width:560px){
   .row{grid-template-columns:var(--thumb) 1fr;grid-template-areas:"thumb info" "qty ctrl"}
   .r-qty{justify-self:start}.qty{font-size:18px}
@@ -188,8 +205,8 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
   #printHead{display:block;margin-bottom:10px}#printHead h2{font-size:18px}#printHead .pmeta{color:#333;font-size:12px;margin-top:2px}
   .row{grid-template-columns:46px 44px 1fr auto;break-inside:avoid;border-color:#ccc;padding:6px 0}
   .thumb{width:46px;height:46px;border-color:#ccc}.row.grabbed{opacity:1}
-  .catrow{color:#000;border-color:#000}.lnk{display:none}
-  .grab{border-color:#999}.grab .gstep{display:none}
+  .catrow{color:#000;border-color:#000}.pmeta .lnk{display:none}
+  .gstep{display:none}.gmain{border-color:#999;background:#fff;color:#000}
 }
 </style>
 
@@ -200,9 +217,7 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
       <div style="min-width:0"><h1>Brick Bag Merge</h1><div class="tag">Pick bags &middot; sum the parts &middot; one pick&#8209;list</div></div>
     </div>
     <div class="hspace"></div>
-    <button class="iconbtn" id="themeBtn" title="Toggle light / dark" aria-label="Toggle theme">
-      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg>
-    </button>
+    <button class="iconbtn" id="themeBtn" title="Toggle light / dark" aria-label="Toggle theme"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg></button>
   </div>
 </header>
 
@@ -238,10 +253,11 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
           <select class="ctl" id="sortSel" aria-label="Sort by">
             <option value="cat">Sort: Category</option><option value="name">Sort: Name A–Z</option><option value="qty">Sort: Quantity</option><option value="color">Sort: Colour</option><option value="bag">Sort: First bag</option>
           </select>
-          <select class="ctl" id="catFilter" aria-label="Filter by category"></select>
-          <select class="ctl" id="colorFilter" aria-label="Filter by colour"></select>
-          <select class="ctl" id="imgSizeSel" aria-label="Image size" title="Image size"><option value="44">Img S</option><option value="64">Img M</option><option value="104">Img L</option><option value="152">Img XL</option></select>
-          <label class="chk"><input type="checkbox" id="hideGrab"> Hide done</label>
+          <div class="ms" id="catFilter"></div>
+          <div class="ms" id="colorFilter"></div>
+          <select class="ctl" id="imgSizeSel" aria-label="Image size"><option value="44">Image size: S</option><option value="64">Image size: M</option><option value="104">Image size: L</option><option value="152">Image size: XL</option></select>
+          <label class="toggle"><input type="checkbox" id="hideGrab"> Hide done</label>
+          <label class="toggle"><input type="checkbox" id="grabbedOnly"> Grabbed</label>
           <button class="btn danger-h" id="resetGrab">Reset</button>
         </div>
       </div>
@@ -286,7 +302,7 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
 
 <div class="lightbox hide" id="lightbox"><img id="lightboxImg" alt=""><div class="cap" id="lightboxCap"></div></div>
 
-<!-- 76178 example (real BSX bags 0-4) -->
+<!-- 76178 example -->
 <script type="application/xml" class="seedbsx" data-bag="0">
 <?xml version="1.0" encoding="UTF-8"?>
 <BrickStoreXML>
@@ -2401,6 +2417,7 @@ const CATS=[["Technic",/technic|liftarm|beam|axle|\bpin\b|bush|gear/i],["Bricks,
 function catFallback(name){const n=name||"";for(let i=0;i<CATS.length;i++)if(CATS[i][1].test(n))return CATS[i][0];return "Other parts";}
 
 let DB={sets:{},order:[],current:null,theme:"system",seeded:false,imgSize:64};
+let catMS=null,colorMS=null;
 function save(){try{localStorage.setItem(LS,JSON.stringify(DB));}catch(e){}}
 function load(){try{const r=localStorage.getItem(LS);if(r)DB=JSON.parse(r);}catch(e){}}
 function curSet(){return DB.sets[DB.current]||null;}
@@ -2409,12 +2426,10 @@ function sortBags(bags){return bags.slice().sort((a,b)=>bagKeyNum(a)-bagKeyNum(b
 function bagsOf(set){const s=new Set();set.entries.forEach(e=>s.add(String(e.bag)));return sortBags([...s]);}
 function groupKey(e){const base=e.id&&String(e.id).trim()?("#"+norm(e.id)):norm(e.name||"");return base+"|"+norm(String(e.color));}
 function defaultSelect(set){bagsOf(set).forEach(b=>{if(!(b in set.selected))set.selected[b]=true;});}
-function newSet(name){const id=uid();DB.sets[id]={id,name:name||"New set",entries:[],selected:{},grabbed:{},hideGrab:false,sort:"cat",search:"",fCat:"",fColor:""};DB.order.push(id);DB.current=id;return DB.sets[id];}
-function grabMap(set,key){const v=set.grabbed[key];return (v&&typeof v==="object")?v:{};}
-function selGotOf(set,g){const gm=grabMap(set,g.key);let s=0;for(const b in g.allByBag){if(set.selected[b])s+=Math.min(gm[b]||0,g.allByBag[b]);}return s;}
-function otherInfo(set,g){const gm=grabMap(set,g.key);let tot=0,got=0;const bags=[];for(const b in g.allByBag){if(!set.selected[b]){tot+=g.allByBag[b];got+=Math.min(gm[b]||0,g.allByBag[b]);bags.push(b);}}return {total:tot,got:got,notGot:tot-got,bags:sortBags(bags)};}
-function setSelGot(set,g,v){v=Math.max(0,Math.min(g.total,Math.floor(Number(v))||0));const gm=Object.assign({},grabMap(set,g.key));const selBags=sortBags(Object.keys(g.byBag));selBags.forEach(b=>{delete gm[b];});let rem=v;for(const b of selBags){const cap=g.allByBag[b]||0;const take=Math.min(cap,rem);if(take>0)gm[b]=take;rem-=take;if(rem<=0)break;}if(Object.keys(gm).length)set.grabbed[g.key]=gm;else delete set.grabbed[g.key];save();renderStats();renderList();}
-function migrateGrabbed(set){if(!set.grabbed)return;const all={};for(const e of set.entries){const k=groupKey(e);(all[k]=all[k]||{});all[k][String(e.bag)]=(all[k][String(e.bag)]||0)+(Number(e.qty)||0);}for(const k in set.grabbed){const v=set.grabbed[k];if(v&&typeof v==="object")continue;const byBag=all[k]||{};const bags=sortBags(Object.keys(byBag));let grand=0;bags.forEach(b=>grand+=byBag[b]);let n=v===true?grand:(Number(v)||0);const gm={};for(const b of bags){const take=Math.min(byBag[b],n);if(take>0)gm[b]=take;n-=take;if(n<=0)break;}if(Object.keys(gm).length)set.grabbed[k]=gm;else delete set.grabbed[k];}}
+function newSet(name){const id=uid();DB.sets[id]={id,name:name||"New set",entries:[],selected:{},grabbed:{},hideGrab:false,grabbedOnly:false,sort:"cat",search:"",fCat:[],fColor:[]};DB.order.push(id);DB.current=id;return DB.sets[id];}
+function gotOf(set,g){return Math.max(0,Math.min(g.grand,Number(set.grabbed[g.key])||0));}
+function setGot(set,g,v){v=Math.floor(Number(v));if(!isFinite(v))v=0;v=Math.max(0,Math.min(g.grand,v));if(v<=0)delete set.grabbed[g.key];else set.grabbed[g.key]=v;save();renderStats();renderList();}
+function migrateGrabbed(set){if(!set.grabbed)return;const all={};for(const e of set.entries){const k=groupKey(e);all[k]=(all[k]||0)+(Number(e.qty)||0);}for(const k in set.grabbed){const v=set.grabbed[k];let n;if(typeof v==="number")n=v;else if(v===true)n=all[k]||0;else if(v&&typeof v==="object")n=Object.keys(v).reduce((a,b)=>a+(Number(v[b])||0),0);else n=0;n=Math.max(0,Math.min(all[k]||0,n));if(n>0)set.grabbed[k]=n;else delete set.grabbed[k];}}
 
 const PLACE="data:image/svg+xml;utf8,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><rect x="6" y="16" width="36" height="24" rx="3" fill="#c9ccd2"/><rect x="12" y="10" width="8" height="8" rx="4" fill="#b4b8bf"/><rect x="28" y="10" width="8" height="8" rx="4" fill="#b4b8bf"/></svg>');
 
@@ -2457,8 +2472,9 @@ function sortAgg(arr,s){
   return arr;
 }
 
-function render(){renderSetSel();renderBags();renderStats();renderList();}
+function render(){renderSetSel();syncFilters();renderBags();renderStats();renderList();}
 function renderSetSel(){const sel=$("#setSel");sel.innerHTML="";DB.order.forEach(id=>{const s=DB.sets[id];if(!s)return;const o=document.createElement("option");o.value=id;o.textContent=s.name+" ("+s.entries.length+")";if(id===DB.current)o.selected=true;sel.appendChild(o);});if(!DB.order.length){const o=document.createElement("option");o.textContent="No sets yet";sel.appendChild(o);}}
+function syncFilters(){const s=curSet();if(catMS)catMS.setSelected(s?(s.fCat||[]):[]);if(colorMS)colorMS.setSelected(s?(s.fColor||[]):[]);}
 function renderBags(){
   const set=curSet();const wrap=$("#bagList");wrap.innerHTML="";
   if(!set){$("#bagSummary").textContent="";$("#bagTotal").textContent="";return;}
@@ -2479,57 +2495,76 @@ function renderBags(){
 function renderStats(){
   const set=curSet();const box=$("#stats");box.innerHTML="";if(!set)return;
   const bags=bagsOf(set);const selCount=bags.filter(b=>set.selected[b]).length;
-  const agg=aggregate(set);const pieces=agg.reduce((a,g)=>a+g.total,0);const done=agg.filter(g=>selGotOf(set,g)>=g.total).length;
+  const agg=aggregate(set);const pieces=agg.reduce((a,g)=>a+g.total,0);const done=agg.filter(g=>gotOf(set,g)>=g.grand).length;
   [[selCount+" / "+bags.length,"bags selected"],[agg.length,"part types"],[pieces,"total pieces"],[done+" / "+agg.length,"done"]].forEach(d=>{const el=document.createElement("div");el.className="stat";el.innerHTML="<b>"+d[0]+"</b><span>"+d[1]+"</span>";box.appendChild(el);});
 }
 function colorLabel(color){return /^\d+$/.test(String(color))?("Colour "+color):String(color);}
-function colorChip(color){if(color===""||color==null)return "";const hex=colorHex(color);return '<span class="swatch">'+(hex?'<span class="dot" style="background:'+hex+'"></span>':'')+esc(colorLabel(color))+'</span>';}
-function renderFilters(agg){
-  const set=curSet();
-  const cats=[...new Set(agg.map(g=>g.catLabel))].sort();
-  const cols=[...new Set(agg.map(g=>String(g.color)).filter(c=>c!==""))].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
-  const cf=$("#catFilter");cf.innerHTML='<option value="">All categories</option>'+cats.map(c=>'<option value="'+esc(c)+'">'+esc(c)+'</option>').join("");
-  if(cats.indexOf(set.fCat)<0)set.fCat="";cf.value=set.fCat||"";
-  const colf=$("#colorFilter");colf.innerHTML='<option value="">All colours</option>'+cols.map(c=>'<option value="'+esc(c)+'">'+esc(colorLabel(c))+'</option>').join("");
-  if(cols.indexOf(set.fColor)<0)set.fColor="";colf.value=set.fColor||"";
+function colorMeta(color){if(color===""||color==null)return "";const hex=colorHex(color);return (hex?'<span class="dot" style="background:'+hex+'"></span>':'')+esc(colorLabel(color));}
+
+/* ---- multi-select ---- */
+function MultiSelect(host,opts){
+  host.innerHTML="";
+  const input=document.createElement("input");input.className="ms-input";input.placeholder=opts.placeholder||"";input.setAttribute("aria-label",opts.placeholder||"filter");
+  const menu=document.createElement("div");menu.className="ms-menu hide";
+  let options=[],selected=[];const label=opts.label||(x=>x),onChange=opts.onChange||function(){};
+  function chips(){[...host.querySelectorAll(".ms-chip")].forEach(c=>c.remove());selected.forEach(val=>{const c=document.createElement("span");c.className="ms-chip";c.innerHTML=esc(label(val))+' <button type="button" aria-label="remove">×</button>';c.querySelector("button").addEventListener("click",e=>{e.stopPropagation();selected=selected.filter(x=>x!==val);chips();onChange(selected.slice());menuOpen();});host.insertBefore(c,input);});input.placeholder=selected.length?"":(opts.placeholder||"");}
+  function menuOpen(){const q=norm(input.value);const avail=options.filter(o=>selected.indexOf(o)<0&&(!q||norm(label(o)).includes(q)));menu.innerHTML="";if(!avail.length){menu.classList.add("hide");return;}avail.slice(0,80).forEach(o=>{const d=document.createElement("div");d.className="ms-opt";d.textContent=label(o);d.addEventListener("mousedown",e=>{e.preventDefault();selected.push(o);input.value="";chips();onChange(selected.slice());menuOpen();input.focus();});menu.appendChild(d);});menu.classList.remove("hide");}
+  function menuClose(){menu.classList.add("hide");}
+  input.addEventListener("focus",menuOpen);
+  input.addEventListener("input",menuOpen);
+  input.addEventListener("keydown",e=>{if(e.key==="Backspace"&&!input.value&&selected.length){selected.pop();chips();onChange(selected.slice());menuOpen();}else if(e.key==="Escape"){menuClose();input.blur();}});
+  host.addEventListener("click",e=>{if(e.target===host||e.target===input)input.focus();});
+  document.addEventListener("click",e=>{if(!host.contains(e.target))menuClose();});
+  host.appendChild(input);host.appendChild(menu);
+  return {setOptions(a){options=a.slice();},setSelected(a){selected=(a||[]).slice();chips();},get(){return selected.slice();}};
 }
+
 function renderList(){
   const set=curSet();const box=$("#parts");box.innerHTML="";
-  if(!set||!set.entries.length){box.innerHTML='<div class="empty"><h3>Nothing here yet</h3>Tap <b>Import (.BSX)</b> to add a set — or load the 76178 example.<br><button class="btn primary" id="emptyImport">Import (.BSX)</button></div>';const b=$("#emptyImport");if(b)b.addEventListener("click",()=>openModal("bsx"));$("#catFilter").innerHTML='<option value="">All categories</option>';$("#colorFilter").innerHTML='<option value="">All colours</option>';renderPrintHead();return;}
+  if(!set||!set.entries.length){box.innerHTML='<div class="empty"><h3>Nothing here yet</h3>Tap <b>Import (.BSX)</b> to add a set — or load the 76178 example.<br><button class="btn primary" id="emptyImport">Import (.BSX)</button></div>';const b=$("#emptyImport");if(b)b.addEventListener("click",()=>openModal("bsx"));if(catMS)catMS.setOptions([]);if(colorMS)colorMS.setOptions([]);renderPrintHead();return;}
   let agg=aggregate(set);
-  renderFilters(agg);
+  const cats=[...new Set(agg.map(g=>g.catLabel))].sort();
+  const cols=[...new Set(agg.map(g=>String(g.color)).filter(c=>c!==""))].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
+  if(catMS)catMS.setOptions(cats);if(colorMS)colorMS.setOptions(cols);
   sortAgg(agg,set.sort||"cat");
   const q=norm(set.search);
   if(q)agg=agg.filter(g=>norm(g.dispName).includes(q)||norm(String(g.color)).includes(q)||norm(g.id).includes(q));
-  if(set.fCat)agg=agg.filter(g=>g.catLabel===set.fCat);
-  if(set.fColor)agg=agg.filter(g=>String(g.color)===set.fColor);
-  if(set.hideGrab)agg=agg.filter(g=>selGotOf(set,g)<g.total);
+  if(set.fCat&&set.fCat.length)agg=agg.filter(g=>set.fCat.indexOf(g.catLabel)>=0);
+  if(set.fColor&&set.fColor.length)agg=agg.filter(g=>set.fColor.indexOf(String(g.color))>=0);
+  if(set.hideGrab)agg=agg.filter(g=>gotOf(set,g)<g.grand);
+  if(set.grabbedOnly)agg=agg.filter(g=>gotOf(set,g)>0);
   if(!agg.length){box.innerHTML='<div class="empty"><h3>No matching parts</h3>Turn on more bags, or clear the search / filters.</div>';renderPrintHead();return;}
   const showCats=(set.sort||"cat")==="cat";let lastCat=null;
   agg.forEach(g=>{
     if(showCats&&g.catLabel!==lastCat){lastCat=g.catLabel;const c=document.createElement("div");c.className="catrow";c.textContent=g.catLabel;box.appendChild(c);}
-    const needed=g.total;const got=selGotOf(set,g);const state=got<=0?"none":(got>=needed?"done":"partial");
-    const oi=otherInfo(set,g);
-    const row=document.createElement("div");row.className="row"+(got>=needed?" grabbed":"");
-    const meta=[];const cc=colorChip(g.color);if(cc)meta.push(cc);
-    if(g.id)meta.push('<span class="pid">#'+esc(g.id)+'</span>');
+    const selNeed=g.total,grand=g.grand,got=gotOf(set,g),remaining=grand-got,done=got>=grand;
+    const state=done?"done":"none";
+    const otherTotal=grand-selNeed;const otherBags=sortBags(Object.keys(g.allByBag).filter(b=>!set.selected[b]));
+    const row=document.createElement("div");row.className="row"+(done?" grabbed":"");
+    const meta=[];const cm=colorMeta(g.color);if(cm)meta.push(cm);
+    if(g.id)meta.push('#'+esc(g.id));
     if(g.id)meta.push('<a class="lnk" href="'+baLink(g.id)+'" target="_blank" rel="noopener">Brick Architect ↗</a>');
     if(g.id)meta.push('<a class="lnk" href="'+bsLink(g.id)+'" target="_blank" rel="noopener">Brickset ↗</a>');
-    const bagBadges=sortBags(Object.keys(g.byBag)).map(b=>'<span class="bb">bag '+esc(b)+': '+g.byBag[b]+'</span>').join("");
-    let otherLine="";
-    if(oi.total>0){otherLine='<div class="other">Also in bag'+(oi.bags.length>1?"s":"")+' '+oi.bags.join(", ")+': <b>'+oi.notGot+'</b> not grabbed'+(oi.got>0?(' &middot; <b>'+oi.got+'</b> grabbed'):'')+'</div>';}
+    const bagLine=sortBags(Object.keys(g.byBag)).map(b=>"bag "+esc(b)+": "+g.byBag[b]).join(", ");
+    const progCls=done?"done":(remaining>0&&remaining<10?"low":"");
+    let prog='<span>'+got+'/'+grand+' grabbed</span>';
+    if(otherTotal>0)prog+=' <span class="other">&middot; also in bag'+(otherBags.length>1?"s":"")+' '+otherBags.join(", ")+' (+'+otherTotal+')</span>';
     row.innerHTML=
       '<img class="thumb r-thumb" loading="lazy" alt="" src="'+esc(g.img||PLACE)+'" onerror="this.onerror=null;this.src=\''+PLACE+'\'">'+
-      '<div class="qty r-qty">'+needed+'<small>×</small></div>'+
-      '<div class="pinfo r-info"><div class="pname">'+esc(g.dispName)+'</div><div class="pmeta">'+meta.join("")+'</div>'+(bagBadges?('<div class="bags-b">'+bagBadges+'</div>'):'')+otherLine+'</div>'+
-      '<div class="grab r-ctrl" data-state="'+state+'"><button class="gmain">'+(got>0?("Grabbed "+got+"/"+needed):"Grab all")+'</button><div class="gstep"><button class="gminus" aria-label="one fewer">−</button><input class="ginput" type="number" inputmode="numeric" min="0" max="'+needed+'" value="'+got+'" aria-label="grabbed quantity"><button class="gplus" aria-label="one more">+</button></div></div>';
+      '<div class="qty r-qty">'+selNeed+'<small>×</small></div>'+
+      '<div class="pinfo r-info"><div class="pname">'+esc(g.dispName)+'</div>'+
+        '<div class="pmeta">'+meta.join('<span class="sep">·</span>')+'</div>'+
+        '<div class="bagline">'+bagLine+'</div>'+
+        '<div class="prog '+progCls+'">'+prog+'</div>'+
+      '</div>'+
+      '<div class="grab r-ctrl" data-state="'+state+'"><div class="gstep"><button class="gminus" aria-label="one fewer">−</button><input class="ginput" type="number" inputmode="numeric" min="0" max="'+grand+'" value="'+got+'" aria-label="grabbed quantity"><button class="gplus" aria-label="one more">+</button></div><button class="gmain">'+(done?"Grabbed":"Grab all")+'</button></div>';
     const grab=row.querySelector(".grab");
-    grab.querySelector(".gminus").addEventListener("click",()=>setSelGot(set,g,got-1));
-    grab.querySelector(".gplus").addEventListener("click",()=>setSelGot(set,g,got+1));
-    grab.querySelector(".gmain").addEventListener("click",()=>setSelGot(set,g,got>0?0:needed));
+    grab.querySelector(".gminus").addEventListener("click",()=>setGot(set,g,got-1));
+    grab.querySelector(".gplus").addEventListener("click",()=>setGot(set,g,got+1));
+    grab.querySelector(".gmain").addEventListener("click",()=>setGot(set,g,done?0:grand));
     const gi=grab.querySelector(".ginput");
-    gi.addEventListener("change",()=>setSelGot(set,g,gi.value));
-    gi.addEventListener("keydown",ev=>{if(ev.key==="Enter"){ev.preventDefault();setSelGot(set,g,gi.value);}});
+    gi.addEventListener("change",()=>setGot(set,g,gi.value));
+    gi.addEventListener("keydown",ev=>{if(ev.key==="Enter"){ev.preventDefault();setGot(set,g,gi.value);}});
     row.querySelector(".thumb").addEventListener("click",()=>openLightbox(g.img||PLACE,g.dispName,colorLabel(g.color)+(g.id?" · #"+g.id:"")));
     box.appendChild(row);
   });
@@ -2572,8 +2607,12 @@ function init(){
   DB.order=DB.order.filter(id=>DB.sets[id]);
   if(!DB.order.length&&!DB.seeded){const e=seedEntries();if(e.length){const s=newSet("76178 Daily Bugle (bags 0–4)");s.entries=e;defaultSelect(s);}DB.seeded=true;}
   if(!DB.current||!DB.sets[DB.current])DB.current=DB.order[0]||null;
-  Object.values(DB.sets).forEach(s=>{if(s&&s.entries)migrateGrabbed(s);});
+  Object.values(DB.sets).forEach(s=>{if(s){if(s.entries)migrateGrabbed(s);if(!Array.isArray(s.fCat))s.fCat=[];if(!Array.isArray(s.fColor))s.fColor=[];}});
   const cs=curSet();if(cs)defaultSelect(cs);
+
+  catMS=MultiSelect($("#catFilter"),{placeholder:"Categories…",onChange:a=>{const s=curSet();if(s){s.fCat=a;save();renderList();}}});
+  colorMS=MultiSelect($("#colorFilter"),{placeholder:"Colours…",label:colorLabel,onChange:a=>{const s=curSet();if(s){s.fColor=a;save();renderList();}}});
+
   applyTheme();applyImgSize();save();render();loadParts();
 
   $("#themeBtn").addEventListener("click",toggleTheme);
@@ -2591,11 +2630,10 @@ function init(){
   $$(".minibtn[data-all]").forEach(b=>b.addEventListener("click",()=>{const set=curSet();if(!set)return;bagsOf(set).forEach(bag=>set.selected[bag]=b.dataset.all==="1");save();renderBags();renderStats();renderList();}));
   $("#searchInp").addEventListener("input",e=>{const s=curSet();if(s){s.search=e.target.value;save();renderList();}});
   $("#sortSel").addEventListener("change",e=>{const s=curSet();if(s){s.sort=e.target.value;save();renderList();}});
-  $("#catFilter").addEventListener("change",e=>{const s=curSet();if(s){s.fCat=e.target.value;save();renderList();}});
-  $("#colorFilter").addEventListener("change",e=>{const s=curSet();if(s){s.fColor=e.target.value;save();renderList();}});
   $("#imgSizeSel").addEventListener("change",e=>{DB.imgSize=parseInt(e.target.value,10)||64;applyImgSize();save();});
   $("#hideGrab").addEventListener("change",e=>{const s=curSet();if(s){s.hideGrab=e.target.checked;save();renderList();}});
-  $("#resetGrab").addEventListener("click",()=>{const s=curSet();if(!s)return;const n=Object.keys(s.grabbed||{}).length;if(!n)return alert("Nothing is marked yet.");if(!confirm("Clear grabbed progress for all "+n+" parts in this set?"))return;s.grabbed={};save();renderStats();renderList();});
+  $("#grabbedOnly").addEventListener("change",e=>{const s=curSet();if(s){s.grabbedOnly=e.target.checked;save();renderList();}});
+  $("#resetGrab").addEventListener("click",()=>{const s=curSet();if(!s)return;const n=Object.keys(s.grabbed||{}).length;if(!n)return alert("Nothing is marked yet.");if(!confirm("Clear grabbed progress for all "+n+" parts in this set?"))return;s.grabbed={};save();renderStats();renderBags();renderList();});
 
   let staged=[];
   function afterImport(){const s=curSet();if(s){s.sort="cat";save();}$("#sortSel").value="cat";render();}
@@ -2618,11 +2656,11 @@ function init(){
   $("#addRowBtn").addEventListener("click",()=>{let s=curSet();if(!s)s=newSet("New set");const bags=bagsOf(s);const bag=bags[bags.length-1]||"1";s.entries.push({bag,qty:1,name:"",color:"",id:"",img:""});if(!(bag in s.selected))s.selected[bag]=true;save();renderEdit();renderBags();renderStats();});
 
   $("#backupDownload").addEventListener("click",()=>{const ok=downloadText("brick-bag-merge-backup.json",JSON.stringify(DB));if(!ok){switchTab("backup");$("#backupText").value=JSON.stringify(DB,null,2);alert("Download blocked here — copy the text backup instead.");}});
-  $("#backupFile").addEventListener("change",async e=>{const f=(e.target.files||[])[0];if(!f)return;try{const d=JSON.parse(await readFileText(f));if(!d.sets||!d.order)throw new Error("not a backup");if(!confirm("Replace everything with this backup file?"))return;DB=d;if(!DB.imgSize)DB.imgSize=64;save();applyTheme();applyImgSize();render();alert("Restored.");closeModal();}catch(x){alert("Couldn’t read that backup: "+x.message);}e.target.value="";});
+  $("#backupFile").addEventListener("change",async e=>{const f=(e.target.files||[])[0];if(!f)return;try{const d=JSON.parse(await readFileText(f));if(!d.sets||!d.order)throw new Error("not a backup");if(!confirm("Replace everything with this backup file?"))return;DB=d;if(!DB.imgSize)DB.imgSize=64;Object.values(DB.sets).forEach(s=>{if(s){if(s.entries)migrateGrabbed(s);if(!Array.isArray(s.fCat))s.fCat=[];if(!Array.isArray(s.fColor))s.fColor=[];}});save();applyTheme();applyImgSize();render();alert("Restored.");closeModal();}catch(x){alert("Couldn’t read that backup: "+x.message);}e.target.value="";});
   $("#backupCopy").addEventListener("click",()=>{const t=$("#backupText");t.focus();t.select();try{document.execCommand("copy");}catch(e){}try{navigator.clipboard&&navigator.clipboard.writeText(t.value);}catch(e){}});
-  $("#backupRestore").addEventListener("click",()=>{try{const d=JSON.parse($("#backupText").value);if(!d.sets||!d.order)throw new Error("not a backup");if(!confirm("Replace everything with this backup?"))return;DB=d;if(!DB.imgSize)DB.imgSize=64;save();applyTheme();applyImgSize();render();alert("Restored.");closeModal();}catch(x){alert("Couldn’t restore: "+x.message);}});
+  $("#backupRestore").addEventListener("click",()=>{try{const d=JSON.parse($("#backupText").value);if(!d.sets||!d.order)throw new Error("not a backup");if(!confirm("Replace everything with this backup?"))return;DB=d;if(!DB.imgSize)DB.imgSize=64;Object.values(DB.sets).forEach(s=>{if(s){if(s.entries)migrateGrabbed(s);if(!Array.isArray(s.fCat))s.fCat=[];if(!Array.isArray(s.fColor))s.fColor=[];}});save();applyTheme();applyImgSize();render();alert("Restored.");closeModal();}catch(x){alert("Couldn’t restore: "+x.message);}});
 
-  const s0=curSet();if(s0){$("#sortSel").value=s0.sort||"cat";$("#searchInp").value=s0.search||"";$("#hideGrab").checked=!!s0.hideGrab;}
+  const s0=curSet();if(s0){$("#sortSel").value=s0.sort||"cat";$("#searchInp").value=s0.search||"";$("#hideGrab").checked=!!s0.hideGrab;$("#grabbedOnly").checked=!!s0.grabbedOnly;}
   $("#imgSizeSel").value=String(DB.imgSize||64);
 }
 document.addEventListener("DOMContentLoaded",init);
