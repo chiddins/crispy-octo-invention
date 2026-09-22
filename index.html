@@ -6,11 +6,12 @@
 :root{
   --bg:#eceef1; --surface:#ffffff; --surface-2:#f5f6f8; --surface-3:#eef0f3;
   --ink:#1b1d22; --muted:#5c6270; --faint:#8b91a0; --line:#dde0e6;
-  --accent:#c8102e; --accent-ink:#ffffff; --accent-soft:#fbe6ea;
-  --sel:#ffc72c; --sel-ink:#3a2c00; --sel-line:#e6a400;
+  --accent:#f2c200; --accent-ink:#1b1d22; --accent-soft:#fff4cc; --accent-line:#d9ad00;
+  --danger:#c8102e; --danger-soft:#fbe6ea;
+  --link:#1667d6;
   --grab:#2e7d32; --grab-soft:#e6f2e6;
   --shadow:0 1px 2px rgba(20,22,28,.06), 0 6px 20px rgba(20,22,28,.06);
-  --radius:12px; --radius-sm:8px;
+  --radius:12px; --ctl:40px; --thumb:64px;
   --font-ui:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   --font-head:"Archivo",var(--font-ui);
 }
@@ -18,8 +19,8 @@
   :root:not([data-theme="light"]){
     --bg:#141519; --surface:#1e2025; --surface-2:#25272d; --surface-3:#2b2e35;
     --ink:#ecedef; --muted:#9aa0ac; --faint:#717784; --line:#31343b;
-    --accent:#f04058; --accent-ink:#1b0308; --accent-soft:#33141a;
-    --sel:#ffcf3f; --sel-ink:#231900; --sel-line:#c99a12;
+    --accent:#ffcf3f; --accent-ink:#231900; --accent-soft:#332b12; --accent-line:#c99a12;
+    --danger:#f04058; --danger-soft:#33141a; --link:#78b0ff;
     --grab:#54b95f; --grab-soft:#16281a;
     --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 26px rgba(0,0,0,.35);
   }
@@ -27,8 +28,8 @@
 :root[data-theme="dark"]{
   --bg:#141519; --surface:#1e2025; --surface-2:#25272d; --surface-3:#2b2e35;
   --ink:#ecedef; --muted:#9aa0ac; --faint:#717784; --line:#31343b;
-  --accent:#f04058; --accent-ink:#1b0308; --accent-soft:#33141a;
-  --sel:#ffcf3f; --sel-ink:#231900; --sel-line:#c99a12;
+  --accent:#ffcf3f; --accent-ink:#231900; --accent-soft:#332b12; --accent-line:#c99a12;
+  --danger:#f04058; --danger-soft:#33141a; --link:#78b0ff;
   --grab:#54b95f; --grab-soft:#16281a;
   --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 26px rgba(0,0,0,.35);
 }
@@ -38,9 +39,8 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-ui);f
 h1,h2,h3{font-family:var(--font-head);margin:0;line-height:1.15;text-wrap:balance}
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
-:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
-::selection{background:var(--sel);color:var(--sel-ink)}
-a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent-line);outline-offset:2px;border-radius:4px}
+::selection{background:var(--accent);color:var(--accent-ink)}
 .wrap{max-width:1180px;margin:0 auto;padding-inline:16px}
 
 header.app{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
@@ -51,19 +51,23 @@ header.app{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;backgroun
 .brand h1{font-size:18px;font-weight:800;letter-spacing:-.01em}
 .brand .tag{font-size:11.5px;color:var(--muted);font-weight:600;letter-spacing:.02em}
 .hspace{flex:1}
-.iconbtn{background:var(--surface);border:1px solid var(--line);border-radius:9px;width:38px;height:38px;display:grid;place-items:center;color:var(--ink);box-shadow:var(--shadow)}
+
+.btn,.iconbtn,.setsel,select.ctl,input.ctl{height:var(--ctl);box-sizing:border-box}
+.iconbtn{background:var(--surface);border:1px solid var(--line);border-radius:9px;width:var(--ctl);display:inline-grid;place-items:center;color:var(--ink);box-shadow:var(--shadow)}
 .iconbtn:hover{border-color:var(--faint)}
+.btn{background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:0 14px;font-weight:600;box-shadow:var(--shadow);display:inline-flex;align-items:center;gap:7px}
+.btn:hover{border-color:var(--faint)}
+.btn.primary{background:var(--accent);border-color:var(--accent-line);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(1.04)}
+.btn svg{width:16px;height:16px}
+.btn.danger-h:hover{background:var(--danger-soft);border-color:var(--danger);color:var(--danger)}
+#deleteSetBtn:hover,#delSetBtn:hover{border-color:var(--danger);color:var(--danger)}
 
 .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding-block:14px}
-select,input[type=text],input[type=search]{background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:9px 11px;color:var(--ink);box-shadow:var(--shadow)}
-select:hover,input:hover{border-color:var(--faint)}
+input[type=text],input[type=search]{background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:0 11px;color:var(--ink);box-shadow:var(--shadow)}
+select.ctl{background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:0 34px 0 11px;color:var(--ink);box-shadow:var(--shadow);appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center}
+input:hover,select.ctl:hover{border-color:var(--faint)}
 .setsel{font-weight:700;min-width:170px;max-width:100%}
-.btn{background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:9px 14px;font-weight:600;box-shadow:var(--shadow);display:inline-flex;align-items:center;gap:7px}
-.btn:hover{border-color:var(--faint)}
-.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
-.btn.primary:hover{filter:brightness(1.05)}
-.btn svg{width:16px;height:16px}
-.iconbtn.sm{width:34px;height:34px}
 
 .stats{display:flex;flex-wrap:wrap;gap:8px;padding-bottom:4px}
 .stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 13px;box-shadow:var(--shadow);display:flex;align-items:baseline;gap:7px}
@@ -80,64 +84,66 @@ select:hover,input:hover{border-color:var(--faint)}
 aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
 @media (max-width:820px){aside{position:static}}
 .bag-tools{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
-.minibtn{background:var(--surface-2);border:1px solid var(--line);border-radius:7px;padding:5px 9px;font-size:12px;font-weight:600}
+.minibtn{background:var(--surface-2);border:1px solid var(--line);border-radius:7px;padding:6px 11px;font-size:12px;font-weight:600}
 .minibtn:hover{border-color:var(--faint)}
-.rangewrap{display:flex;gap:6px;margin-bottom:12px}
-.rangewrap input{flex:1;min-width:0;padding:7px 10px;font-size:13px}
-.bag-list{display:flex;flex-direction:column;gap:6px;max-height:min(52vh,520px);overflow:auto}
+.bagtotal{font-size:12px;color:var(--muted);font-weight:600;margin-bottom:10px}
+.bagtotal b{color:var(--ink);font-family:var(--font-head);font-variant-numeric:tabular-nums}
+.bag-list{display:flex;flex-direction:column;gap:6px;max-height:min(56vh,560px);overflow:auto}
 @media (max-width:820px){.bag-list{max-height:none}}
-.bagchip{display:flex;align-items:center;gap:10px;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:var(--surface-2);text-align:left;font-weight:600;transition:background .12s,border-color .12s}
+.bagchip{display:flex;align-items:center;gap:10px;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:var(--surface-2);text-align:left;font-weight:600;transition:border-color .12s}
 .bagchip:hover{border-color:var(--faint)}
-.bagchip .box{width:20px;height:20px;flex:none;border-radius:6px;border:2px solid var(--faint);display:grid;place-items:center}
-.bagchip .box svg{width:12px;height:12px;opacity:0;color:var(--sel)}
+.bagchip .box{width:20px;height:20px;flex:none;border-radius:6px;border:2px solid var(--faint);display:grid;place-items:center;transition:background .12s,border-color .12s}
+.bagchip .box svg{width:12px;height:12px;opacity:0;color:var(--accent-ink)}
 .bagchip .nm{flex:1;min-width:0}
 .bagchip .ct{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
-.bagchip.on{background:var(--sel);border-color:var(--sel-line);color:var(--sel-ink)}
-.bagchip.on .box{background:var(--sel-ink);border-color:var(--sel-ink)}
+.bagchip.on{border-color:var(--accent-line)}
+.bagchip.on .box{background:var(--accent);border-color:var(--accent-line)}
 .bagchip.on .box svg{opacity:1}
-.bagchip.on .ct{color:var(--sel-ink);opacity:.75}
 
-.listhead{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.listhead{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .listhead .search{flex:1;min-width:150px}
 .listhead .search input{width:100%}
-.chk{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--muted);user-select:none}
-.chk input{width:16px;height:16px;accent-color:var(--accent)}
+.chk{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--muted);user-select:none;height:var(--ctl)}
+.chk input{width:16px;height:16px;accent-color:var(--accent-line)}
 
 .parts{display:flex;flex-direction:column}
 .catrow{padding:14px 15px 6px;font-family:var(--font-head);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);border-top:1px solid var(--line)}
 .catrow:first-child{border-top:0}
-.row{display:grid;grid-template-columns:26px 52px 54px 1fr auto;gap:12px;align-items:center;padding:10px 15px;border-top:1px solid var(--line)}
+.row{display:grid;gap:8px 12px;align-items:center;padding:11px 15px;border-top:1px solid var(--line);grid-template-columns:var(--thumb) 54px 1fr auto;grid-template-areas:"thumb qty info ctrl"}
 .row:first-child{border-top:0}
-.row.grabbed{opacity:.5}
+.row.grabbed{opacity:.55}
 .row.grabbed .pname{text-decoration:line-through;text-decoration-color:var(--muted)}
-.gbox{width:22px;height:22px;border:2px solid var(--faint);border-radius:7px;background:var(--surface);display:grid;place-items:center;justify-self:center;transition:background .12s,border-color .12s}
-.gbox:hover{border-color:var(--grab)}
-.gbox svg{width:13px;height:13px;color:var(--grab);opacity:0}
-.row.grabbed .gbox{background:var(--grab-soft);border-color:var(--grab)}
-.row.grabbed .gbox svg{opacity:1}
-.thumb{width:52px;height:52px;border-radius:8px;background:#fff;border:1px solid var(--line);object-fit:contain;padding:3px}
+.r-thumb{grid-area:thumb}.r-qty{grid-area:qty}.r-info{grid-area:info;min-width:0}.r-ctrl{grid-area:ctrl;justify-self:end}
+.thumb{width:var(--thumb);height:var(--thumb);border-radius:8px;background:#fff;border:1px solid var(--line);object-fit:contain;padding:3px;cursor:zoom-in}
 .qty{font-family:var(--font-head);font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;text-align:right;letter-spacing:-.02em}
 .qty small{font-size:12px;font-weight:700;color:var(--muted)}
-.pinfo{min-width:0}
 .pname{font-weight:600;word-break:break-word}
-.pmeta{display:flex;flex-wrap:wrap;gap:6px 10px;margin-top:3px;font-size:12px;color:var(--muted)}
+.pmeta{display:flex;flex-wrap:wrap;align-items:center;gap:3px 14px;margin-top:4px;font-size:12px;color:var(--muted)}
 .swatch{display:inline-flex;align-items:center;gap:6px}
 .dot{width:12px;height:12px;border-radius:50%;border:1px solid rgba(0,0,0,.25);flex:none}
-.pill{background:var(--surface-2);border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-variant-numeric:tabular-nums}
 .pid{font-variant-numeric:tabular-nums}
-.balink{color:var(--accent);text-decoration:none;font-weight:600;white-space:nowrap}
-.balink:hover{text-decoration:underline}
-.bags-b{display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end;max-width:190px}
-.bb{font-size:11px;font-weight:700;background:var(--surface-2);border:1px solid var(--line);border-radius:6px;padding:2px 6px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.lnk{color:var(--link);text-decoration:none;font-weight:600;white-space:nowrap}
+.lnk:hover{text-decoration:underline}
+.bags-b{display:flex;flex-wrap:wrap;gap:2px 12px;margin-top:5px;font-size:11.5px;color:var(--faint);font-variant-numeric:tabular-nums}
+.bags-b .bb{white-space:nowrap}
+.other{margin-top:5px;font-size:11.5px;color:var(--muted)}
+.other b{color:var(--ink);font-variant-numeric:tabular-nums;font-weight:800}
+.grab{display:inline-flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:6px}
+.gmain{border:1px solid var(--line);background:var(--surface);border-radius:9px;height:34px;padding:0 14px;font-weight:700;font-size:13px;white-space:nowrap;box-shadow:var(--shadow);color:var(--ink)}
+.gmain:hover{border-color:var(--faint)}
+.grab[data-state="partial"] .gmain{background:var(--accent-soft);border-color:var(--accent-line)}
+.grab[data-state="done"] .gmain{background:var(--grab-soft);border-color:var(--grab);color:var(--grab)}
+.gstep{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:9px;background:var(--surface);overflow:hidden;box-shadow:var(--shadow)}
+.gstep button{width:30px;height:34px;border:0;background:transparent;font-size:18px;font-weight:700;color:var(--muted);display:grid;place-items:center}
+.gstep button:hover{background:var(--surface-2);color:var(--ink)}
+.ginput{width:44px;height:34px;border:0;border-left:1px solid var(--line);border-right:1px solid var(--line);text-align:center;font-weight:700;font-variant-numeric:tabular-nums;background:var(--surface);color:var(--ink);-moz-appearance:textfield;border-radius:0}
+.ginput::-webkit-outer-spin-button,.ginput::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 @media (max-width:560px){
-  .row{grid-template-columns:24px 44px 46px 1fr;row-gap:6px}
-  .thumb{width:44px;height:44px}
-  .bags-b{grid-column:2/-1;justify-content:flex-start;max-width:none;margin-left:56px}
-  .qty{font-size:18px}
+  .row{grid-template-columns:var(--thumb) 1fr;grid-template-areas:"thumb info" "qty ctrl"}
+  .r-qty{justify-self:start}.qty{font-size:18px}
 }
 .empty{padding:40px 22px;text-align:center;color:var(--muted)}
-.empty h3{font-size:16px;color:var(--ink);margin-bottom:6px}
-.empty .btn{margin-top:12px}
+.empty h3{font-size:16px;color:var(--ink);margin-bottom:6px}.empty .btn{margin-top:12px}
 
 .overlay{position:fixed;inset:0;z-index:60;background:rgba(10,12,16,.55);display:flex;align-items:flex-start;justify-content:center;padding:24px 16px;overflow:auto}
 .modal{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.4);width:100%;max-width:720px;margin:auto}
@@ -145,12 +151,13 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
 .modal .mhead h2{font-size:17px;font-weight:800}
 .tabs{display:flex;gap:4px;padding:10px 12px 0;flex-wrap:wrap;border-bottom:1px solid var(--line)}
 .tab{background:transparent;border:0;border-bottom:2px solid transparent;padding:8px 12px;font-weight:700;color:var(--muted);border-radius:6px 6px 0 0}
-.tab.on{color:var(--ink);border-bottom-color:var(--accent);background:var(--surface-2)}
+.tab.on{color:var(--ink);border-bottom-color:var(--accent-line);background:var(--surface-2)}
 .tabpane{padding:16px 18px}
 .tabpane p.hint{color:var(--muted);margin:0 0 12px}
 textarea{width:100%;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:11px;color:var(--ink);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;line-height:1.5;resize:vertical}
 .field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
 .field label{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.field input{height:var(--ctl)}
 .mactions{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;margin-top:12px}
 .previewbox{background:var(--surface-2);border:1px dashed var(--line);border-radius:10px;padding:11px 13px;font-size:13px;margin-top:12px;color:var(--muted)}
 .previewbox b{color:var(--ink)}
@@ -159,28 +166,30 @@ textarea{width:100%;background:var(--surface-2);border:1px solid var(--line);bor
 .etable td{padding:4px 6px;border-bottom:1px solid var(--line);vertical-align:middle}
 .etable input{width:100%;padding:6px 8px;font-size:12.5px}
 .etable input.w-bag{width:56px}.etable input.w-qty{width:56px}
-.etable .del{background:var(--surface-2);border:1px solid var(--line);border-radius:6px;width:28px;height:28px;display:grid;place-items:center;color:var(--accent)}
+.etable .del{background:var(--surface-2);border:1px solid var(--line);border-radius:6px;width:28px;height:28px;display:grid;place-items:center;color:var(--danger)}
 .escroll{max-height:340px;overflow:auto;border:1px solid var(--line);border-radius:10px}
 .setbar{display:flex;flex-wrap:wrap;gap:8px;align-items:end;margin-bottom:14px}
 .setbar .field{margin:0;flex:1;min-width:150px}
 .hide{display:none!important}
 small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px;font-size:12px}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
 
+.lightbox{position:fixed;inset:0;z-index:80;background:rgba(8,10,14,.82);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;cursor:zoom-out}
+.lightbox img{max-width:min(90vw,620px);max-height:78vh;background:#fff;border-radius:14px;padding:14px;box-shadow:0 24px 70px rgba(0,0,0,.5)}
+.lightbox .cap{color:#fff;font-weight:700;text-align:center;max-width:90vw}
+.lightbox .cap small{display:block;color:#c9ccd2;font-weight:500;margin-top:3px}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
 #printHead{display:none}
 @media print{
-  header.app,.toolbar,aside,.listhead,.overlay,small.foot,.stats{display:none!important}
+  header.app,.toolbar,aside,.listhead,.overlay,.lightbox,small.foot,.stats{display:none!important}
   body{background:#fff;color:#000;font-size:12px}
-  .wrap{max-width:none;padding:0}
-  .grid{display:block;padding:0}
-  .panel{border:0;box-shadow:none}
-  .panel .phead{display:none}
-  #printHead{display:block;margin-bottom:10px}
-  #printHead h2{font-size:18px}
-  #printHead .pmeta{color:#333;font-size:12px;margin-top:2px}
-  .row{grid-template-columns:22px 46px 1fr auto;break-inside:avoid;border-color:#ccc;padding:6px 0}
-  .thumb{border-color:#ccc}.row.grabbed{opacity:1}.gbox{border-color:#000}
-  .catrow{color:#000;border-color:#000}.bb{border-color:#bbb;color:#333}.balink{display:none}
+  .wrap{max-width:none;padding:0}.grid{display:block;padding:0}
+  .panel{border:0;box-shadow:none}.panel .phead{display:none}
+  #printHead{display:block;margin-bottom:10px}#printHead h2{font-size:18px}#printHead .pmeta{color:#333;font-size:12px;margin-top:2px}
+  .row{grid-template-columns:46px 44px 1fr auto;break-inside:avoid;border-color:#ccc;padding:6px 0}
+  .thumb{width:46px;height:46px;border-color:#ccc}.row.grabbed{opacity:1}
+  .catrow{color:#000;border-color:#000}.lnk{display:none}
+  .grab{border-color:#999}.grab .gstep{display:none}
 }
 </style>
 
@@ -188,10 +197,7 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
   <div class="wrap hbar">
     <div class="brand">
       <span class="logo" aria-hidden="true"><span></span></span>
-      <div style="min-width:0">
-        <h1>Brick Bag Merge</h1>
-        <div class="tag">Pick bags &middot; sum the parts &middot; one pick&#8209;list</div>
-      </div>
+      <div style="min-width:0"><h1>Brick Bag Merge</h1><div class="tag">Pick bags &middot; sum the parts &middot; one pick&#8209;list</div></div>
     </div>
     <div class="hspace"></div>
     <button class="iconbtn" id="themeBtn" title="Toggle light / dark" aria-label="Toggle theme">
@@ -202,22 +208,12 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
 
 <div class="wrap">
   <div class="toolbar">
-    <select class="setsel" id="setSel" aria-label="Choose set"></select>
-    <button class="iconbtn sm" id="renameSetBtn" title="Rename this set" aria-label="Rename set">
-      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
-    </button>
-    <button class="iconbtn sm" id="deleteSetBtn" title="Delete this set" aria-label="Delete set">
-      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
-    </button>
-    <button class="btn primary" id="importBtn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
-      Import (.BSX)
-    </button>
+    <select class="setsel ctl" id="setSel" aria-label="Choose set"></select>
+    <button class="iconbtn" id="renameSetBtn" title="Rename this set" aria-label="Rename set"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button>
+    <button class="iconbtn" id="deleteSetBtn" title="Delete this set" aria-label="Delete set"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>
+    <button class="btn primary" id="importBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>Import (.BSX)</button>
     <div class="hspace" style="flex:1"></div>
-    <button class="btn" id="printBtn" title="Print the current combined list">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2M6 14h12v7H6z"/></svg>
-      Print
-    </button>
+    <button class="btn" id="printBtn" title="Print the current combined list"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2M6 14h12v7H6z"/></svg>Print</button>
   </div>
 
   <div class="stats" id="stats"></div>
@@ -225,36 +221,28 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
   <div class="grid">
     <aside>
       <div class="panel">
-        <div class="phead"><h2>Bags</h2><span class="ct" id="bagSummary" style="font-size:11.5px;color:var(--muted)"></span></div>
+        <div class="phead"><h2>Bags</h2><span id="bagSummary" style="font-size:11.5px;color:var(--muted)"></span></div>
         <div class="pbody">
-          <div class="bag-tools">
-            <button class="minibtn" data-all="1">All</button>
-            <button class="minibtn" data-all="0">None</button>
-            <button class="minibtn" id="invertBtn">Invert</button>
-          </div>
-          <div class="rangewrap">
-            <input type="text" id="rangeInp" placeholder="e.g. 1-4, 6" aria-label="Select bag range">
-            <button class="minibtn" id="rangeBtn">Select</button>
-          </div>
+          <div class="bag-tools"><button class="minibtn" data-all="1">Select all</button><button class="minibtn" data-all="0">Clear</button></div>
+          <div class="bagtotal" id="bagTotal"></div>
           <div class="bag-list" id="bagList"></div>
         </div>
       </div>
     </aside>
 
     <main class="panel">
-      <div class="phead" style="flex-wrap:wrap">
-        <h2>Combined parts</h2>
+      <div class="phead" style="flex-wrap:wrap;gap:10px">
+        <h2 style="white-space:nowrap">Combined parts</h2>
         <div class="listhead" style="flex:1;justify-content:flex-end">
           <div class="search"><input type="search" id="searchInp" placeholder="Search parts…" aria-label="Search parts"></div>
-          <select id="sortSel" aria-label="Sort by">
-            <option value="cat">Sort: Category (bin order)</option>
-            <option value="name">Sort: Name A–Z</option>
-            <option value="qty">Sort: Quantity (high→low)</option>
-            <option value="color">Sort: Colour</option>
-            <option value="bag">Sort: First bag</option>
+          <select class="ctl" id="sortSel" aria-label="Sort by">
+            <option value="cat">Sort: Category</option><option value="name">Sort: Name A–Z</option><option value="qty">Sort: Quantity</option><option value="color">Sort: Colour</option><option value="bag">Sort: First bag</option>
           </select>
-          <label class="chk"><input type="checkbox" id="hideGrab"> Hide grabbed</label>
-          <button class="minibtn" id="resetGrab">Reset ✓</button>
+          <select class="ctl" id="catFilter" aria-label="Filter by category"></select>
+          <select class="ctl" id="colorFilter" aria-label="Filter by colour"></select>
+          <select class="ctl" id="imgSizeSel" aria-label="Image size" title="Image size"><option value="44">Img S</option><option value="64">Img M</option><option value="104">Img L</option><option value="152">Img XL</option></select>
+          <label class="chk"><input type="checkbox" id="hideGrab"> Hide done</label>
+          <button class="btn danger-h" id="resetGrab">Reset</button>
         </div>
       </div>
       <div id="printHead"></div>
@@ -267,75 +255,36 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
 
 <div class="overlay hide" id="overlay">
   <div class="modal" role="dialog" aria-modal="true" aria-label="Import and manage data">
-    <div class="mhead">
-      <h2>Import &amp; edit</h2>
-      <button class="iconbtn" id="closeModal" aria-label="Close">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
-      </button>
-    </div>
-    <div class="tabs" id="tabs">
-      <button class="tab on" data-tab="bsx">.BSX</button>
-      <button class="tab" data-tab="edit">Edit rows</button>
-      <button class="tab" data-tab="backup">Backup</button>
-    </div>
-
+    <div class="mhead"><h2>Import &amp; edit</h2><button class="iconbtn" id="closeModal" aria-label="Close"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <div class="tabs" id="tabs"><button class="tab on" data-tab="bsx">.BSX</button><button class="tab" data-tab="edit">Edit rows</button><button class="tab" data-tab="backup">Backup</button></div>
     <div class="tabpane" data-pane="bsx">
-      <p class="hint">In <b>BrickStore</b>, export each bag as a <b>.bsx</b> file (one per bag). Pick them all here — the app reads the real parts, colours and quantities from your files. Filenames like <code>…bag-3.bsx</code> set the bag number automatically.</p>
-      <div class="field">
-        <label for="bsxFiles">Choose your .bsx bag files (pick several at once)</label>
-        <input type="file" id="bsxFiles" accept=".bsx,.xml,text/xml" multiple>
-      </div>
-      <div class="mactions" style="justify-content:flex-start;margin-top:-4px;margin-bottom:4px">
-        <button class="btn" id="bsxDemoBtn">📦 Load example: 76178 (bags 0–4)</button>
-      </div>
-      <div class="field">
-        <label for="bsxSetName">Set name</label>
-        <input type="text" id="bsxSetName" placeholder="e.g. 76178 Daily Bugle">
-      </div>
+      <p class="hint">In <b>BrickStore</b>, export each bag as a <b>.bsx</b> file (one per bag). Pick them all here — the app reads the real parts, colours and quantities. Filenames like <code>…bag-3.bsx</code> set the bag number automatically.</p>
+      <div class="field"><label for="bsxFiles">Choose your .bsx bag files (pick several at once)</label><input type="file" id="bsxFiles" accept=".bsx,.xml,text/xml" multiple></div>
+      <div class="mactions" style="justify-content:flex-start;margin-top:-4px;margin-bottom:4px"><button class="btn" id="bsxDemoBtn">📦 Load example: 76178 (bags 0–4)</button></div>
+      <div class="field"><label for="bsxSetName">Set name</label><input type="text" id="bsxSetName" placeholder="e.g. 76178 Daily Bugle"></div>
       <div class="previewbox" id="bsxPreview" hidden></div>
-      <div class="mactions">
-        <button class="btn" id="bsxAddBtn">Add to current set</button>
-        <button class="btn primary" id="bsxNewBtn">Import as new set</button>
-      </div>
-      <details style="margin-top:14px">
-        <summary style="cursor:pointer;font-weight:700;color:var(--muted)">Phone won’t let you pick files? Paste one bag’s BSX text</summary>
+      <div class="mactions"><button class="btn" id="bsxAddBtn">Add to current set</button><button class="btn primary" id="bsxNewBtn">Import as new set</button></div>
+      <details style="margin-top:14px"><summary style="cursor:pointer;font-weight:700;color:var(--muted)">Phone won’t let you pick files? Paste one bag’s BSX text</summary>
         <div class="field" style="margin-top:10px"><label for="bsxPasteBag">Bag number</label><input type="text" id="bsxPasteBag" placeholder="1" style="max-width:120px"></div>
         <textarea id="bsxPasteText" rows="6" placeholder="Open a .bsx file, copy everything, paste here"></textarea>
         <div class="mactions"><button class="btn" id="bsxPasteBtn">Add this bag</button></div>
       </details>
     </div>
-
     <div class="tabpane hide" data-pane="edit">
-      <div class="setbar">
-        <div class="field"><label for="setName">Set name</label><input type="text" id="setName" placeholder="Set name"></div>
-        <button class="btn" id="newSetBtn">＋ New set</button>
-        <button class="btn" id="delSetBtn">Delete set</button>
-      </div>
-      <p class="hint">Fix or add rows by hand (part number, colour number, quantity). One row = one part in one bag; duplicates merge automatically.</p>
-      <div class="escroll">
-        <table class="etable">
-          <thead><tr><th>Bag</th><th>Qty</th><th>Part&nbsp;#</th><th>Colour&nbsp;#</th><th></th></tr></thead>
-          <tbody id="editBody"></tbody>
-        </table>
-      </div>
+      <div class="setbar"><div class="field"><label for="setName">Set name</label><input type="text" id="setName" placeholder="Set name"></div><button class="btn" id="newSetBtn">＋ New set</button><button class="btn danger-h" id="delSetBtn">Delete set</button></div>
+      <p class="hint">Fix or add rows by hand. One row = one part in one bag; duplicates merge automatically.</p>
+      <div class="escroll"><table class="etable"><thead><tr><th>Bag</th><th>Qty</th><th>Part&nbsp;#</th><th>Colour&nbsp;#</th><th></th></tr></thead><tbody id="editBody"></tbody></table></div>
       <div class="mactions"><button class="btn primary" id="addRowBtn">＋ Add row</button></div>
     </div>
-
     <div class="tabpane hide" data-pane="backup">
-      <p class="hint">Your sets live in this browser only. Save a backup file to keep them safe or move them to another device (e.g. via Google Drive), then load it there.</p>
-      <div class="mactions" style="justify-content:flex-start">
-        <button class="btn primary" id="backupDownload">⬇ Save backup file</button>
-        <label class="btn" for="backupFile" style="margin:0">⬆ Load backup file</label>
-        <input type="file" id="backupFile" accept=".json,application/json" class="hide">
-      </div>
-      <details style="margin-top:14px">
-        <summary style="cursor:pointer;font-weight:700;color:var(--muted)">Or copy / paste as text</summary>
-        <textarea id="backupText" rows="8" spellcheck="false" style="margin-top:10px"></textarea>
-        <div class="mactions"><button class="btn" id="backupCopy">Copy</button><button class="btn" id="backupRestore">Restore from text</button></div>
-      </details>
+      <p class="hint">Your sets live in this browser only. Save a backup file to keep them safe or move them to another device, then load it there.</p>
+      <div class="mactions" style="justify-content:flex-start"><button class="btn primary" id="backupDownload">⬇ Save backup file</button><label class="btn" for="backupFile" style="margin:0">⬆ Load backup file</label><input type="file" id="backupFile" accept=".json,application/json" class="hide"></div>
+      <details style="margin-top:14px"><summary style="cursor:pointer;font-weight:700;color:var(--muted)">Or copy / paste as text</summary><textarea id="backupText" rows="8" spellcheck="false" style="margin-top:10px"></textarea><div class="mactions"><button class="btn" id="backupCopy">Copy</button><button class="btn" id="backupRestore">Restore from text</button></div></details>
     </div>
   </div>
 </div>
+
+<div class="lightbox hide" id="lightbox"><img id="lightboxImg" alt=""><div class="cap" id="lightboxCap"></div></div>
 
 <!-- 76178 example (real BSX bags 0-4) -->
 <script type="application/xml" class="seedbsx" data-bag="0">
@@ -2429,11 +2378,9 @@ const norm=s=>(s||"").toLowerCase().replace(/\s+/g," ").trim();
 const uid=()=>"s"+Math.random().toString(36).slice(2,9);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
-/* colour swatches for named colours (numeric BrickLink ids show as "Colour N") */
 const COLORS={"white":"#f4f4f4","black":"#1b1b1b","red":"#b40000","blue":"#0057a6","yellow":"#f7c000","green":"#237841","tan":"#e4cd9e","reddish brown":"#5b3927","dark bluish gray":"#6c6e68","light bluish gray":"#a0a5a9","medium nougat":"#cc8e57","orange":"#fe8a18","trans-clear":"#eeeeee"};
 function colorHex(c){if(!c)return null;const k=norm(c);if(COLORS[k])return COLORS[k];for(const key in COLORS){if(k.includes(key))return COLORS[key];}return null;}
 
-/* Rebrickable part names + categories, loaded at runtime (works on a normal web page) */
 let PARTS=null;
 function loadParts(){try{fetch("parts.json").then(r=>r.ok?r.json():null).then(d=>{if(d&&d.parts){PARTS=d;render();}}).catch(()=>{});}catch(e){}}
 function lookupPart(id){
@@ -2447,12 +2394,13 @@ function lookupPart(id){
 function partName(id){const p=lookupPart(id);return p?p[0]:null;}
 function partCat(id){const p=lookupPart(id);return p&&PARTS.cats[p[1]]?PARTS.cats[p[1]]:null;}
 function baLink(id){return "https://brickarchitect.com/parts/"+encodeURIComponent(id);}
+function bsDesign(id){return String(id).replace(/(p[brx]\w+|c\d\d.*)$/i,"")||id;}
+function bsLink(id){return "https://brickset.com/parts/design-"+encodeURIComponent(bsDesign(id));}
 
-/* keyword fallback categories when the parts DB isn't loaded */
 const CATS=[["Technic",/technic|liftarm|beam|axle|\bpin\b|bush|gear/i],["Bricks, Round & Modified",/round brick|modified brick|headlight|snot/i],["Bricks",/\bbrick\b/i],["Plates, Round & Modified",/round plate|modified plate|jumper/i],["Plates",/\bplate\b/i],["Tiles",/\btile\b/i],["Slopes",/\bslope\b|wedge|cheese/i],["Panels & Walls",/panel|wall|fence/i],["Windows & Doors",/window|door|glass|windscreen/i],["Plants & Nature",/plant|flower|leaf|stem|tree/i],["Minifigs & Accessories",/minifig|torso|\bhead\b|\blegs?\b|helmet|hair|utensil/i]];
 function catFallback(name){const n=name||"";for(let i=0;i<CATS.length;i++)if(CATS[i][1].test(n))return CATS[i][0];return "Other parts";}
 
-let DB={sets:{},order:[],current:null,theme:"system",seeded:false};
+let DB={sets:{},order:[],current:null,theme:"system",seeded:false,imgSize:64};
 function save(){try{localStorage.setItem(LS,JSON.stringify(DB));}catch(e){}}
 function load(){try{const r=localStorage.getItem(LS);if(r)DB=JSON.parse(r);}catch(e){}}
 function curSet(){return DB.sets[DB.current]||null;}
@@ -2461,18 +2409,19 @@ function sortBags(bags){return bags.slice().sort((a,b)=>bagKeyNum(a)-bagKeyNum(b
 function bagsOf(set){const s=new Set();set.entries.forEach(e=>s.add(String(e.bag)));return sortBags([...s]);}
 function groupKey(e){const base=e.id&&String(e.id).trim()?("#"+norm(e.id)):norm(e.name||"");return base+"|"+norm(String(e.color));}
 function defaultSelect(set){bagsOf(set).forEach(b=>{if(!(b in set.selected))set.selected[b]=true;});}
-function newSet(name){const id=uid();DB.sets[id]={id,name:name||"New set",entries:[],selected:{},grabbed:{},hideGrab:false,sort:"cat",search:""};DB.order.push(id);DB.current=id;return DB.sets[id];}
+function newSet(name){const id=uid();DB.sets[id]={id,name:name||"New set",entries:[],selected:{},grabbed:{},hideGrab:false,sort:"cat",search:"",fCat:"",fColor:""};DB.order.push(id);DB.current=id;return DB.sets[id];}
+function grabMap(set,key){const v=set.grabbed[key];return (v&&typeof v==="object")?v:{};}
+function selGotOf(set,g){const gm=grabMap(set,g.key);let s=0;for(const b in g.allByBag){if(set.selected[b])s+=Math.min(gm[b]||0,g.allByBag[b]);}return s;}
+function otherInfo(set,g){const gm=grabMap(set,g.key);let tot=0,got=0;const bags=[];for(const b in g.allByBag){if(!set.selected[b]){tot+=g.allByBag[b];got+=Math.min(gm[b]||0,g.allByBag[b]);bags.push(b);}}return {total:tot,got:got,notGot:tot-got,bags:sortBags(bags)};}
+function setSelGot(set,g,v){v=Math.max(0,Math.min(g.total,Math.floor(Number(v))||0));const gm=Object.assign({},grabMap(set,g.key));const selBags=sortBags(Object.keys(g.byBag));selBags.forEach(b=>{delete gm[b];});let rem=v;for(const b of selBags){const cap=g.allByBag[b]||0;const take=Math.min(cap,rem);if(take>0)gm[b]=take;rem-=take;if(rem<=0)break;}if(Object.keys(gm).length)set.grabbed[g.key]=gm;else delete set.grabbed[g.key];save();renderStats();renderList();}
+function migrateGrabbed(set){if(!set.grabbed)return;const all={};for(const e of set.entries){const k=groupKey(e);(all[k]=all[k]||{});all[k][String(e.bag)]=(all[k][String(e.bag)]||0)+(Number(e.qty)||0);}for(const k in set.grabbed){const v=set.grabbed[k];if(v&&typeof v==="object")continue;const byBag=all[k]||{};const bags=sortBags(Object.keys(byBag));let grand=0;bags.forEach(b=>grand+=byBag[b]);let n=v===true?grand:(Number(v)||0);const gm={};for(const b of bags){const take=Math.min(byBag[b],n);if(take>0)gm[b]=take;n-=take;if(n<=0)break;}if(Object.keys(gm).length)set.grabbed[k]=gm;else delete set.grabbed[k];}}
 
 const PLACE="data:image/svg+xml;utf8,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><rect x="6" y="16" width="36" height="24" rx="3" fill="#c9ccd2"/><rect x="12" y="10" width="8" height="8" rx="4" fill="#b4b8bf"/><rect x="28" y="10" width="8" height="8" rx="4" fill="#b4b8bf"/></svg>');
 
-/* ---------- BSX ---------- */
 function parseBsx(xml){
   const doc=new DOMParser().parseFromString(String(xml||""),"application/xml");
   if(doc.getElementsByTagName("parsererror").length)throw new Error("that isn't valid BSX/XML");
-  return [...doc.getElementsByTagName("Item")].map(it=>{
-    const g=t=>{const n=it.getElementsByTagName(t)[0];return n?(n.textContent||"").trim():"";};
-    return {itemId:g("ItemID"),colorId:g("ColorID"),qty:parseInt(g("Qty")||"1",10)||1,type:g("ItemTypeID")||"P"};
-  }).filter(x=>x.itemId);
+  return [...doc.getElementsByTagName("Item")].map(it=>{const g=t=>{const n=it.getElementsByTagName(t)[0];return n?(n.textContent||"").trim():"";};return {itemId:g("ItemID"),colorId:g("ColorID"),qty:parseInt(g("Qty")||"1",10)||1,type:g("ItemTypeID")||"P"};}).filter(x=>x.itemId);
 }
 function blImg(itemId,colorId,type){const t=(type==="M")?"MN":"PN";return "https://img.bricklink.com/ItemImage/"+t+"/"+(colorId||"0")+"/"+encodeURIComponent(itemId)+".png";}
 function bsxToEntries(items,bag){return items.map(it=>({bag:String(bag),qty:it.qty,name:"",color:String(it.colorId||""),id:it.itemId,img:blImg(it.itemId,it.colorId,it.type)}));}
@@ -2480,31 +2429,25 @@ function bagFromName(name,idx){const m=String(name||"").match(/bag[^0-9]*(\d+)/i
 function readFileText(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result||""));r.onerror=()=>rej(r.error||new Error("read failed"));r.readAsText(file);});}
 function seedEntries(){let e=[];$$(".seedbsx").forEach(b=>{try{const items=parseBsx(b.textContent);const bag=b.getAttribute("data-bag")||"1";if(items.length)e=e.concat(bsxToEntries(items,bag));}catch(x){}});return e;}
 
-/* ---------- commit ---------- */
-function cleanupBlank(){/* no-op placeholder for future */}
-function commit(entries,replace,setName){
-  let set=curSet();
-  if(!set)set=newSet(setName||"Imported set");
-  if(replace){set.entries=[];set.grabbed={};set.selected={};}
-  if(setName&&(replace||!set.entries.length))set.name=setName;
-  set.entries=set.entries.concat(entries);
-  defaultSelect(set);save();render();
-}
+function commit(entries,replace,setName){let set=curSet();if(!set)set=newSet(setName||"Imported set");if(replace){set.entries=[];set.grabbed={};set.selected={};}if(setName&&(replace||!set.entries.length))set.name=setName;set.entries=set.entries.concat(entries);defaultSelect(set);save();render();}
 function commitNew(entries,setName){const set=newSet(setName||"Imported set");set.entries=entries.slice();defaultSelect(set);save();render();}
 
-/* ---------- aggregate ---------- */
 function aggregate(set){
+  const all=new Map();
+  for(const e of set.entries){const k=groupKey(e);let a=all.get(k);if(!a){a={byBag:{},grand:0};all.set(k,a);}const q=Number(e.qty)||0;a.byBag[String(e.bag)]=(a.byBag[String(e.bag)]||0)+q;a.grand+=q;}
   const groups=new Map();
   for(const e of set.entries){
     if(!set.selected[String(e.bag)])continue;
     const k=groupKey(e);let g=groups.get(k);
-    if(!g){g={key:k,name:e.name,color:String(e.color||""),id:e.id||"",img:e.img||"",total:0,byBag:{}};groups.set(k,g);}
+    if(!g){const a=all.get(k);g={key:k,name:e.name,color:String(e.color||""),id:e.id||"",img:e.img||"",total:0,byBag:{},allByBag:a.byBag,grand:a.grand};groups.set(k,g);}
     const q=Number(e.qty)||0;g.total+=q;g.byBag[String(e.bag)]=(g.byBag[String(e.bag)]||0)+q;
     if(!g.img&&e.img)g.img=e.img;
   }
   let arr=[...groups.values()];
   arr.forEach(g=>{g.dispName=partName(g.id)||g.name||g.id||"(part)";g.catLabel=partCat(g.id)||catFallback(g.dispName);});
-  const s=set.sort||"cat";
+  return arr;
+}
+function sortAgg(arr,s){
   const byName=(a,b)=>a.dispName.localeCompare(b.dispName);
   if(s==="name")arr.sort(byName);
   else if(s==="qty")arr.sort((a,b)=>b.total-a.total||byName(a,b));
@@ -2514,16 +2457,11 @@ function aggregate(set){
   return arr;
 }
 
-/* ---------- render ---------- */
 function render(){renderSetSel();renderBags();renderStats();renderList();}
-function renderSetSel(){
-  const sel=$("#setSel");sel.innerHTML="";
-  DB.order.forEach(id=>{const s=DB.sets[id];if(!s)return;const o=document.createElement("option");o.value=id;o.textContent=s.name+" ("+s.entries.length+")";if(id===DB.current)o.selected=true;sel.appendChild(o);});
-  if(!DB.order.length){const o=document.createElement("option");o.textContent="No sets yet";sel.appendChild(o);}
-}
+function renderSetSel(){const sel=$("#setSel");sel.innerHTML="";DB.order.forEach(id=>{const s=DB.sets[id];if(!s)return;const o=document.createElement("option");o.value=id;o.textContent=s.name+" ("+s.entries.length+")";if(id===DB.current)o.selected=true;sel.appendChild(o);});if(!DB.order.length){const o=document.createElement("option");o.textContent="No sets yet";sel.appendChild(o);}}
 function renderBags(){
   const set=curSet();const wrap=$("#bagList");wrap.innerHTML="";
-  if(!set){$("#bagSummary").textContent="";return;}
+  if(!set){$("#bagSummary").textContent="";$("#bagTotal").textContent="";return;}
   const bags=bagsOf(set);const counts={};set.entries.forEach(e=>{counts[String(e.bag)]=(counts[String(e.bag)]||0)+(Number(e.qty)||0);});
   let on=0;
   bags.forEach(b=>{
@@ -2534,97 +2472,116 @@ function renderBags(){
     wrap.appendChild(btn);
   });
   $("#bagSummary").textContent=on+" / "+bags.length+" on";
+  const agg=aggregate(set);const pieces=agg.reduce((a,g)=>a+g.total,0);
+  $("#bagTotal").innerHTML="Selected bags: <b>"+pieces+"</b> pieces &middot; <b>"+agg.length+"</b> part types";
   if(!bags.length)wrap.innerHTML='<div style="color:var(--muted);font-size:13px">No bags yet — import a set.</div>';
 }
 function renderStats(){
   const set=curSet();const box=$("#stats");box.innerHTML="";if(!set)return;
   const bags=bagsOf(set);const selCount=bags.filter(b=>set.selected[b]).length;
-  const agg=aggregate(set);const pieces=agg.reduce((a,g)=>a+g.total,0);const grabbed=agg.filter(g=>set.grabbed[g.key]).length;
-  [[selCount+" / "+bags.length,"bags selected"],[agg.length,"part types"],[pieces,"total pieces"],[grabbed+" / "+agg.length,"grabbed"]].forEach(d=>{const el=document.createElement("div");el.className="stat";el.innerHTML="<b>"+d[0]+"</b><span>"+d[1]+"</span>";box.appendChild(el);});
+  const agg=aggregate(set);const pieces=agg.reduce((a,g)=>a+g.total,0);const done=agg.filter(g=>selGotOf(set,g)>=g.total).length;
+  [[selCount+" / "+bags.length,"bags selected"],[agg.length,"part types"],[pieces,"total pieces"],[done+" / "+agg.length,"done"]].forEach(d=>{const el=document.createElement("div");el.className="stat";el.innerHTML="<b>"+d[0]+"</b><span>"+d[1]+"</span>";box.appendChild(el);});
 }
-function colorChip(color){
-  if(color===""||color==null)return "";
-  if(/^\d+$/.test(String(color)))return '<span class="pill">Colour '+esc(color)+'</span>';
-  const hex=colorHex(color);
-  return '<span class="swatch">'+(hex?'<span class="dot" style="background:'+hex+'"></span>':'')+esc(color)+'</span>';
+function colorLabel(color){return /^\d+$/.test(String(color))?("Colour "+color):String(color);}
+function colorChip(color){if(color===""||color==null)return "";const hex=colorHex(color);return '<span class="swatch">'+(hex?'<span class="dot" style="background:'+hex+'"></span>':'')+esc(colorLabel(color))+'</span>';}
+function renderFilters(agg){
+  const set=curSet();
+  const cats=[...new Set(agg.map(g=>g.catLabel))].sort();
+  const cols=[...new Set(agg.map(g=>String(g.color)).filter(c=>c!==""))].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
+  const cf=$("#catFilter");cf.innerHTML='<option value="">All categories</option>'+cats.map(c=>'<option value="'+esc(c)+'">'+esc(c)+'</option>').join("");
+  if(cats.indexOf(set.fCat)<0)set.fCat="";cf.value=set.fCat||"";
+  const colf=$("#colorFilter");colf.innerHTML='<option value="">All colours</option>'+cols.map(c=>'<option value="'+esc(c)+'">'+esc(colorLabel(c))+'</option>').join("");
+  if(cols.indexOf(set.fColor)<0)set.fColor="";colf.value=set.fColor||"";
 }
 function renderList(){
   const set=curSet();const box=$("#parts");box.innerHTML="";
-  if(!set||!set.entries.length){box.innerHTML='<div class="empty"><h3>Nothing here yet</h3>Tap <b>Import (.BSX)</b> to add a set — or load the 76178 example.<br><button class="btn primary" id="emptyImport">Import (.BSX)</button></div>';const b=$("#emptyImport");if(b)b.addEventListener("click",()=>openModal("bsx"));renderPrintHead();return;}
+  if(!set||!set.entries.length){box.innerHTML='<div class="empty"><h3>Nothing here yet</h3>Tap <b>Import (.BSX)</b> to add a set — or load the 76178 example.<br><button class="btn primary" id="emptyImport">Import (.BSX)</button></div>';const b=$("#emptyImport");if(b)b.addEventListener("click",()=>openModal("bsx"));$("#catFilter").innerHTML='<option value="">All categories</option>';$("#colorFilter").innerHTML='<option value="">All colours</option>';renderPrintHead();return;}
   let agg=aggregate(set);
+  renderFilters(agg);
+  sortAgg(agg,set.sort||"cat");
   const q=norm(set.search);
   if(q)agg=agg.filter(g=>norm(g.dispName).includes(q)||norm(String(g.color)).includes(q)||norm(g.id).includes(q));
-  if(set.hideGrab)agg=agg.filter(g=>!set.grabbed[g.key]);
-  if(!agg.length){box.innerHTML='<div class="empty"><h3>No matching parts</h3>Turn on more bags, clear the search, or unhide grabbed parts.</div>';renderPrintHead();return;}
+  if(set.fCat)agg=agg.filter(g=>g.catLabel===set.fCat);
+  if(set.fColor)agg=agg.filter(g=>String(g.color)===set.fColor);
+  if(set.hideGrab)agg=agg.filter(g=>selGotOf(set,g)<g.total);
+  if(!agg.length){box.innerHTML='<div class="empty"><h3>No matching parts</h3>Turn on more bags, or clear the search / filters.</div>';renderPrintHead();return;}
   const showCats=(set.sort||"cat")==="cat";let lastCat=null;
   agg.forEach(g=>{
     if(showCats&&g.catLabel!==lastCat){lastCat=g.catLabel;const c=document.createElement("div");c.className="catrow";c.textContent=g.catLabel;box.appendChild(c);}
-    const row=document.createElement("div");row.className="row"+(set.grabbed[g.key]?" grabbed":"");
+    const needed=g.total;const got=selGotOf(set,g);const state=got<=0?"none":(got>=needed?"done":"partial");
+    const oi=otherInfo(set,g);
+    const row=document.createElement("div");row.className="row"+(got>=needed?" grabbed":"");
     const meta=[];const cc=colorChip(g.color);if(cc)meta.push(cc);
     if(g.id)meta.push('<span class="pid">#'+esc(g.id)+'</span>');
-    if(g.id)meta.push('<a class="balink" href="'+baLink(g.id)+'" target="_blank" rel="noopener">Brick Architect ↗</a>');
-    const bagBadges=sortBags(Object.keys(g.byBag)).map(b=>'<span class="bb">b'+esc(b)+'·'+g.byBag[b]+'</span>').join("");
+    if(g.id)meta.push('<a class="lnk" href="'+baLink(g.id)+'" target="_blank" rel="noopener">Brick Architect ↗</a>');
+    if(g.id)meta.push('<a class="lnk" href="'+bsLink(g.id)+'" target="_blank" rel="noopener">Brickset ↗</a>');
+    const bagBadges=sortBags(Object.keys(g.byBag)).map(b=>'<span class="bb">bag '+esc(b)+': '+g.byBag[b]+'</span>').join("");
+    let otherLine="";
+    if(oi.total>0){otherLine='<div class="other">Also in bag'+(oi.bags.length>1?"s":"")+' '+oi.bags.join(", ")+': <b>'+oi.notGot+'</b> not grabbed'+(oi.got>0?(' &middot; <b>'+oi.got+'</b> grabbed'):'')+'</div>';}
     row.innerHTML=
-      '<button class="gbox" aria-label="Mark grabbed" aria-pressed="'+(set.grabbed[g.key]?"true":"false")+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg></button>'+
-      '<img class="thumb" loading="lazy" alt="" src="'+esc(g.img||PLACE)+'" onerror="this.onerror=null;this.src=\''+PLACE+'\'">'+
-      '<div class="qty">'+g.total+'<small>×</small></div>'+
-      '<div class="pinfo"><div class="pname">'+esc(g.dispName)+'</div><div class="pmeta">'+meta.join("")+'</div></div>'+
-      '<div class="bags-b">'+bagBadges+'</div>';
-    row.querySelector(".gbox").addEventListener("click",()=>{if(set.grabbed[g.key])delete set.grabbed[g.key];else set.grabbed[g.key]=true;save();renderStats();renderList();});
+      '<img class="thumb r-thumb" loading="lazy" alt="" src="'+esc(g.img||PLACE)+'" onerror="this.onerror=null;this.src=\''+PLACE+'\'">'+
+      '<div class="qty r-qty">'+needed+'<small>×</small></div>'+
+      '<div class="pinfo r-info"><div class="pname">'+esc(g.dispName)+'</div><div class="pmeta">'+meta.join("")+'</div>'+(bagBadges?('<div class="bags-b">'+bagBadges+'</div>'):'')+otherLine+'</div>'+
+      '<div class="grab r-ctrl" data-state="'+state+'"><button class="gmain">'+(got>0?("Grabbed "+got+"/"+needed):"Grab all")+'</button><div class="gstep"><button class="gminus" aria-label="one fewer">−</button><input class="ginput" type="number" inputmode="numeric" min="0" max="'+needed+'" value="'+got+'" aria-label="grabbed quantity"><button class="gplus" aria-label="one more">+</button></div></div>';
+    const grab=row.querySelector(".grab");
+    grab.querySelector(".gminus").addEventListener("click",()=>setSelGot(set,g,got-1));
+    grab.querySelector(".gplus").addEventListener("click",()=>setSelGot(set,g,got+1));
+    grab.querySelector(".gmain").addEventListener("click",()=>setSelGot(set,g,got>0?0:needed));
+    const gi=grab.querySelector(".ginput");
+    gi.addEventListener("change",()=>setSelGot(set,g,gi.value));
+    gi.addEventListener("keydown",ev=>{if(ev.key==="Enter"){ev.preventDefault();setSelGot(set,g,gi.value);}});
+    row.querySelector(".thumb").addEventListener("click",()=>openLightbox(g.img||PLACE,g.dispName,colorLabel(g.color)+(g.id?" · #"+g.id:"")));
     box.appendChild(row);
   });
   renderPrintHead();
 }
 function renderPrintHead(){const set=curSet();const el=$("#printHead");if(!set){el.innerHTML="";return;}const bags=bagsOf(set).filter(b=>set.selected[b]);el.innerHTML="<h2>"+esc(set.name)+"</h2><div class='pmeta'>Bags: "+(bags.length?bags.map(b=>"#"+esc(b)).join(", "):"none")+" &middot; "+new Date().toLocaleDateString()+"</div>";}
 
-/* ---------- edit rows ---------- */
+function openLightbox(src,name,sub){$("#lightboxImg").src=src;$("#lightboxCap").innerHTML=esc(name)+"<small>"+esc(sub)+"</small>";$("#lightbox").classList.remove("hide");}
+function closeLightbox(){$("#lightbox").classList.add("hide");$("#lightboxImg").src="";}
+
 function renderEdit(){
   const set=curSet();const body=$("#editBody");body.innerHTML="";$("#setName").value=set?set.name:"";if(!set)return;
   set.entries.forEach((e,i)=>{
     const tr=document.createElement("tr");
     tr.innerHTML='<td><input class="w-bag" value="'+esc(e.bag)+'" data-f="bag"></td><td><input class="w-qty" type="number" min="0" value="'+(Number(e.qty)||0)+'" data-f="qty"></td><td><input value="'+esc(e.id||"")+'" data-f="id"></td><td><input class="w-qty" value="'+esc(e.color||"")+'" data-f="color"></td><td><button class="del" aria-label="Delete row">✕</button></td>';
-    $$("input",tr).forEach(inp=>inp.addEventListener("change",()=>{const f=inp.dataset.f;e[f]=f==="qty"?(Number(inp.value)||0):inp.value.trim();if(f==="id")e.img=blImg(e.id,e.color,"P");if(f==="color")e.img=blImg(e.id,e.color,"P");if(f==="bag"&&!(e.bag in set.selected))set.selected[e.bag]=true;save();renderBags();renderStats();renderList();}));
+    $$("input",tr).forEach(inp=>inp.addEventListener("change",()=>{const f=inp.dataset.f;e[f]=f==="qty"?(Number(inp.value)||0):inp.value.trim();if(f==="id"||f==="color")e.img=blImg(e.id,e.color,"P");if(f==="bag"&&!(e.bag in set.selected))set.selected[e.bag]=true;save();renderBags();renderStats();renderList();}));
     tr.querySelector(".del").addEventListener("click",()=>{set.entries.splice(i,1);save();renderEdit();renderBags();renderStats();renderList();});
     body.appendChild(tr);
   });
 }
 
-/* ---------- modal ---------- */
 function openModal(tab){$("#overlay").classList.remove("hide");if(tab)switchTab(tab);document.body.style.overflow="hidden";}
 function closeModal(){$("#overlay").classList.add("hide");document.body.style.overflow="";}
 function switchTab(name){$$(".tab").forEach(t=>t.classList.toggle("on",t.dataset.tab===name));$$(".tabpane").forEach(p=>p.classList.toggle("hide",p.dataset.pane!==name));if(name==="edit")renderEdit();if(name==="backup"){try{$("#backupText").value=JSON.stringify(DB,null,2);}catch(e){}}}
 
-/* ---------- range / theme ---------- */
-function applyRange(str){const set=curSet();if(!set)return;const bags=bagsOf(set);const want=new Set();String(str).split(/[,\s]+/).filter(Boolean).forEach(tok=>{const m=tok.match(/^(\d+)\s*-\s*(\d+)$/);if(m){for(let i=Math.min(+m[1],+m[2]);i<=Math.max(+m[1],+m[2]);i++)want.add(i);}else if(/^\d+$/.test(tok))want.add(+tok);});bags.forEach(b=>{set.selected[b]=want.has(bagKeyNum(b));});save();renderBags();renderStats();renderList();}
 function applyTheme(){const t=DB.theme;if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);else document.documentElement.removeAttribute("data-theme");}
 function toggleTheme(){const cur=document.documentElement.getAttribute("data-theme");const isDark=cur?cur==="dark":matchMedia("(prefers-color-scheme: dark)").matches;DB.theme=isDark?"light":"dark";applyTheme();save();}
+function applyImgSize(){document.documentElement.style.setProperty("--thumb",(DB.imgSize||64)+"px");}
 
-/* ---------- backup ---------- */
 function downloadText(filename,text){try{const blob=new Blob([text],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=filename;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(url);a.remove();},500);return true;}catch(e){return false;}}
-
-/* ---------- set management ---------- */
 function renameCurrent(){const s=curSet();if(!s)return;const n=prompt("Rename set:",s.name);if(n!=null){s.name=n.trim()||s.name;save();render();}}
 function deleteCurrent(){const s=curSet();if(!s)return;if(!confirm("Delete “"+s.name+"”? This can’t be undone."))return;delete DB.sets[s.id];DB.order=DB.order.filter(x=>x!==s.id);DB.current=DB.order[0]||null;save();render();}
 
-/* ---------- init ---------- */
 function init(){
   load();
-  if(!DB||!DB.sets)DB={sets:{},order:[],current:null,theme:"system",seeded:false};
+  if(!DB||!DB.sets)DB={sets:{},order:[],current:null,theme:"system",seeded:false,imgSize:64};
+  if(!DB.imgSize)DB.imgSize=64;
   DB.order=(DB.order||[]).filter(id=>DB.sets[id]);
-  // migrate away from the old fake sample
   DB.order.filter(id=>DB.sets[id]&&DB.sets[id].sample).forEach(id=>delete DB.sets[id]);
   DB.order=DB.order.filter(id=>DB.sets[id]);
-  // seed the real 76178 example once, on a fresh install
   if(!DB.order.length&&!DB.seeded){const e=seedEntries();if(e.length){const s=newSet("76178 Daily Bugle (bags 0–4)");s.entries=e;defaultSelect(s);}DB.seeded=true;}
   if(!DB.current||!DB.sets[DB.current])DB.current=DB.order[0]||null;
+  Object.values(DB.sets).forEach(s=>{if(s&&s.entries)migrateGrabbed(s);});
   const cs=curSet();if(cs)defaultSelect(cs);
-  applyTheme();save();render();loadParts();
+  applyTheme();applyImgSize();save();render();loadParts();
 
   $("#themeBtn").addEventListener("click",toggleTheme);
   $("#importBtn").addEventListener("click",()=>openModal("bsx"));
   $("#closeModal").addEventListener("click",closeModal);
   $("#overlay").addEventListener("click",e=>{if(e.target===$("#overlay"))closeModal();});
-  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#overlay").classList.contains("hide"))closeModal();});
+  $("#lightbox").addEventListener("click",closeLightbox);
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"){if(!$("#lightbox").classList.contains("hide"))closeLightbox();else if(!$("#overlay").classList.contains("hide"))closeModal();}});
   $("#printBtn").addEventListener("click",()=>window.print());
   $("#renameSetBtn").addEventListener("click",renameCurrent);
   $("#deleteSetBtn").addEventListener("click",deleteCurrent);
@@ -2632,15 +2589,14 @@ function init(){
   $$(".tab").forEach(t=>t.addEventListener("click",()=>switchTab(t.dataset.tab)));
 
   $$(".minibtn[data-all]").forEach(b=>b.addEventListener("click",()=>{const set=curSet();if(!set)return;bagsOf(set).forEach(bag=>set.selected[bag]=b.dataset.all==="1");save();renderBags();renderStats();renderList();}));
-  $("#invertBtn").addEventListener("click",()=>{const set=curSet();if(!set)return;bagsOf(set).forEach(bag=>set.selected[bag]=!set.selected[bag]);save();renderBags();renderStats();renderList();});
-  $("#rangeBtn").addEventListener("click",()=>applyRange($("#rangeInp").value));
-  $("#rangeInp").addEventListener("keydown",e=>{if(e.key==="Enter")applyRange(e.target.value);});
   $("#searchInp").addEventListener("input",e=>{const s=curSet();if(s){s.search=e.target.value;save();renderList();}});
   $("#sortSel").addEventListener("change",e=>{const s=curSet();if(s){s.sort=e.target.value;save();renderList();}});
+  $("#catFilter").addEventListener("change",e=>{const s=curSet();if(s){s.fCat=e.target.value;save();renderList();}});
+  $("#colorFilter").addEventListener("change",e=>{const s=curSet();if(s){s.fColor=e.target.value;save();renderList();}});
+  $("#imgSizeSel").addEventListener("change",e=>{DB.imgSize=parseInt(e.target.value,10)||64;applyImgSize();save();});
   $("#hideGrab").addEventListener("change",e=>{const s=curSet();if(s){s.hideGrab=e.target.checked;save();renderList();}});
-  $("#resetGrab").addEventListener("click",()=>{const s=curSet();if(s){s.grabbed={};save();renderStats();renderList();}});
+  $("#resetGrab").addEventListener("click",()=>{const s=curSet();if(!s)return;const n=Object.keys(s.grabbed||{}).length;if(!n)return alert("Nothing is marked yet.");if(!confirm("Clear grabbed progress for all "+n+" parts in this set?"))return;s.grabbed={};save();renderStats();renderList();});
 
-  // BSX
   let staged=[];
   function afterImport(){const s=curSet();if(s){s.sort="cat";save();}$("#sortSel").value="cat";render();}
   $("#bsxFiles").addEventListener("change",async e=>{
@@ -2656,19 +2612,18 @@ function init(){
   $("#bsxPasteBtn").addEventListener("click",()=>{try{const items=parseBsx($("#bsxPasteText").value);if(!items.length)return alert("No parts found in that text.");const bag=$("#bsxPasteBag").value.trim()||"1";commit(bsxToEntries(items,bag),false);afterImport();$("#bsxPasteText").value="";alert("Added bag "+bag+" ("+items.length+" parts).");}catch(x){alert("Couldn’t read that as BSX: "+x.message);}});
   $("#bsxDemoBtn").addEventListener("click",()=>{const e=seedEntries();if(!e.length)return alert("No example data embedded.");commitNew(e,"76178 Daily Bugle (bags 0–4)");afterImport();closeModal();});
 
-  // edit / sets
   $("#setName").addEventListener("change",e=>{const s=curSet();if(s){s.name=e.target.value.trim()||"Untitled set";save();renderSetSel();}});
   $("#newSetBtn").addEventListener("click",()=>{newSet("New set");save();render();renderEdit();$("#setName").focus();$("#setName").select();});
   $("#delSetBtn").addEventListener("click",()=>{deleteCurrent();renderEdit();});
   $("#addRowBtn").addEventListener("click",()=>{let s=curSet();if(!s)s=newSet("New set");const bags=bagsOf(s);const bag=bags[bags.length-1]||"1";s.entries.push({bag,qty:1,name:"",color:"",id:"",img:""});if(!(bag in s.selected))s.selected[bag]=true;save();renderEdit();renderBags();renderStats();});
 
-  // backup
-  $("#backupDownload").addEventListener("click",()=>{const ok=downloadText("brick-bag-merge-backup.json",JSON.stringify(DB));if(!ok){switchTab("backup");$("#backupText").value=JSON.stringify(DB,null,2);alert("Download blocked here — copy the text backup instead (opened below).");}});
-  $("#backupFile").addEventListener("change",async e=>{const f=(e.target.files||[])[0];if(!f)return;try{const d=JSON.parse(await readFileText(f));if(!d.sets||!d.order)throw new Error("not a backup");if(!confirm("Replace everything with this backup file?"))return;DB=d;save();applyTheme();render();alert("Restored.");closeModal();}catch(x){alert("Couldn’t read that backup: "+x.message);}e.target.value="";});
+  $("#backupDownload").addEventListener("click",()=>{const ok=downloadText("brick-bag-merge-backup.json",JSON.stringify(DB));if(!ok){switchTab("backup");$("#backupText").value=JSON.stringify(DB,null,2);alert("Download blocked here — copy the text backup instead.");}});
+  $("#backupFile").addEventListener("change",async e=>{const f=(e.target.files||[])[0];if(!f)return;try{const d=JSON.parse(await readFileText(f));if(!d.sets||!d.order)throw new Error("not a backup");if(!confirm("Replace everything with this backup file?"))return;DB=d;if(!DB.imgSize)DB.imgSize=64;save();applyTheme();applyImgSize();render();alert("Restored.");closeModal();}catch(x){alert("Couldn’t read that backup: "+x.message);}e.target.value="";});
   $("#backupCopy").addEventListener("click",()=>{const t=$("#backupText");t.focus();t.select();try{document.execCommand("copy");}catch(e){}try{navigator.clipboard&&navigator.clipboard.writeText(t.value);}catch(e){}});
-  $("#backupRestore").addEventListener("click",()=>{try{const d=JSON.parse($("#backupText").value);if(!d.sets||!d.order)throw new Error("not a backup");if(!confirm("Replace everything with this backup?"))return;DB=d;save();applyTheme();render();alert("Restored.");closeModal();}catch(x){alert("Couldn’t restore: "+x.message);}});
+  $("#backupRestore").addEventListener("click",()=>{try{const d=JSON.parse($("#backupText").value);if(!d.sets||!d.order)throw new Error("not a backup");if(!confirm("Replace everything with this backup?"))return;DB=d;if(!DB.imgSize)DB.imgSize=64;save();applyTheme();applyImgSize();render();alert("Restored.");closeModal();}catch(x){alert("Couldn’t restore: "+x.message);}});
 
   const s0=curSet();if(s0){$("#sortSel").value=s0.sort||"cat";$("#searchInp").value=s0.search||"";$("#hideGrab").checked=!!s0.hideGrab;}
+  $("#imgSizeSel").value=String(DB.imgSize||64);
 }
 document.addEventListener("DOMContentLoaded",init);
 })();
