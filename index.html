@@ -2562,7 +2562,7 @@ function renderList(){
   const showCats=(set.sort||"cat")==="cat";let lastCat=null;
   agg.forEach(g=>{
     if(showCats&&g.catLabel!==lastCat){lastCat=g.catLabel;const c=document.createElement("div");c.className="catrow";c.textContent=g.catLabel;box.appendChild(c);}
-    const selNeed=g.total,grand=g.grand,got=gotOf(set,g),remaining=grand-got,done=got>=grand;
+    const selNeed=g.total,grand=g.grand,got=gotOf(set,g),remaining=grand-got,remLater=grand-Math.max(got,selNeed),done=got>=grand;
     const state=done?"done":"none";
     const otherTotal=grand-selNeed;const otherBags=sortBags(Object.keys(g.allByBag).filter(b=>!set.selected[b]));
     const canU=canUndo(set,g),undoAmt=canU?got-set.grabPrev[g.key]:0;
@@ -2572,7 +2572,7 @@ function renderList(){
     if(g.id)meta.push('<a class="lnk" href="'+baLink(g.id)+'" target="_blank" rel="noopener">Brick Architect ↗</a>');
     if(g.id)meta.push('<a class="lnk" href="'+bsLink(g.id)+'" target="_blank" rel="noopener">Brickset ↗</a>');
     const bagLine=sortBags(Object.keys(g.byBag)).map(b=>"bag "+esc(b)+": "+g.byBag[b]).join(", ");
-    const progCls=done?"done":(remaining>0&&remaining<10?"low":"");
+    const progCls=done?"done":(((remaining>0&&remaining<=10)||(remLater>0&&remLater<=10))?"low":"");
     let prog='<span>'+got+'/'+grand+' grabbed</span>';
     if(otherTotal>0)prog+=' <span class="other">&middot; '+otherTotal+' more in bag'+(otherBags.length>1?"s":"")+' '+otherBags.join(", ")+'</span>';
     row.innerHTML=
