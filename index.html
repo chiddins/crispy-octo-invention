@@ -169,6 +169,8 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
 .gtext:hover{background:var(--surface-2)}
 .gcta{border:1px solid var(--accent-line);background:var(--accent);color:var(--accent-ink);border-radius:9px;height:34px;padding:0 14px;font-weight:700;font-size:13px;white-space:nowrap}
 .gcta:hover{filter:brightness(1.04)}
+.gclear{color:var(--muted)}
+.gclear:hover{background:var(--danger-soft);color:var(--danger)}
 .empty{padding:40px 22px;text-align:center;color:var(--muted)}
 .empty h3{font-size:16px;color:var(--ink);margin-bottom:6px}.empty .btn{margin-top:12px}
 
@@ -2573,18 +2575,19 @@ function renderList(){
           '<div class="bagline">'+bagLine+'</div>'+
           '<div class="prog '+progCls+'">'+prog+'</div>'+
         '</div>'+
-        '<div class="grab"><div class="gstep"><button class="gminus" aria-label="one fewer">−</button><input class="ginput" type="number" inputmode="numeric" min="0" max="'+grand+'" value="'+selNeed+'" aria-label="quantity to record"><button class="gplus" aria-label="one more">+</button></div><button class="gtext gall">Grab all</button><button class="gcta gqty">Grab '+selNeed+'</button></div>'+
+        '<div class="grab"><button class="gtext gall">Grab all ('+grand+'/'+grand+')</button><div class="gstep"><button class="gminus" aria-label="one fewer">−</button><input class="ginput" type="number" inputmode="numeric" min="0" max="'+grand+'" value="'+selNeed+'" aria-label="quantity to record"><button class="gplus" aria-label="one more">+</button></div><button class="gtext gclear">Clear '+selNeed+'</button><button class="gcta gqty">Grab '+selNeed+'/'+grand+'</button></div>'+
       '</div></div>';
     const grab=row.querySelector(".grab");
     const gi=grab.querySelector(".ginput");
-    const gqtyBtn=grab.querySelector(".gqty");
+    const gqtyBtn=grab.querySelector(".gqty"),gclearBtn=grab.querySelector(".gclear");
     const fieldVal=()=>{let v=parseInt(gi.value,10);if(!isFinite(v)||v<0)v=0;if(v>grand)v=grand;return v;};
-    const updLabels=()=>{gqtyBtn.textContent="Grab "+fieldVal();};
+    const updLabels=()=>{const v=fieldVal();gqtyBtn.textContent="Grab "+v+"/"+grand;gclearBtn.textContent="Clear "+v;};
     grab.querySelector(".gminus").addEventListener("click",()=>{gi.value=Math.max(0,fieldVal()-1);updLabels();});
     grab.querySelector(".gplus").addEventListener("click",()=>{gi.value=Math.min(grand,fieldVal()+1);updLabels();});
     gi.addEventListener("input",updLabels);
     gi.addEventListener("keydown",ev=>{if(ev.key==="Enter"){ev.preventDefault();setGot(set,g,got+fieldVal());}});
     gqtyBtn.addEventListener("click",()=>setGot(set,g,got+fieldVal()));
+    gclearBtn.addEventListener("click",()=>setGot(set,g,got-fieldVal()));
     grab.querySelector(".gall").addEventListener("click",()=>setGot(set,g,grand));
     row.querySelector(".thumb").addEventListener("click",()=>openLightbox(g.img||PLACE,g.dispName,colorLabel(g.color)+(g.id?" · #"+g.id:"")));
     box.appendChild(row);
