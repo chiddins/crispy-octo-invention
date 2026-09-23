@@ -145,8 +145,10 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
 .catrow:first-child{border-top:0}
 .row{display:flex;align-items:flex-start;gap:12px;padding:11px 15px;border-top:1px solid var(--line)}
 .row:first-child{border-top:0}
-.row.grabbed{opacity:.6}
-.row.grabbed .pname{text-decoration:line-through;text-decoration-color:var(--muted)}
+.row.grabbed .gstep{opacity:.45;pointer-events:none}
+.row.grabbed .gcta{background:var(--grab-bright);border-color:var(--grab-bright);color:var(--grab-bright-ink)}
+.row.grabbed .greset{color:var(--danger)}
+@media (hover:hover){.row.grabbed .greset{opacity:0;pointer-events:none;transition:opacity .12s}.row.grabbed:hover .greset{opacity:1;pointer-events:auto}}
 .thumb{flex:none;width:var(--thumb);height:var(--thumb);border-radius:8px;background:#fff;border:1px solid var(--line);object-fit:contain;padding:3px;cursor:zoom-in}
 .rbody{flex:1;min-width:0}
 .rtop{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 14px}
@@ -164,9 +166,9 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
 .prog.done{color:var(--grab-bright)}
 .prog .other{color:var(--faint);font-weight:600}
 .lowinfo{display:inline-flex;align-items:center;vertical-align:-2px;margin-right:4px;color:var(--warn)}
+.doneinfo{display:inline-flex;align-items:center;vertical-align:-2px;margin-right:4px;color:var(--grab-bright)}
 .progrow{display:flex;align-items:center;gap:6px 10px;flex-wrap:wrap;margin-top:4px}
 .progrow .prog{margin-top:0}
-.progrow .gall{margin-left:auto}
 .grab{display:flex;align-items:center;flex-wrap:wrap;justify-content:flex-end;gap:6px;flex:0 1 auto;min-width:0}
 .gstep{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:9px;background:var(--surface);overflow:hidden}
 .gstep button{width:30px;height:34px;border:0;background:transparent;font-size:18px;font-weight:700;color:var(--muted);display:grid;place-items:center}
@@ -180,7 +182,7 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
 .greset{color:var(--muted)}
 .greset:hover:not(:disabled){background:var(--danger-soft);color:var(--danger)}
 .greset:disabled{color:var(--faint);opacity:.55;cursor:default}
-.gall{color:var(--muted)}
+.gall{color:var(--muted);border-color:currentColor}
 .gall.low{color:var(--warn)}
 .gall.done{color:var(--grab-bright)}
 .empty{padding:40px 22px;text-align:center;color:var(--muted)}
@@ -2463,6 +2465,7 @@ function migrateGrabbed(set){if(!set.grabbed)return;const all={};for(const e of 
 
 const PLACE="data:image/svg+xml;utf8,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><rect x="6" y="16" width="36" height="24" rx="3" fill="#c9ccd2"/><rect x="12" y="10" width="8" height="8" rx="4" fill="#b4b8bf"/><rect x="28" y="10" width="8" height="8" rx="4" fill="#b4b8bf"/></svg>');
 const LOWINFO='<span class="lowinfo" role="img" aria-label="You’re almost done — just a few of these left to grab" title="You’re almost done — just a few of these left to grab"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16"/><line x1="12" y1="7.6" x2="12.01" y2="7.6"/></svg></span>';
+const DONEINFO='<span class="doneinfo" role="img" aria-label="Fully grabbed" title="Fully grabbed"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.4 12.4l2.4 2.4 4.8-5.2"/></svg></span>';
 
 function parseBsx(xml){
   const doc=new DOMParser().parseFromString(String(xml||"").trim(),"application/xml");
@@ -2580,7 +2583,7 @@ function renderList(){
     if(g.id)meta.push('<a class="lnk" href="'+bsLink(g.id)+'" target="_blank" rel="noopener">Brickset ↗</a>');
     const bagLine=sortBags(Object.keys(g.byBag)).map(b=>"bag "+esc(b)+": "+g.byBag[b]).join(", ");
     const progCls=done?"done":(((remaining>0&&remaining<=lowT)||(remLater>0&&remLater<=lowT))?"low":"");
-    let prog=(progCls==="low"?LOWINFO:"")+'<span>'+got+'/'+grand+' total</span>';
+    let prog=(progCls==="done"?DONEINFO:progCls==="low"?LOWINFO:"")+'<span>'+got+'/'+grand+' total</span>';
     if(otherTotal>0)prog+=' <span class="other">&middot; '+otherTotal+' more in bag'+(otherBags.length>1?"s":"")+' '+otherBags.join(", ")+'</span>';
     row.innerHTML=
       '<img class="thumb" loading="lazy" alt="" src="'+esc(g.img||PLACE)+'" onerror="this.onerror=null;this.src=\''+PLACE+'\'">'+
