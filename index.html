@@ -198,6 +198,7 @@ textarea{width:100%;background:var(--surface-2);border:1px solid var(--line);bor
 .setbar{display:flex;flex-wrap:wrap;gap:8px;align-items:end;margin-bottom:14px}
 .setbar .field{margin:0;flex:1;min-width:150px}
 .hide{display:none!important}
+.vh{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px;font-size:12px}
 
 .lightbox{position:fixed;inset:0;z-index:80;background:rgba(8,10,14,.82);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;cursor:zoom-out}
@@ -285,7 +286,7 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
     <div class="tabs" id="tabs"><button class="tab on" data-tab="bsx">.BSX</button><button class="tab" data-tab="edit">Edit rows</button><button class="tab" data-tab="backup">Backup</button></div>
     <div class="tabpane" data-pane="bsx">
       <p class="hint">In <b>BrickStore</b>, export each bag as a <b>.bsx</b> file (one per bag). Pick them all here — the app reads the real parts, colours and quantities. Filenames like <code>…bag-3.bsx</code> set the bag number automatically.</p>
-      <div class="field"><label for="bsxFiles">Choose your .bsx bag files (pick several at once)</label><input type="file" id="bsxFiles" accept=".bsx,.xml,text/xml" multiple></div>
+      <div class="field"><label>Choose your .bsx bag files (pick several at once)</label><button class="btn primary" id="bsxChoose" type="button" style="align-self:flex-start">📁 Choose .bsx files</button><input type="file" id="bsxFiles" multiple class="vh"></div>
       <div class="mactions" style="justify-content:flex-start;margin-top:-4px;margin-bottom:4px"><button class="btn" id="bsxDemoBtn">📦 Load example: 76178 (bags 0–4)</button></div>
       <div class="field"><label for="bsxSetName">Set name</label><input type="text" id="bsxSetName" placeholder="e.g. 76178 Daily Bugle"></div>
       <div class="previewbox" id="bsxPreview" hidden></div>
@@ -2662,6 +2663,7 @@ function init(){
     if(!$("#bsxSetName").value){const m=files[0].name.match(/^(.*?)[-_ ]*bag/i);$("#bsxSetName").value=((m&&m[1])?m[1]:files[0].name.replace(/\.(bsx|xml)$/i,"")).replace(/[-_]+/g," ").trim();}
     const box=$("#bsxPreview");box.hidden=false;box.innerHTML=staged.length?("Read <b>"+ok+"</b> file(s): <b>"+staged.length+"</b> part lines across bags <b>"+sortBags([...bags]).join(", ")+"</b>"+(err?(" — "+err+" skipped"):"")+". Tap <b>Import as new set</b>."):"Couldn’t read any parts — are these BrickStore .bsx files?";
   });
+  $("#bsxChoose").addEventListener("click",()=>{const f=$("#bsxFiles");if(f)f.click();});
   $("#bsxNewBtn").addEventListener("click",()=>{if(!staged.length)return alert("Choose your .bsx files first (or use the paste box).");commitNew(staged.slice(),$("#bsxSetName").value.trim()||"Imported set");afterImport();closeModal();});
   $("#bsxAddBtn").addEventListener("click",()=>{if(!staged.length)return alert("Choose your .bsx files first (or use the paste box).");commit(staged.slice(),false,$("#bsxSetName").value.trim());afterImport();closeModal();});
   $("#bsxPasteBtn").addEventListener("click",()=>{try{const items=parseBsx($("#bsxPasteText").value);if(!items.length)return alert("No parts found in that text.");const bag=$("#bsxPasteBag").value.trim()||"1";commit(bsxToEntries(items,bag),false);afterImport();$("#bsxPasteText").value="";alert("Added bag "+bag+" ("+items.length+" parts).");}catch(x){alert("Couldn’t read that as BSX: "+x.message);}});
