@@ -122,7 +122,7 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
 .toggle .cbx:checked+.cbox{background:var(--accent);border-color:var(--accent-line)}
 .toggle .cbx:checked+.cbox svg{opacity:1}
 .toggle:has(.cbx:checked){background:var(--accent-soft);border-color:var(--accent-line)}
-.numctl{display:inline-flex;align-items:center;gap:7px;height:var(--ctl);border:1px solid var(--line);border-radius:9px;background:var(--surface);box-shadow:var(--shadow);padding:0 8px 0 12px;font-weight:600;font-size:13px;color:var(--muted);white-space:nowrap}
+.numctl{display:inline-flex;align-items:center;gap:7px;height:var(--ctl);border:1px solid var(--line);border-radius:9px;background:var(--surface);box-shadow:var(--shadow);padding:0 12px;font-weight:600;font-size:13px;color:var(--muted);white-space:nowrap}
 .numctl:hover{border-color:var(--faint)}
 .numctl input{width:52px;height:28px;border:1px solid var(--line);border-radius:7px;background:var(--surface-2);color:var(--ink);text-align:center;font-weight:700;font-variant-numeric:tabular-nums;-moz-appearance:textfield}
 .numctl input::-webkit-outer-spin-button,.numctl input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
@@ -280,7 +280,7 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
           <div class="ms" id="catFilter"></div>
           <div class="ms" id="colorFilter"></div>
           <select class="ctl" id="imgSizeSel" aria-label="Image size"><option value="44">Image size: S</option><option value="64">Image size: M</option><option value="104">Image size: L</option><option value="152">Image size: XL</option></select>
-          <label class="numctl" title="Show a part in yellow when this many or fewer pieces are left to grab after grabbing what's in your selected bags">Yellow ≤ <input type="number" id="lowThresh" min="0" max="9999" inputmode="numeric" aria-label="Yellow highlight threshold"></label>
+          <label class="numctl" title="Highlights a part when this many or fewer pieces are still to grab — counting what's left in the bags you've selected.">Remaining parts threshold <input type="number" id="lowThresh" min="0" max="9999" inputmode="numeric" aria-label="Remaining parts threshold"></label>
           <label class="toggle"><input type="checkbox" class="cbx" id="hideGrab"><span class="cbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg></span> Hide grabbed</label>
           <label class="toggle"><input type="checkbox" class="cbx" id="grabbedOnly"><span class="cbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg></span> Grabbed</label>
           <button class="btn danger-h" id="resetGrab">Reset</button>
