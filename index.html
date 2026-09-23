@@ -198,6 +198,11 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
 .greset:disabled{color:var(--faint);opacity:.55;cursor:default}
 .gall{color:var(--ink);border-color:var(--line);background:var(--surface)}
 .gall:hover{border-color:var(--faint)}
+.genter{color:var(--ink);border-color:var(--line);background:var(--surface)}
+.genter:hover{border-color:var(--faint)}
+.amtrow{display:flex;gap:8px}
+.amtrow input{flex:1;height:var(--ctl);border:1px solid var(--line);border-radius:9px;background:var(--surface-2);color:var(--ink);padding:0 11px;font-weight:700;font-variant-numeric:tabular-nums}
+.amtrow .btn{flex:none}
 .gall.low,.gall.done{background:transparent;border-color:currentColor}
 .gall.low{color:var(--warn)}
 .gall.done{color:var(--grab-bright)}
@@ -263,7 +268,7 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
       <div style="min-width:0"><h1>Brick Bag Merge</h1><div class="tag">Pick bags &middot; sum the parts &middot; one pick&#8209;list</div></div>
     </div>
     <div class="hspace"></div>
-    <div class="modelwrap"><button class="iconbtn" id="grabModeBtn" title="Grab model (testing)" aria-label="Grab model"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg></button><div class="modelmenu hide" id="modelMenu"><div class="mm-title">Grab model · testing</div><button class="mm-opt" data-model="add">Add (staging + Grab N)</button><button class="mm-opt" data-model="set">Set total (tap to save)</button><button class="mm-opt" data-model="live">Live (edit total directly)</button></div></div>
+    <div class="modelwrap"><button class="iconbtn" id="grabModeBtn" title="Grab model (testing)" aria-label="Grab model"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg></button><div class="modelmenu hide" id="modelMenu"><div class="mm-title">Grab model · testing</div><button class="mm-opt" data-model="add">Add (staging + Grab N)</button><button class="mm-opt" data-model="set">Set total (tap to save)</button><button class="mm-opt" data-model="live">Live (edit total directly)</button><button class="mm-opt" data-model="dialog">Dialog (enter amount)</button></div></div>
     <button class="iconbtn" id="themeBtn" title="Toggle light / dark" aria-label="Toggle theme"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg></button>
   </div>
 </header>
@@ -2607,36 +2612,43 @@ function renderList(){
     else if(model==="set")cta='<button class="gcta gqty">Set '+got+'/'+grand+'</button>';
     else if(model==="live")cta='<button class="gcta gqty">Grab all</button>';
     else cta='<button class="gcta gqty">Grab '+selNeed+'/'+grand+'</button>';
+    const stepperHTML='<div class="gstep"><button class="gminus" aria-label="one fewer">−</button><input class="ginput" type="number" inputmode="numeric" min="0" max="'+grand+'" value="'+(model==="add"?selNeed:got)+'" aria-label="quantity to record"><button class="gplus" aria-label="one more">+</button></div>';
+    const grabbtnsHTML=model==="dialog"?('<button class="gtext genter">Enter amount</button>'+(done?'':'<button class="gtext gall '+progCls+'">Grab all ('+grand+'/'+grand+')</button>')+cta):(stepperHTML+cta);
     row.innerHTML=
       '<img class="thumb" loading="lazy" alt="" src="'+esc(g.img||PLACE)+'" onerror="this.onerror=null;this.src=\''+PLACE+'\'">'+
       '<div class="rbody"><div class="rtop">'+
         '<div class="pinfo"><div class="pname"><span class="qty">'+selNeed+'×</span>'+esc(g.dispName)+'</div>'+
           '<div class="pmeta"><span class="cattag">'+esc(g.catLabel)+'</span>'+meta.join('<span class="sep">·</span>')+'</div>'+
           '<div class="bagline">'+bagLine+'</div>'+
-          '<div class="progrow"><div class="prog '+progCls+'">'+prog+'</div>'+(model==="live"?'':'<button class="gtext gall '+progCls+'">Grab all ('+grand+'/'+grand+')</button>')+'</div>'+
+          '<div class="progrow"><div class="prog '+progCls+'">'+prog+'</div>'+((model==="live"||model==="dialog")?'':'<button class="gtext gall '+progCls+'">Grab all ('+grand+'/'+grand+')</button>')+'</div>'+
         '</div>'+
-        '<div class="grab"><button class="gtext greset"'+(got>0?'':' disabled')+'>Reset</button><div class="grabbtns"><div class="gstep"><button class="gminus" aria-label="one fewer">−</button><input class="ginput" type="number" inputmode="numeric" min="0" max="'+grand+'" value="'+(model==="add"?selNeed:got)+'" aria-label="quantity to record"><button class="gplus" aria-label="one more">+</button></div>'+cta+'</div></div>'+
+        '<div class="grab"><button class="gtext greset"'+(got>0?'':' disabled')+'>Reset</button><div class="grabbtns">'+grabbtnsHTML+'</div></div>'+
       '</div></div>';
     const grab=row.querySelector(".grab");
     if(!done){
-      const gi=grab.querySelector(".ginput");
-      const gqtyBtn=grab.querySelector(".gqty");
-      const fieldVal=()=>{let v=parseInt(gi.value,10);if(!isFinite(v)||v<0)v=0;if(v>grand)v=grand;return v;};
-      if(model==="live"){
-        grab.querySelector(".gminus").addEventListener("click",()=>setGot(set,g,got-1));
-        grab.querySelector(".gplus").addEventListener("click",()=>setGot(set,g,got+1));
-        gi.addEventListener("change",()=>setGot(set,g,fieldVal()));
-        gqtyBtn.addEventListener("click",()=>setGot(set,g,grand));
+      if(model==="dialog"){
+        grab.querySelector(".gqty").addEventListener("click",()=>grabAction(set,g,got+selNeed));
       }else{
-        const commit=()=>model==="set"?setGot(set,g,fieldVal()):grabAction(set,g,got+fieldVal());
-        const updLabels=()=>{gqtyBtn.textContent=(model==="set"?"Set ":"Grab ")+fieldVal()+"/"+grand;};
-        grab.querySelector(".gminus").addEventListener("click",()=>{gi.value=Math.max(0,fieldVal()-1);updLabels();});
-        grab.querySelector(".gplus").addEventListener("click",()=>{gi.value=Math.min(grand,fieldVal()+1);updLabels();});
-        gi.addEventListener("input",updLabels);
-        gi.addEventListener("keydown",ev=>{if(ev.key==="Enter"){ev.preventDefault();commit();}});
-        gqtyBtn.addEventListener("click",commit);
+        const gi=grab.querySelector(".ginput");
+        const gqtyBtn=grab.querySelector(".gqty");
+        const fieldVal=()=>{let v=parseInt(gi.value,10);if(!isFinite(v)||v<0)v=0;if(v>grand)v=grand;return v;};
+        if(model==="live"){
+          grab.querySelector(".gminus").addEventListener("click",()=>setGot(set,g,got-1));
+          grab.querySelector(".gplus").addEventListener("click",()=>setGot(set,g,got+1));
+          gi.addEventListener("change",()=>setGot(set,g,fieldVal()));
+          gqtyBtn.addEventListener("click",()=>setGot(set,g,grand));
+        }else{
+          const commit=()=>model==="set"?setGot(set,g,fieldVal()):grabAction(set,g,got+fieldVal());
+          const updLabels=()=>{gqtyBtn.textContent=(model==="set"?"Set ":"Grab ")+fieldVal()+"/"+grand;};
+          grab.querySelector(".gminus").addEventListener("click",()=>{gi.value=Math.max(0,fieldVal()-1);updLabels();});
+          grab.querySelector(".gplus").addEventListener("click",()=>{gi.value=Math.min(grand,fieldVal()+1);updLabels();});
+          gi.addEventListener("input",updLabels);
+          gi.addEventListener("keydown",ev=>{if(ev.key==="Enter"){ev.preventDefault();commit();}});
+          gqtyBtn.addEventListener("click",commit);
+        }
       }
     }
+    const enterBtn=row.querySelector(".genter");if(enterBtn)enterBtn.addEventListener("click",()=>openAmountDialog(set,g));
     grab.querySelector(".greset").addEventListener("click",()=>setGot(set,g,0));
     const gallBtn=row.querySelector(".gall");if(gallBtn)gallBtn.addEventListener("click",()=>grabAction(set,g,grand));
     row.querySelector(".thumb").addEventListener("click",()=>openLightbox(g.img||PLACE,g.dispName,colorLabel(g.color)+(g.id?" · #"+g.id:"")));
@@ -2646,6 +2658,30 @@ function renderList(){
 }
 function renderPrintHead(){const set=curSet();const el=$("#printHead");if(!set){el.innerHTML="";return;}const bags=bagsOf(set).filter(b=>set.selected[b]);el.innerHTML="<h2>"+esc(set.name)+"</h2><div class='pmeta'>Bags: "+(bags.length?bags.map(b=>"#"+esc(b)).join(", "):"none")+" &middot; "+new Date().toLocaleDateString()+"</div>";}
 
+function openAmountDialog(set,g){
+  const got=gotOf(set,g),grand=g.grand;
+  const ov=document.createElement("div");ov.className="overlay";
+  const close=()=>{ov.remove();document.removeEventListener("keydown",onKey);};
+  const onKey=e=>{if(e.key==="Escape"){e.preventDefault();close();}};
+  const numVal=id=>{let v=parseInt(ov.querySelector(id).value,10);if(!isFinite(v)||v<0)v=0;if(v>grand)v=grand;return v;};
+  ov.innerHTML='<div class="modal" style="max-width:420px">'+
+    '<div class="mhead"><h2>'+esc(g.dispName)+'</h2><button class="iconbtn" data-a="cancel" aria-label="Close"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>'+
+    '<div class="tabpane"><p class="hint"><b>'+got+' of '+grand+'</b> grabbed so far.</p>'+
+      '<div class="field"><label for="amtGrab">Grab some now (e.g. only found a few)</label><div class="amtrow"><input type="number" id="amtGrab" min="1" max="'+grand+'" inputmode="numeric" placeholder="how many"><button class="btn primary" data-a="grab">Grab</button></div></div>'+
+      '<div class="field"><label for="amtSet">Or set your total on hand</label><div class="amtrow"><input type="number" id="amtSet" min="0" max="'+grand+'" inputmode="numeric" value="'+got+'"><button class="btn" data-a="set">Set total</button></div></div>'+
+    '</div></div>';
+  ov.addEventListener("click",e=>{
+    if(e.target===ov)return close();
+    const a=e.target.closest("[data-a]");if(!a)return;
+    const act=a.getAttribute("data-a");
+    if(act==="grab")grabAction(set,g,got+numVal("#amtGrab"));
+    else if(act==="set")setGot(set,g,numVal("#amtSet"));
+    close();
+  });
+  document.addEventListener("keydown",onKey);
+  document.body.appendChild(ov);
+  const f=ov.querySelector("#amtGrab");if(f)f.focus();
+}
 function openLightbox(src,name,sub){$("#lightboxImg").src=src;$("#lightboxCap").innerHTML=esc(name)+"<small>"+esc(sub)+"</small>";$("#lightbox").classList.remove("hide");}
 function closeLightbox(){$("#lightbox").classList.add("hide");$("#lightboxImg").src="";}
 
