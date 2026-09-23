@@ -139,14 +139,15 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
 .parts{display:flex;flex-direction:column}
 .catrow{padding:14px 15px 6px;font-family:var(--font-head);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);border-top:1px solid var(--line)}
 .catrow:first-child{border-top:0}
-.row{display:grid;gap:8px 12px;align-items:center;padding:11px 15px;border-top:1px solid var(--line);grid-template-columns:var(--thumb) 54px 1fr auto;grid-template-areas:"thumb qty info ctrl"}
+.row{display:flex;align-items:flex-start;gap:12px;padding:11px 15px;border-top:1px solid var(--line)}
 .row:first-child{border-top:0}
 .row.grabbed{opacity:.6}
 .row.grabbed .pname{text-decoration:line-through;text-decoration-color:var(--muted)}
-.r-thumb{grid-area:thumb}.r-qty{grid-area:qty}.r-info{grid-area:info;min-width:0}.r-ctrl{grid-area:ctrl;justify-self:end}
-.thumb{width:var(--thumb);height:var(--thumb);border-radius:8px;background:#fff;border:1px solid var(--line);object-fit:contain;padding:3px;cursor:zoom-in}
-.qty{font-family:var(--font-head);font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;text-align:right;letter-spacing:-.02em}
-.qty small{font-size:12px;font-weight:700;color:var(--muted)}
+.thumb{flex:none;width:var(--thumb);height:var(--thumb);border-radius:8px;background:#fff;border:1px solid var(--line);object-fit:contain;padding:3px;cursor:zoom-in}
+.rbody{flex:1;min-width:0}
+.rtop{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 14px}
+.pinfo{flex:1 1 210px;min-width:0}
+.qty{font-family:var(--font-head);font-size:15px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.02em;margin-right:6px}
 .pname{font-weight:600;word-break:break-word}
 .pmeta{margin-top:3px;font-size:12px;color:var(--muted);line-height:1.7}
 .pmeta .sep{color:var(--faint);margin:0 7px}
@@ -158,22 +159,16 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
 .prog.low{color:var(--warn)}
 .prog.done{color:var(--grab-bright)}
 .prog .other{color:var(--faint);font-weight:600}
-.grab{display:inline-flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:6px}
-.gstep{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:9px;background:var(--surface);overflow:hidden;box-shadow:var(--shadow)}
+.grab{display:inline-flex;align-items:center;flex-wrap:wrap;gap:6px;flex:none}
+.gstep{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:9px;background:var(--surface);overflow:hidden}
 .gstep button{width:30px;height:34px;border:0;background:transparent;font-size:18px;font-weight:700;color:var(--muted);display:grid;place-items:center}
 .gstep button:hover{background:var(--surface-2);color:var(--ink)}
 .ginput{width:46px;height:34px;border:0;border-left:1px solid var(--line);border-right:1px solid var(--line);text-align:center;font-weight:700;font-variant-numeric:tabular-nums;background:var(--surface);color:var(--ink);-moz-appearance:textfield;border-radius:0}
 .ginput::-webkit-outer-spin-button,.ginput::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .gtext{border:1px solid transparent;background:transparent;color:var(--accent-text);border-radius:9px;height:34px;padding:0 10px;font-weight:700;font-size:13px;white-space:nowrap}
 .gtext:hover{background:var(--surface-2)}
-.gcta{border:1px solid var(--accent-line);background:var(--accent);color:var(--accent-ink);border-radius:9px;height:34px;padding:0 14px;font-weight:700;font-size:13px;white-space:nowrap;box-shadow:var(--shadow)}
+.gcta{border:1px solid var(--accent-line);background:var(--accent);color:var(--accent-ink);border-radius:9px;height:34px;padding:0 14px;font-weight:700;font-size:13px;white-space:nowrap}
 .gcta:hover{filter:brightness(1.04)}
-.gclear{color:var(--muted)}
-.gclear:hover{background:var(--danger-soft);color:var(--danger)}
-@media (max-width:560px){
-  .row{grid-template-columns:var(--thumb) 1fr;grid-template-areas:"thumb info" "qty ctrl"}
-  .r-qty{justify-self:start}.qty{font-size:18px}
-}
 .empty{padding:40px 22px;text-align:center;color:var(--muted)}
 .empty h3{font-size:16px;color:var(--ink);margin-bottom:6px}.empty .btn{margin-top:12px}
 
@@ -219,10 +214,10 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
   .wrap{max-width:none;padding:0}.grid{display:block;padding:0}
   .panel{border:0;box-shadow:none}.panel .phead{display:none}
   #printHead{display:block;margin-bottom:10px}#printHead h2{font-size:18px}#printHead .pmeta{color:#333;font-size:12px;margin-top:2px}
-  .row{grid-template-columns:46px 44px 1fr auto;break-inside:avoid;border-color:#ccc;padding:6px 0}
+  .row{break-inside:avoid;border-color:#ccc;padding:6px 0}
   .thumb{width:46px;height:46px;border-color:#ccc}.row.grabbed{opacity:1}
   .catrow{color:#000;border-color:#000}.pmeta .lnk{display:none}
-  .gstep,.gtext{display:none}.gcta{border-color:#999;background:#fff;color:#000}
+  .grab{display:none}
 }
 </style>
 </head>
@@ -2571,25 +2566,25 @@ function renderList(){
     let prog='<span>'+got+'/'+grand+' grabbed</span>';
     if(otherTotal>0)prog+=' <span class="other">&middot; '+otherTotal+' more in bag'+(otherBags.length>1?"s":"")+' '+otherBags.join(", ")+'</span>';
     row.innerHTML=
-      '<img class="thumb r-thumb" loading="lazy" alt="" src="'+esc(g.img||PLACE)+'" onerror="this.onerror=null;this.src=\''+PLACE+'\'">'+
-      '<div class="qty r-qty">'+selNeed+'<small>×</small></div>'+
-      '<div class="pinfo r-info"><div class="pname">'+esc(g.dispName)+'</div>'+
-        '<div class="pmeta">'+meta.join('<span class="sep">·</span>')+'</div>'+
-        '<div class="bagline">'+bagLine+'</div>'+
-        '<div class="prog '+progCls+'">'+prog+'</div>'+
-      '</div>'+
-      '<div class="grab r-ctrl"><div class="gstep"><button class="gminus" aria-label="one fewer">−</button><input class="ginput" type="number" inputmode="numeric" min="0" max="'+grand+'" value="'+selNeed+'" aria-label="quantity to record"><button class="gplus" aria-label="one more">+</button></div><button class="gtext gall">Grab all</button><button class="gtext gclear">Clear '+selNeed+'</button><button class="gcta gqty">Grab '+selNeed+'</button></div>';
+      '<img class="thumb" loading="lazy" alt="" src="'+esc(g.img||PLACE)+'" onerror="this.onerror=null;this.src=\''+PLACE+'\'">'+
+      '<div class="rbody"><div class="rtop">'+
+        '<div class="pinfo"><div class="pname"><span class="qty">'+selNeed+'×</span>'+esc(g.dispName)+'</div>'+
+          '<div class="pmeta">'+meta.join('<span class="sep">·</span>')+'</div>'+
+          '<div class="bagline">'+bagLine+'</div>'+
+          '<div class="prog '+progCls+'">'+prog+'</div>'+
+        '</div>'+
+        '<div class="grab"><div class="gstep"><button class="gminus" aria-label="one fewer">−</button><input class="ginput" type="number" inputmode="numeric" min="0" max="'+grand+'" value="'+selNeed+'" aria-label="quantity to record"><button class="gplus" aria-label="one more">+</button></div><button class="gtext gall">Grab all</button><button class="gcta gqty">Grab '+selNeed+'</button></div>'+
+      '</div></div>';
     const grab=row.querySelector(".grab");
     const gi=grab.querySelector(".ginput");
-    const gqtyBtn=grab.querySelector(".gqty"),gclearBtn=grab.querySelector(".gclear");
+    const gqtyBtn=grab.querySelector(".gqty");
     const fieldVal=()=>{let v=parseInt(gi.value,10);if(!isFinite(v)||v<0)v=0;if(v>grand)v=grand;return v;};
-    const updLabels=()=>{const v=fieldVal();gqtyBtn.textContent="Grab "+v;gclearBtn.textContent="Clear "+v;};
+    const updLabels=()=>{gqtyBtn.textContent="Grab "+fieldVal();};
     grab.querySelector(".gminus").addEventListener("click",()=>{gi.value=Math.max(0,fieldVal()-1);updLabels();});
     grab.querySelector(".gplus").addEventListener("click",()=>{gi.value=Math.min(grand,fieldVal()+1);updLabels();});
     gi.addEventListener("input",updLabels);
     gi.addEventListener("keydown",ev=>{if(ev.key==="Enter"){ev.preventDefault();setGot(set,g,got+fieldVal());}});
     gqtyBtn.addEventListener("click",()=>setGot(set,g,got+fieldVal()));
-    gclearBtn.addEventListener("click",()=>setGot(set,g,got-fieldVal()));
     grab.querySelector(".gall").addEventListener("click",()=>setGot(set,g,grand));
     row.querySelector(".thumb").addEventListener("click",()=>openLightbox(g.img||PLACE,g.dispName,colorLabel(g.color)+(g.id?" · #"+g.id:"")));
     box.appendChild(row);
