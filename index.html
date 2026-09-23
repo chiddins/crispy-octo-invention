@@ -178,6 +178,14 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
 .grab{display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;gap:8px;flex:0 0 auto}
 .grabbtns{display:flex;align-items:center;flex-wrap:wrap;justify-content:flex-end;gap:6px}
 @media (max-width:820px){.grab{flex-direction:row;justify-content:space-between;align-items:center;flex-basis:100%;width:100%}}
+@media (max-width:560px){
+  .grab{flex-direction:column;align-items:stretch;gap:8px}
+  .grab>.greset{order:2}
+  .grabbtns{flex-direction:column-reverse;align-items:stretch;width:100%;gap:8px}
+  .grabbtns>*{width:100%}
+  .grabbtns .gstep{width:100%}
+  .grabbtns .gstep .ginput{flex:1}
+}
 .modelwrap{position:relative}
 .modelmenu{position:absolute;top:calc(100% + 6px);right:0;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:0 12px 34px rgba(0,0,0,.32);z-index:50;padding:6px;min-width:236px}
 .mm-title{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:700;padding:6px 8px}
