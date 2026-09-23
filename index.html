@@ -146,9 +146,12 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
 .row{display:flex;align-items:flex-start;gap:12px;padding:11px 15px;border-top:1px solid var(--line)}
 .row:first-child{border-top:0}
 .row.grabbed .gstep{opacity:.45;pointer-events:none}
-.row.grabbed .gcta{background:var(--grab-bright);border-color:var(--grab-bright);color:var(--grab-bright-ink)}
+.row.grabbed .gall{display:none}
+.gdone .lbl-reset{display:none}
+.gcta.gdone{background:var(--grab-bright);border-color:var(--grab-bright);color:var(--grab-bright-ink)}
 .row.grabbed .greset{color:var(--danger)}
-@media (hover:hover){.row.grabbed .greset{opacity:0;pointer-events:none;transition:opacity .12s}.row.grabbed:hover .greset{opacity:1;pointer-events:auto}}
+@media (hover:hover){.row.grabbed .greset{display:none}.row.grabbed:hover .gdone{background:transparent;border-color:var(--danger);color:var(--danger)}.row.grabbed:hover .gdone .lbl-done{display:none}.row.grabbed:hover .gdone .lbl-reset{display:inline}}
+@media (hover:none){.row.grabbed .gdone{pointer-events:none}}
 .thumb{flex:none;width:var(--thumb);height:var(--thumb);border-radius:8px;background:#fff;border:1px solid var(--line);object-fit:contain;padding:3px;cursor:zoom-in}
 .rbody{flex:1;min-width:0}
 .rtop{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 14px}
@@ -2585,6 +2588,7 @@ function renderList(){
     const progCls=done?"done":(((remaining>0&&remaining<=lowT)||(remLater>0&&remLater<=lowT))?"low":"");
     let prog=(progCls==="done"?DONEINFO:progCls==="low"?LOWINFO:"")+'<span>'+got+'/'+grand+' total</span>';
     if(otherTotal>0)prog+=' <span class="other">&middot; '+otherTotal+' more in bag'+(otherBags.length>1?"s":"")+' '+otherBags.join(", ")+'</span>';
+    const cta=done?'<button class="gcta gdone"><span class="lbl-done">Grabbed '+got+'/'+grand+'</span><span class="lbl-reset">Reset</span></button>':'<button class="gcta gqty">Grab '+selNeed+'/'+grand+'</button>';
     row.innerHTML=
       '<img class="thumb" loading="lazy" alt="" src="'+esc(g.img||PLACE)+'" onerror="this.onerror=null;this.src=\''+PLACE+'\'">'+
       '<div class="rbody"><div class="rtop">'+
@@ -2593,18 +2597,22 @@ function renderList(){
           '<div class="bagline">'+bagLine+'</div>'+
           '<div class="progrow"><div class="prog '+progCls+'">'+prog+'</div><button class="gtext gall '+progCls+'">Grab all ('+grand+'/'+grand+')</button></div>'+
         '</div>'+
-        '<div class="grab"><div class="gstep"><button class="gminus" aria-label="one fewer">−</button><input class="ginput" type="number" inputmode="numeric" min="0" max="'+grand+'" value="'+selNeed+'" aria-label="quantity to record"><button class="gplus" aria-label="one more">+</button></div><button class="gtext greset"'+(got>0?'':' disabled')+'>Reset</button><button class="gcta gqty">Grab '+selNeed+'/'+grand+'</button></div>'+
+        '<div class="grab"><div class="gstep"><button class="gminus" aria-label="one fewer">−</button><input class="ginput" type="number" inputmode="numeric" min="0" max="'+grand+'" value="'+selNeed+'" aria-label="quantity to record"><button class="gplus" aria-label="one more">+</button></div><button class="gtext greset"'+(got>0?'':' disabled')+'>Reset</button>'+cta+'</div>'+
       '</div></div>';
     const grab=row.querySelector(".grab");
-    const gi=grab.querySelector(".ginput");
-    const gqtyBtn=grab.querySelector(".gqty");
-    const fieldVal=()=>{let v=parseInt(gi.value,10);if(!isFinite(v)||v<0)v=0;if(v>grand)v=grand;return v;};
-    const updLabels=()=>{gqtyBtn.textContent="Grab "+fieldVal()+"/"+grand;};
-    grab.querySelector(".gminus").addEventListener("click",()=>{gi.value=Math.max(0,fieldVal()-1);updLabels();});
-    grab.querySelector(".gplus").addEventListener("click",()=>{gi.value=Math.min(grand,fieldVal()+1);updLabels();});
-    gi.addEventListener("input",updLabels);
-    gi.addEventListener("keydown",ev=>{if(ev.key==="Enter"){ev.preventDefault();grabAction(set,g,got+fieldVal());}});
-    gqtyBtn.addEventListener("click",()=>grabAction(set,g,got+fieldVal()));
+    if(done){
+      row.querySelector(".gdone").addEventListener("click",()=>setGot(set,g,0));
+    }else{
+      const gi=grab.querySelector(".ginput");
+      const gqtyBtn=grab.querySelector(".gqty");
+      const fieldVal=()=>{let v=parseInt(gi.value,10);if(!isFinite(v)||v<0)v=0;if(v>grand)v=grand;return v;};
+      const updLabels=()=>{gqtyBtn.textContent="Grab "+fieldVal()+"/"+grand;};
+      grab.querySelector(".gminus").addEventListener("click",()=>{gi.value=Math.max(0,fieldVal()-1);updLabels();});
+      grab.querySelector(".gplus").addEventListener("click",()=>{gi.value=Math.min(grand,fieldVal()+1);updLabels();});
+      gi.addEventListener("input",updLabels);
+      gi.addEventListener("keydown",ev=>{if(ev.key==="Enter"){ev.preventDefault();grabAction(set,g,got+fieldVal());}});
+      gqtyBtn.addEventListener("click",()=>grabAction(set,g,got+fieldVal()));
+    }
     grab.querySelector(".greset").addEventListener("click",()=>setGot(set,g,0));
     row.querySelector(".gall").addEventListener("click",()=>grabAction(set,g,grand));
     row.querySelector(".thumb").addEventListener("click",()=>openLightbox(g.img||PLACE,g.dispName,colorLabel(g.color)+(g.id?" · #"+g.id:"")));
