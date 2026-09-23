@@ -133,6 +133,8 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
 .ms-input{flex:1;min-width:0;border:0;background:transparent;color:var(--ink);height:100%;padding:0}
 .ms-input:focus{outline:none}
 .ms-input::placeholder{color:var(--muted);font-weight:600}
+.ms.has-sel{background:var(--accent-soft);border-color:var(--accent-line)}
+.ms.has-sel .ms-input::placeholder{color:var(--accent-text);font-weight:700}
 .ms-clear{border:0;background:transparent;color:var(--muted);font-size:19px;line-height:1;width:24px;height:24px;border-radius:6px;flex:none;display:grid;place-items:center}
 .ms-clear:hover{background:var(--surface-2);color:var(--danger)}
 .ms-menu{position:absolute;top:calc(100% + 4px);left:0;min-width:100%;max-width:300px;max-height:260px;overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:9px;box-shadow:0 12px 34px rgba(0,0,0,.28);z-index:40}
@@ -147,14 +149,10 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
 .row:first-child{border-top:0}
 .row.grabbed .gstep{opacity:.45;pointer-events:none}
 .row.grabbed .gall{display:none}
-.gdone .lbl-reset{display:none}
-.gcta.gdone{background:var(--grab-bright);border-color:var(--grab-bright);color:var(--grab-bright-ink)}
-.row.grabbed .greset{color:var(--danger)}
-@media (hover:hover){.row.grabbed .greset{display:none}.row.grabbed:hover .gdone{background:transparent;border-color:var(--danger);color:var(--danger)}.row.grabbed:hover .gdone .lbl-done{display:none}.row.grabbed:hover .gdone .lbl-reset{display:inline}}
-@media (hover:none){.row.grabbed .gdone{pointer-events:none}}
+.gcta.gdone{background:var(--grab-bright);border-color:var(--grab-bright);color:var(--grab-bright-ink);pointer-events:none}
 .thumb{flex:none;width:var(--thumb);height:var(--thumb);border-radius:8px;background:#fff;border:1px solid var(--line);object-fit:contain;padding:3px;cursor:zoom-in}
 .rbody{flex:1;min-width:0}
-.rtop{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 14px}
+.rtop{display:flex;flex-wrap:wrap;align-items:stretch;justify-content:space-between;gap:8px 14px}
 .pinfo{flex:1 1 210px;min-width:0}
 .qty{font-family:var(--font-head);font-size:15px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.02em;margin-right:6px;color:var(--accent-text)}
 .pname{font-weight:600;word-break:break-word}
@@ -172,7 +170,8 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
 .doneinfo{display:inline-flex;align-items:center;vertical-align:-2px;margin-right:4px;color:var(--grab-bright)}
 .progrow{display:flex;align-items:center;gap:6px 10px;flex-wrap:wrap;margin-top:4px}
 .progrow .prog{margin-top:0}
-.grab{display:flex;align-items:center;flex-wrap:wrap;justify-content:flex-end;gap:6px;flex:0 1 auto;min-width:0}
+.grab{display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;gap:8px;flex:0 0 auto}
+.grabbtns{display:flex;align-items:center;flex-wrap:wrap;justify-content:flex-end;gap:6px}
 .gstep{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:9px;background:var(--surface);overflow:hidden}
 .gstep button{width:30px;height:34px;border:0;background:transparent;font-size:18px;font-weight:700;color:var(--muted);display:grid;place-items:center}
 .gstep button:hover{background:var(--surface-2);color:var(--ink)}
@@ -185,7 +184,9 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
 .greset{color:var(--muted)}
 .greset:hover:not(:disabled){background:var(--danger-soft);color:var(--danger)}
 .greset:disabled{color:var(--faint);opacity:.55;cursor:default}
-.gall{color:var(--muted);border-color:currentColor}
+.gall{color:var(--ink);border-color:var(--line);background:var(--surface)}
+.gall:hover{border-color:var(--faint)}
+.gall.low,.gall.done{background:transparent;border-color:currentColor}
 .gall.low{color:var(--warn)}
 .gall.done{color:var(--grab-bright)}
 .empty{padding:40px 22px;text-align:center;color:var(--muted)}
@@ -2546,7 +2547,7 @@ function MultiSelect(host,opts){
   const clear=document.createElement("button");clear.type="button";clear.className="ms-clear hide";clear.setAttribute("aria-label","Clear filter");clear.textContent="×";
   const menu=document.createElement("div");menu.className="ms-menu hide";
   let options=[],selected=[];const label=opts.label||(x=>x),onChange=opts.onChange||function(){},title=opts.title||"Filter";
-  function ph(){input.placeholder=selected.length?(title+" ("+selected.length+")"):title;clear.classList.toggle("hide",!selected.length);}
+  function ph(){input.placeholder=selected.length?(title+" ("+selected.length+")"):title;clear.classList.toggle("hide",!selected.length);host.classList.toggle("has-sel",selected.length>0);}
   function draw(){const q=norm(input.value);const list=options.filter(o=>!q||norm(label(o)).includes(q));menu.innerHTML="";if(!list.length){menu.classList.add("hide");return;}list.slice(0,150).forEach(o=>{const on=selected.indexOf(o)>=0;const d=document.createElement("div");d.className="ms-opt";d.innerHTML='<span class="cbox'+(on?" on":"")+'">'+MSCHECK+'</span>'+esc(label(o));d.addEventListener("mousedown",e=>{e.preventDefault();const i=selected.indexOf(o);if(i>=0)selected.splice(i,1);else selected.push(o);ph();draw();onChange(selected.slice());});menu.appendChild(d);});menu.classList.remove("hide");}
   input.addEventListener("focus",draw);
   input.addEventListener("input",draw);
@@ -2588,7 +2589,7 @@ function renderList(){
     const progCls=done?"done":(((remaining>0&&remaining<=lowT)||(remLater>0&&remLater<=lowT))?"low":"");
     let prog=(progCls==="done"?DONEINFO:progCls==="low"?LOWINFO:"")+'<span>'+got+'/'+grand+' total</span>';
     if(otherTotal>0)prog+=' <span class="other">&middot; '+otherTotal+' more in bag'+(otherBags.length>1?"s":"")+' '+otherBags.join(", ")+'</span>';
-    const cta=done?'<button class="gcta gdone"><span class="lbl-done">Grabbed '+got+'/'+grand+'</span><span class="lbl-reset">Reset</span></button>':'<button class="gcta gqty">Grab '+selNeed+'/'+grand+'</button>';
+    const cta=done?'<button class="gcta gdone">Grabbed '+got+'/'+grand+'</button>':'<button class="gcta gqty">Grab '+selNeed+'/'+grand+'</button>';
     row.innerHTML=
       '<img class="thumb" loading="lazy" alt="" src="'+esc(g.img||PLACE)+'" onerror="this.onerror=null;this.src=\''+PLACE+'\'">'+
       '<div class="rbody"><div class="rtop">'+
@@ -2597,12 +2598,10 @@ function renderList(){
           '<div class="bagline">'+bagLine+'</div>'+
           '<div class="progrow"><div class="prog '+progCls+'">'+prog+'</div><button class="gtext gall '+progCls+'">Grab all ('+grand+'/'+grand+')</button></div>'+
         '</div>'+
-        '<div class="grab"><div class="gstep"><button class="gminus" aria-label="one fewer">−</button><input class="ginput" type="number" inputmode="numeric" min="0" max="'+grand+'" value="'+selNeed+'" aria-label="quantity to record"><button class="gplus" aria-label="one more">+</button></div><button class="gtext greset"'+(got>0?'':' disabled')+'>Reset</button>'+cta+'</div>'+
+        '<div class="grab"><button class="gtext greset"'+(got>0?'':' disabled')+'>Reset</button><div class="grabbtns"><div class="gstep"><button class="gminus" aria-label="one fewer">−</button><input class="ginput" type="number" inputmode="numeric" min="0" max="'+grand+'" value="'+selNeed+'" aria-label="quantity to record"><button class="gplus" aria-label="one more">+</button></div>'+cta+'</div></div>'+
       '</div></div>';
     const grab=row.querySelector(".grab");
-    if(done){
-      row.querySelector(".gdone").addEventListener("click",()=>setGot(set,g,0));
-    }else{
+    if(!done){
       const gi=grab.querySelector(".ginput");
       const gqtyBtn=grab.querySelector(".gqty");
       const fieldVal=()=>{let v=parseInt(gi.value,10);if(!isFinite(v)||v<0)v=0;if(v>grand)v=grand;return v;};
