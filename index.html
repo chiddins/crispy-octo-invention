@@ -27,7 +27,7 @@
     --ink:#ecedef; --muted:#9aa0ac; --faint:#717784; --line:#31343b;
     --accent:#ffcf3f; --accent-ink:#231900; --accent-soft:#332b12; --accent-line:#c99a12; --accent-text:#ffd24a;
     --danger:#f04058; --danger-soft:#33141a; --link:#78b0ff;
-    --grab:#54b95f; --grab-soft:#16281a; --grab-bright:#2fbf4c; --grab-bright-ink:#08210d;
+    --grab:#54b95f; --grab-soft:#16281a; --grab-bright:#3fe06a; --grab-bright-ink:#08210d;
     --warn:#e8b23a;
     --shadow:none;
   }
@@ -37,7 +37,7 @@
   --ink:#ecedef; --muted:#9aa0ac; --faint:#717784; --line:#31343b;
   --accent:#ffcf3f; --accent-ink:#231900; --accent-soft:#332b12; --accent-line:#c99a12;
   --danger:#f04058; --danger-soft:#33141a; --link:#78b0ff;
-  --grab:#54b95f; --grab-soft:#16281a; --grab-bright:#2fbf4c; --grab-bright-ink:#08210d;
+  --grab:#54b95f; --grab-soft:#16281a; --grab-bright:#3fe06a; --grab-bright-ink:#08210d;
   --warn:#e8b23a;
   --shadow:none;
 }
@@ -163,6 +163,10 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
 .prog.low{color:var(--warn)}
 .prog.done{color:var(--grab-bright)}
 .prog .other{color:var(--faint);font-weight:600}
+.lowinfo{display:inline-flex;align-items:center;vertical-align:-2px;margin-right:4px;color:var(--warn)}
+.progrow{display:flex;align-items:center;gap:6px 10px;flex-wrap:wrap;margin-top:4px}
+.progrow .prog{margin-top:0}
+.progrow .gall{margin-left:auto}
 .grab{display:flex;align-items:center;flex-wrap:wrap;justify-content:flex-end;gap:6px;flex:0 1 auto;min-width:0}
 .gstep{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:9px;background:var(--surface);overflow:hidden}
 .gstep button{width:30px;height:34px;border:0;background:transparent;font-size:18px;font-weight:700;color:var(--muted);display:grid;place-items:center}
@@ -173,9 +177,9 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
 .gtext:hover{background:var(--surface-2)}
 .gcta{border:1px solid var(--accent-line);background:var(--accent);color:var(--accent-ink);border-radius:9px;height:34px;padding:0 14px;font-weight:700;font-size:13px;white-space:nowrap}
 .gcta:hover{filter:brightness(1.04)}
-.gundo{color:var(--muted)}
-.gundo:hover:not(:disabled){background:var(--surface-2);color:var(--ink)}
-.gundo:disabled{color:var(--faint);opacity:.55;cursor:default}
+.greset{color:var(--muted)}
+.greset:hover:not(:disabled){background:var(--danger-soft);color:var(--danger)}
+.greset:disabled{color:var(--faint);opacity:.55;cursor:default}
 .gall{color:var(--muted)}
 .gall.low{color:var(--warn)}
 .gall.done{color:var(--grab-bright)}
@@ -280,7 +284,7 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
           <div class="ms" id="catFilter"></div>
           <div class="ms" id="colorFilter"></div>
           <select class="ctl" id="imgSizeSel" aria-label="Image size"><option value="44">Image size: S</option><option value="64">Image size: M</option><option value="104">Image size: L</option><option value="152">Image size: XL</option></select>
-          <label class="numctl" title="Highlights a part when this many or fewer pieces are still to grab — counting what's left in the bags you've selected.">Remaining parts threshold <input type="number" id="lowThresh" min="0" max="9999" inputmode="numeric" aria-label="Remaining parts threshold"></label>
+          <label class="numctl">Remaining parts threshold <input type="number" id="lowThresh" min="0" max="9999" inputmode="numeric" aria-label="Remaining parts threshold"></label>
           <label class="toggle"><input type="checkbox" class="cbx" id="hideGrab"><span class="cbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg></span> Hide grabbed</label>
           <label class="toggle"><input type="checkbox" class="cbx" id="grabbedOnly"><span class="cbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg></span> Grabbed</label>
           <button class="btn danger-h" id="resetGrab">Reset</button>
@@ -2454,12 +2458,11 @@ function defaultSelect(set){bagsOf(set).forEach(b=>{if(!(b in set.selected))set.
 function newSet(name){const id=uid();DB.sets[id]={id,name:name||"New set",entries:[],selected:{},grabbed:{},grabPrev:{},hideGrab:false,grabbedOnly:false,sort:"cat",search:"",fCat:[],fColor:[]};DB.order.push(id);DB.current=id;return DB.sets[id];}
 function gotOf(set,g){return Math.max(0,Math.min(g.grand,Number(set.grabbed[g.key])||0));}
 function setGot(set,g,v){v=Math.floor(Number(v));if(!isFinite(v))v=0;v=Math.max(0,Math.min(g.grand,v));if(v<=0)delete set.grabbed[g.key];else set.grabbed[g.key]=v;save();renderStats();renderList();}
-function grabAction(set,g,v){const cur=gotOf(set,g);v=Math.max(0,Math.min(g.grand,Math.floor(Number(v))||0));if(v===cur)return;if(!set.grabPrev)set.grabPrev={};set.grabPrev[g.key]=cur;setGot(set,g,v);}
-function undoGrab(set,g){if(!(set.grabPrev&&g.key in set.grabPrev))return;const prev=set.grabPrev[g.key];delete set.grabPrev[g.key];setGot(set,g,prev);}
-function canUndo(set,g){return !!(set.grabPrev&&g.key in set.grabPrev);}
+function grabAction(set,g,v){const cur=gotOf(set,g);v=Math.max(0,Math.min(g.grand,Math.floor(Number(v))||0));if(v!==cur)setGot(set,g,v);}
 function migrateGrabbed(set){if(!set.grabbed)return;const all={};for(const e of set.entries){const k=groupKey(e);all[k]=(all[k]||0)+(Number(e.qty)||0);}for(const k in set.grabbed){const v=set.grabbed[k];let n;if(typeof v==="number")n=v;else if(v===true)n=all[k]||0;else if(v&&typeof v==="object")n=Object.keys(v).reduce((a,b)=>a+(Number(v[b])||0),0);else n=0;n=Math.max(0,Math.min(all[k]||0,n));if(n>0)set.grabbed[k]=n;else delete set.grabbed[k];}}
 
 const PLACE="data:image/svg+xml;utf8,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><rect x="6" y="16" width="36" height="24" rx="3" fill="#c9ccd2"/><rect x="12" y="10" width="8" height="8" rx="4" fill="#b4b8bf"/><rect x="28" y="10" width="8" height="8" rx="4" fill="#b4b8bf"/></svg>');
+const LOWINFO='<span class="lowinfo" role="img" aria-label="You’re almost done — just a few of these left to grab" title="You’re almost done — just a few of these left to grab"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16"/><line x1="12" y1="7.6" x2="12.01" y2="7.6"/></svg></span>';
 
 function parseBsx(xml){
   const doc=new DOMParser().parseFromString(String(xml||"").trim(),"application/xml");
@@ -2570,7 +2573,6 @@ function renderList(){
     const selNeed=g.total,grand=g.grand,got=gotOf(set,g),remaining=grand-got,remLater=grand-Math.max(got,selNeed),done=got>=grand;
     const state=done?"done":"none";
     const otherTotal=grand-selNeed;const otherBags=sortBags(Object.keys(g.allByBag).filter(b=>!set.selected[b]));
-    const canU=canUndo(set,g),undoAmt=canU?got-set.grabPrev[g.key]:0;
     const row=document.createElement("div");row.className="row"+(done?" grabbed":"");
     const meta=[];const cm=colorMeta(g.color);if(cm)meta.push(cm);
     if(g.id)meta.push('#'+esc(g.id));
@@ -2578,7 +2580,7 @@ function renderList(){
     if(g.id)meta.push('<a class="lnk" href="'+bsLink(g.id)+'" target="_blank" rel="noopener">Brickset ↗</a>');
     const bagLine=sortBags(Object.keys(g.byBag)).map(b=>"bag "+esc(b)+": "+g.byBag[b]).join(", ");
     const progCls=done?"done":(((remaining>0&&remaining<=lowT)||(remLater>0&&remLater<=lowT))?"low":"");
-    let prog='<span>'+got+'/'+grand+' grabbed</span>';
+    let prog=(progCls==="low"?LOWINFO:"")+'<span>'+got+'/'+grand+' total</span>';
     if(otherTotal>0)prog+=' <span class="other">&middot; '+otherTotal+' more in bag'+(otherBags.length>1?"s":"")+' '+otherBags.join(", ")+'</span>';
     row.innerHTML=
       '<img class="thumb" loading="lazy" alt="" src="'+esc(g.img||PLACE)+'" onerror="this.onerror=null;this.src=\''+PLACE+'\'">'+
@@ -2586,9 +2588,9 @@ function renderList(){
         '<div class="pinfo"><div class="pname"><span class="qty">'+selNeed+'×</span>'+esc(g.dispName)+'</div>'+
           '<div class="pmeta">'+meta.join('<span class="sep">·</span>')+'</div>'+
           '<div class="bagline">'+bagLine+'</div>'+
-          '<div class="prog '+progCls+'">'+prog+'</div>'+
+          '<div class="progrow"><div class="prog '+progCls+'">'+prog+'</div><button class="gtext gall '+progCls+'">Grab all ('+grand+'/'+grand+')</button></div>'+
         '</div>'+
-        '<div class="grab"><button class="gtext gall '+progCls+'">Grab all ('+grand+'/'+grand+')</button><div class="gstep"><button class="gminus" aria-label="one fewer">−</button><input class="ginput" type="number" inputmode="numeric" min="0" max="'+grand+'" value="'+selNeed+'" aria-label="quantity to record"><button class="gplus" aria-label="one more">+</button></div><button class="gtext gundo"'+(canU?'':' disabled')+'>'+(canU?('Undo '+(undoAmt>=0?'+':'−')+Math.abs(undoAmt)):'Undo')+'</button><button class="gcta gqty">Grab '+selNeed+'/'+grand+'</button></div>'+
+        '<div class="grab"><div class="gstep"><button class="gminus" aria-label="one fewer">−</button><input class="ginput" type="number" inputmode="numeric" min="0" max="'+grand+'" value="'+selNeed+'" aria-label="quantity to record"><button class="gplus" aria-label="one more">+</button></div><button class="gtext greset"'+(got>0?'':' disabled')+'>Reset</button><button class="gcta gqty">Grab '+selNeed+'/'+grand+'</button></div>'+
       '</div></div>';
     const grab=row.querySelector(".grab");
     const gi=grab.querySelector(".ginput");
@@ -2600,8 +2602,8 @@ function renderList(){
     gi.addEventListener("input",updLabels);
     gi.addEventListener("keydown",ev=>{if(ev.key==="Enter"){ev.preventDefault();grabAction(set,g,got+fieldVal());}});
     gqtyBtn.addEventListener("click",()=>grabAction(set,g,got+fieldVal()));
-    grab.querySelector(".gundo").addEventListener("click",()=>undoGrab(set,g));
-    grab.querySelector(".gall").addEventListener("click",()=>grabAction(set,g,grand));
+    grab.querySelector(".greset").addEventListener("click",()=>setGot(set,g,0));
+    row.querySelector(".gall").addEventListener("click",()=>grabAction(set,g,grand));
     row.querySelector(".thumb").addEventListener("click",()=>openLightbox(g.img||PLACE,g.dispName,colorLabel(g.color)+(g.id?" · #"+g.id:"")));
     box.appendChild(row);
   });
