@@ -122,6 +122,10 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
 .toggle .cbx:checked+.cbox{background:var(--accent);border-color:var(--accent-line)}
 .toggle .cbx:checked+.cbox svg{opacity:1}
 .toggle:has(.cbx:checked){background:var(--accent-soft);border-color:var(--accent-line)}
+.numctl{display:inline-flex;align-items:center;gap:7px;height:var(--ctl);border:1px solid var(--line);border-radius:9px;background:var(--surface);box-shadow:var(--shadow);padding:0 8px 0 12px;font-weight:600;font-size:13px;color:var(--muted);white-space:nowrap}
+.numctl:hover{border-color:var(--faint)}
+.numctl input{width:52px;height:28px;border:1px solid var(--line);border-radius:7px;background:var(--surface-2);color:var(--ink);text-align:center;font-weight:700;font-variant-numeric:tabular-nums;-moz-appearance:textfield}
+.numctl input::-webkit-outer-spin-button,.numctl input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 
 /* multi-select */
 .ms{position:relative;display:flex;align-items:center;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:0 6px 0 11px;box-shadow:var(--shadow);width:190px;height:var(--ctl);cursor:text}
@@ -276,6 +280,7 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
           <div class="ms" id="catFilter"></div>
           <div class="ms" id="colorFilter"></div>
           <select class="ctl" id="imgSizeSel" aria-label="Image size"><option value="44">Image size: S</option><option value="64">Image size: M</option><option value="104">Image size: L</option><option value="152">Image size: XL</option></select>
+          <label class="numctl" title="Show a part in yellow when this many or fewer pieces are left to grab after grabbing what's in your selected bags">Yellow ≤ <input type="number" id="lowThresh" min="0" max="9999" inputmode="numeric" aria-label="Yellow highlight threshold"></label>
           <label class="toggle"><input type="checkbox" class="cbx" id="hideGrab"><span class="cbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg></span> Hide grabbed</label>
           <label class="toggle"><input type="checkbox" class="cbx" id="grabbedOnly"><span class="cbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg></span> Grabbed</label>
           <button class="btn danger-h" id="resetGrab">Reset</button>
@@ -2436,7 +2441,7 @@ function bsLink(id){return "https://brickset.com/search?query="+encodeURICompone
 const CATS=[["Technic",/technic|liftarm|beam|axle|\bpin\b|bush|gear/i],["Bricks, Round & Modified",/round brick|modified brick|headlight|snot/i],["Bricks",/\bbrick\b/i],["Plates, Round & Modified",/round plate|modified plate|jumper/i],["Plates",/\bplate\b/i],["Tiles",/\btile\b/i],["Slopes",/\bslope\b|wedge|cheese/i],["Panels & Walls",/panel|wall|fence/i],["Windows & Doors",/window|door|glass|windscreen/i],["Plants & Nature",/plant|flower|leaf|stem|tree/i],["Minifigs & Accessories",/minifig|torso|\bhead\b|\blegs?\b|helmet|hair|utensil/i]];
 function catFallback(name){const n=name||"";for(let i=0;i<CATS.length;i++)if(CATS[i][1].test(n))return CATS[i][0];return "Other parts";}
 
-let DB={sets:{},order:[],current:null,theme:"system",seeded:false,imgSize:64};
+let DB={sets:{},order:[],current:null,theme:"system",seeded:false,imgSize:64,lowThreshold:10};
 let catMS=null,colorMS=null;
 function save(){try{localStorage.setItem(LS,JSON.stringify(DB));}catch(e){}}
 function load(){try{const r=localStorage.getItem(LS);if(r)DB=JSON.parse(r);}catch(e){}}
@@ -2559,7 +2564,7 @@ function renderList(){
   if(set.hideGrab)agg=agg.filter(g=>gotOf(set,g)<g.grand);
   if(set.grabbedOnly)agg=agg.filter(g=>gotOf(set,g)>0);
   if(!agg.length){box.innerHTML='<div class="empty"><h3>No matching parts</h3>Turn on more bags, or clear the search / filters.</div>';renderPrintHead();return;}
-  const showCats=(set.sort||"cat")==="cat";let lastCat=null;
+  const showCats=(set.sort||"cat")==="cat";let lastCat=null;const lowT=Number.isFinite(DB.lowThreshold)?DB.lowThreshold:10;
   agg.forEach(g=>{
     if(showCats&&g.catLabel!==lastCat){lastCat=g.catLabel;const c=document.createElement("div");c.className="catrow";c.textContent=g.catLabel;box.appendChild(c);}
     const selNeed=g.total,grand=g.grand,got=gotOf(set,g),remaining=grand-got,remLater=grand-Math.max(got,selNeed),done=got>=grand;
@@ -2572,7 +2577,7 @@ function renderList(){
     if(g.id)meta.push('<a class="lnk" href="'+baLink(g.id)+'" target="_blank" rel="noopener">Brick Architect ↗</a>');
     if(g.id)meta.push('<a class="lnk" href="'+bsLink(g.id)+'" target="_blank" rel="noopener">Brickset ↗</a>');
     const bagLine=sortBags(Object.keys(g.byBag)).map(b=>"bag "+esc(b)+": "+g.byBag[b]).join(", ");
-    const progCls=done?"done":(((remaining>0&&remaining<=10)||(remLater>0&&remLater<=10))?"low":"");
+    const progCls=done?"done":(((remaining>0&&remaining<=lowT)||(remLater>0&&remLater<=lowT))?"low":"");
     let prog='<span>'+got+'/'+grand+' grabbed</span>';
     if(otherTotal>0)prog+=' <span class="other">&middot; '+otherTotal+' more in bag'+(otherBags.length>1?"s":"")+' '+otherBags.join(", ")+'</span>';
     row.innerHTML=
@@ -2632,8 +2637,8 @@ function deleteCurrent(){const s=curSet();if(!s)return;if(!confirm("Delete “"+
 
 function init(){
   load();
-  if(!DB||!DB.sets)DB={sets:{},order:[],current:null,theme:"system",seeded:false,imgSize:64};
-  if(!DB.imgSize)DB.imgSize=64;
+  if(!DB||!DB.sets)DB={sets:{},order:[],current:null,theme:"system",seeded:false,imgSize:64,lowThreshold:10};
+  if(!DB.imgSize)DB.imgSize=64;if(!Number.isFinite(DB.lowThreshold))DB.lowThreshold=10;
   DB.order=(DB.order||[]).filter(id=>DB.sets[id]);
   DB.order.filter(id=>DB.sets[id]&&DB.sets[id].sample).forEach(id=>delete DB.sets[id]);
   DB.order=DB.order.filter(id=>DB.sets[id]);
@@ -2663,6 +2668,7 @@ function init(){
   $("#searchInp").addEventListener("input",e=>{const s=curSet();if(s){s.search=e.target.value;save();renderList();}});
   $("#sortSel").addEventListener("change",e=>{const s=curSet();if(s){s.sort=e.target.value;save();renderList();}});
   $("#imgSizeSel").addEventListener("change",e=>{DB.imgSize=parseInt(e.target.value,10)||64;applyImgSize();save();});
+  $("#lowThresh").addEventListener("input",e=>{let v=parseInt(e.target.value,10);if(!Number.isFinite(v)||v<0)v=0;if(v>9999)v=9999;DB.lowThreshold=v;save();renderList();});
   $("#hideGrab").addEventListener("change",e=>{const s=curSet();if(s){s.hideGrab=e.target.checked;save();renderList();}});
   $("#grabbedOnly").addEventListener("change",e=>{const s=curSet();if(s){s.grabbedOnly=e.target.checked;save();renderList();}});
   $("#resetGrab").addEventListener("click",()=>{const s=curSet();if(!s)return;const n=Object.keys(s.grabbed||{}).length;if(!n)return alert("Nothing is marked yet.");if(!confirm("Clear grabbed progress for all "+n+" parts in this set?"))return;s.grabbed={};s.grabPrev={};save();renderStats();renderBags();renderList();});
@@ -2689,12 +2695,13 @@ function init(){
   $("#addRowBtn").addEventListener("click",()=>{let s=curSet();if(!s)s=newSet("New set");const bags=bagsOf(s);const bag=bags[bags.length-1]||"1";s.entries.push({bag,qty:1,name:"",color:"",id:"",img:""});if(!(bag in s.selected))s.selected[bag]=true;save();renderEdit();renderBags();renderStats();});
 
   $("#backupDownload").addEventListener("click",()=>{const ok=downloadText("brick-bag-merge-backup.json",JSON.stringify(DB));if(!ok){switchTab("backup");$("#backupText").value=JSON.stringify(DB,null,2);alert("Download blocked here — copy the text backup instead.");}});
-  $("#backupFile").addEventListener("change",async e=>{const f=(e.target.files||[])[0];if(!f)return;try{const d=JSON.parse(await readFileText(f));if(!d.sets||!d.order)throw new Error("not a backup");if(!confirm("Replace everything with this backup file?"))return;DB=d;if(!DB.imgSize)DB.imgSize=64;Object.values(DB.sets).forEach(s=>{if(s){if(s.entries)migrateGrabbed(s);if(!Array.isArray(s.fCat))s.fCat=[];if(!Array.isArray(s.fColor))s.fColor=[];}});save();applyTheme();applyImgSize();render();alert("Restored.");closeModal();}catch(x){alert("Couldn’t read that backup: "+x.message);}e.target.value="";});
+  $("#backupFile").addEventListener("change",async e=>{const f=(e.target.files||[])[0];if(!f)return;try{const d=JSON.parse(await readFileText(f));if(!d.sets||!d.order)throw new Error("not a backup");if(!confirm("Replace everything with this backup file?"))return;DB=d;if(!DB.imgSize)DB.imgSize=64;if(!Number.isFinite(DB.lowThreshold))DB.lowThreshold=10;Object.values(DB.sets).forEach(s=>{if(s){if(s.entries)migrateGrabbed(s);if(!Array.isArray(s.fCat))s.fCat=[];if(!Array.isArray(s.fColor))s.fColor=[];}});save();applyTheme();applyImgSize();$("#lowThresh").value=String(DB.lowThreshold);render();alert("Restored.");closeModal();}catch(x){alert("Couldn’t read that backup: "+x.message);}e.target.value="";});
   $("#backupCopy").addEventListener("click",()=>{const t=$("#backupText");t.focus();t.select();try{document.execCommand("copy");}catch(e){}try{navigator.clipboard&&navigator.clipboard.writeText(t.value);}catch(e){}});
-  $("#backupRestore").addEventListener("click",()=>{try{const d=JSON.parse($("#backupText").value);if(!d.sets||!d.order)throw new Error("not a backup");if(!confirm("Replace everything with this backup?"))return;DB=d;if(!DB.imgSize)DB.imgSize=64;Object.values(DB.sets).forEach(s=>{if(s){if(s.entries)migrateGrabbed(s);if(!Array.isArray(s.fCat))s.fCat=[];if(!Array.isArray(s.fColor))s.fColor=[];}});save();applyTheme();applyImgSize();render();alert("Restored.");closeModal();}catch(x){alert("Couldn’t restore: "+x.message);}});
+  $("#backupRestore").addEventListener("click",()=>{try{const d=JSON.parse($("#backupText").value);if(!d.sets||!d.order)throw new Error("not a backup");if(!confirm("Replace everything with this backup?"))return;DB=d;if(!DB.imgSize)DB.imgSize=64;if(!Number.isFinite(DB.lowThreshold))DB.lowThreshold=10;Object.values(DB.sets).forEach(s=>{if(s){if(s.entries)migrateGrabbed(s);if(!Array.isArray(s.fCat))s.fCat=[];if(!Array.isArray(s.fColor))s.fColor=[];}});save();applyTheme();applyImgSize();$("#lowThresh").value=String(DB.lowThreshold);render();alert("Restored.");closeModal();}catch(x){alert("Couldn’t restore: "+x.message);}});
 
   const s0=curSet();if(s0){$("#sortSel").value=s0.sort||"cat";$("#searchInp").value=s0.search||"";$("#hideGrab").checked=!!s0.hideGrab;$("#grabbedOnly").checked=!!s0.grabbedOnly;}
   $("#imgSizeSel").value=String(DB.imgSize||64);
+  $("#lowThresh").value=String(Number.isFinite(DB.lowThreshold)?DB.lowThreshold:10);
 }
 document.addEventListener("DOMContentLoaded",init);
 })();
