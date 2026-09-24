@@ -211,6 +211,13 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
 .amtrow{display:flex;gap:8px}
 .amtrow input{flex:1;height:var(--ctl);border:1px solid var(--line);border-radius:9px;background:var(--surface-2);color:var(--ink);padding:0 11px;font-weight:700;font-variant-numeric:tabular-nums}
 .amtrow .btn{flex:none}
+.amtsum{display:flex;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line)}
+.amtthumb{width:56px;height:56px;flex:none;border-radius:8px;background:#fff;border:1px solid var(--line);object-fit:contain;padding:3px}
+.amtinfo{min-width:0}
+.amtname{font-weight:600}
+.amtmeta{margin-top:3px;font-size:12px;color:var(--muted)}
+.amtbags{margin-top:3px;font-size:11.5px;color:var(--faint);font-variant-numeric:tabular-nums}
+.amtcount{margin-top:3px;font-size:12px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
 .gall.low,.gall.done{background:transparent;border-color:currentColor}
 .gall.low{color:var(--warn)}
 .gall.done{color:var(--grab-bright)}
@@ -2619,6 +2626,7 @@ function renderList(){
     if(done)cta='<button class="gcta gdone">Grabbed '+got+'/'+grand+'</button>';
     else if(model==="set")cta='<button class="gcta gqty">Set '+got+'/'+grand+'</button>';
     else if(model==="live")cta='<button class="gcta gqty">Grab all</button>';
+    else if(model==="dialog")cta=(selNeed>0&&got>=selNeed)?'<button class="gcta gdone">Grabbed '+selNeed+'/'+grand+'</button>':'<button class="gcta gqty">Grab '+selNeed+'/'+grand+'</button>';
     else cta='<button class="gcta gqty">Grab '+selNeed+'/'+grand+'</button>';
     const stepperHTML='<div class="gstep"><button class="gminus" aria-label="one fewer">−</button><input class="ginput" type="number" inputmode="numeric" min="0" max="'+grand+'" value="'+(model==="add"?selNeed:got)+'" aria-label="quantity to record"><button class="gplus" aria-label="one more">+</button></div>';
     const grabbtnsHTML=model==="dialog"?('<button class="gtext genter">Enter amount</button>'+(done?'':'<button class="gtext gall '+progCls+'">Grab all ('+grand+'/'+grand+')</button>')+cta):(stepperHTML+cta);
@@ -2635,7 +2643,7 @@ function renderList(){
     const grab=row.querySelector(".grab");
     if(!done){
       if(model==="dialog"){
-        grab.querySelector(".gqty").addEventListener("click",()=>grabAction(set,g,got+selNeed));
+        const dq=grab.querySelector(".gqty");if(dq)dq.addEventListener("click",()=>grabAction(set,g,got+selNeed));
       }else{
         const gi=grab.querySelector(".ginput");
         const gqtyBtn=grab.querySelector(".gqty");
@@ -2667,15 +2675,25 @@ function renderList(){
 function renderPrintHead(){const set=curSet();const el=$("#printHead");if(!set){el.innerHTML="";return;}const bags=bagsOf(set).filter(b=>set.selected[b]);el.innerHTML="<h2>"+esc(set.name)+"</h2><div class='pmeta'>Bags: "+(bags.length?bags.map(b=>"#"+esc(b)).join(", "):"none")+" &middot; "+new Date().toLocaleDateString()+"</div>";}
 
 function openAmountDialog(set,g){
-  const got=gotOf(set,g),grand=g.grand;
+  const got=gotOf(set,g),grand=g.grand,selNeed=g.total;
+  const bagLine=sortBags(Object.keys(g.byBag)).map(b=>"bag "+esc(b)+": "+g.byBag[b]).join(", ");
+  const cm=colorMeta(g.color)||'';
   const ov=document.createElement("div");ov.className="overlay";
   const close=()=>{ov.remove();document.removeEventListener("keydown",onKey);};
   const onKey=e=>{if(e.key==="Escape"){e.preventDefault();close();}};
   const numVal=id=>{let v=parseInt(ov.querySelector(id).value,10);if(!isFinite(v)||v<0)v=0;if(v>grand)v=grand;return v;};
-  ov.innerHTML='<div class="modal" style="max-width:420px">'+
+  ov.innerHTML='<div class="modal" style="max-width:440px">'+
     '<div class="mhead"><h2>'+esc(g.dispName)+'</h2><button class="iconbtn" data-a="cancel" aria-label="Close"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>'+
-    '<div class="tabpane"><p class="hint"><b>'+got+' of '+grand+'</b> grabbed so far.</p>'+
-      '<div class="field"><label for="amtGrab">Grab some now (e.g. only found a few)</label><div class="amtrow"><input type="number" id="amtGrab" min="1" max="'+grand+'" inputmode="numeric" placeholder="how many"><button class="btn primary" data-a="grab">Grab</button></div></div>'+
+    '<div class="amtsum">'+
+      '<img class="amtthumb" loading="lazy" alt="" src="'+esc(g.img||PLACE)+'" onerror="this.onerror=null;this.src=\''+PLACE+'\'">'+
+      '<div class="amtinfo"><div class="amtname"><span class="qty">'+selNeed+'×</span>'+esc(g.dispName)+'</div>'+
+        '<div class="amtmeta"><span class="cattag">'+esc(g.catLabel)+'</span>'+cm+(g.id?'<span class="sep">·</span>#'+esc(g.id):'')+'</div>'+
+        (bagLine?'<div class="amtbags">'+bagLine+'</div>':'')+
+        '<div class="amtcount">'+got+'/'+grand+' total grabbed</div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="tabpane">'+
+      '<div class="field"><label for="amtGrab">Grab some now (e.g. only found a few)</label><div class="amtrow"><input type="number" id="amtGrab" min="0" max="'+grand+'" inputmode="numeric" value="'+selNeed+'"><button class="btn primary" data-a="grab">Grab</button></div></div>'+
       '<div class="field"><label for="amtSet">Or set your total on hand</label><div class="amtrow"><input type="number" id="amtSet" min="0" max="'+grand+'" inputmode="numeric" value="'+got+'"><button class="btn" data-a="set">Set total</button></div></div>'+
     '</div></div>';
   ov.addEventListener("click",e=>{
@@ -2688,7 +2706,7 @@ function openAmountDialog(set,g){
   });
   document.addEventListener("keydown",onKey);
   document.body.appendChild(ov);
-  const f=ov.querySelector("#amtGrab");if(f)f.focus();
+  const f=ov.querySelector("#amtGrab");if(f){f.focus();f.select();}
 }
 function openLightbox(src,name,sub){$("#lightboxImg").src=src;$("#lightboxCap").innerHTML=esc(name)+"<small>"+esc(sub)+"</small>";$("#lightbox").classList.remove("hide");}
 function closeLightbox(){$("#lightbox").classList.add("hide");$("#lightboxImg").src="";}
