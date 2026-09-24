@@ -150,7 +150,6 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
 .catrow:first-child{border-top:0}
 .row{display:flex;align-items:flex-start;gap:12px;padding:11px 15px;border-top:1px solid var(--line)}
 .row:first-child{border-top:0}
-.row.grabbed .gstep{opacity:.45;pointer-events:none}
 .row.grabbed .gall{display:none}
 .gcta.gdone{background:var(--grab-bright);border-color:var(--grab-bright);color:var(--grab-bright-ink);pointer-events:none}
 .thumb{flex:none;width:var(--thumb);height:var(--thumb);border-radius:8px;background:#fff;border:1px solid var(--line);object-fit:contain;padding:3px;cursor:zoom-in}
@@ -183,20 +182,7 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
   .grab>.greset{order:2}
   .grabbtns{flex-direction:column-reverse;align-items:stretch;width:100%;gap:8px}
   .grabbtns>*{width:100%}
-  .grabbtns .gstep{width:100%}
-  .grabbtns .gstep .ginput{flex:1}
 }
-.modelwrap{position:relative}
-.modelmenu{position:absolute;top:calc(100% + 6px);right:0;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:0 12px 34px rgba(0,0,0,.32);z-index:50;padding:6px;min-width:236px}
-.mm-title{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:700;padding:6px 8px}
-.mm-opt{display:block;width:100%;text-align:left;background:transparent;border:0;border-radius:7px;padding:8px 10px;font-weight:600;font-size:13px;color:var(--ink)}
-.mm-opt:hover{background:var(--surface-2)}
-.mm-opt.on{background:var(--accent-soft);color:var(--accent-text)}
-.gstep{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:9px;background:var(--surface);overflow:hidden}
-.gstep button{width:30px;height:34px;border:0;background:transparent;font-size:18px;font-weight:700;color:var(--muted);display:grid;place-items:center}
-.gstep button:hover{background:var(--surface-2);color:var(--ink)}
-.ginput{width:46px;height:34px;border:0;border-left:1px solid var(--line);border-right:1px solid var(--line);text-align:center;font-weight:700;font-variant-numeric:tabular-nums;background:var(--surface);color:var(--ink);-moz-appearance:textfield;border-radius:0}
-.ginput::-webkit-outer-spin-button,.ginput::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .gtext{border:1px solid transparent;background:transparent;color:var(--accent-text);border-radius:9px;height:34px;padding:0 10px;font-weight:700;font-size:13px;white-space:nowrap}
 .gtext:hover{background:var(--surface-2)}
 .gcta{border:1px solid var(--accent-line);background:var(--accent);color:var(--accent-ink);border-radius:9px;height:34px;padding:0 14px;font-weight:700;font-size:13px;white-space:nowrap}
@@ -283,7 +269,6 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
       <div style="min-width:0"><h1>Brick Bag Merge</h1><div class="tag">Pick bags &middot; sum the parts &middot; one pick&#8209;list</div></div>
     </div>
     <div class="hspace"></div>
-    <div class="modelwrap"><button class="iconbtn" id="grabModeBtn" title="Grab model (testing)" aria-label="Grab model"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg></button><div class="modelmenu hide" id="modelMenu"><div class="mm-title">Grab model · testing</div><button class="mm-opt" data-model="add">Add (staging + Grab N)</button><button class="mm-opt" data-model="set">Set total (tap to save)</button><button class="mm-opt" data-model="live">Live (edit total directly)</button><button class="mm-opt" data-model="dialog">Dialog (enter amount)</button></div></div>
     <button class="iconbtn" id="themeBtn" title="Toggle light / dark" aria-label="Toggle theme"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg></button>
   </div>
 </header>
@@ -2484,7 +2469,7 @@ function bsLink(id){return "https://brickset.com/search?query="+encodeURICompone
 const CATS=[["Technic",/technic|liftarm|beam|axle|\bpin\b|bush|gear/i],["Bricks, Round & Modified",/round brick|modified brick|headlight|snot/i],["Bricks",/\bbrick\b/i],["Plates, Round & Modified",/round plate|modified plate|jumper/i],["Plates",/\bplate\b/i],["Tiles",/\btile\b/i],["Slopes",/\bslope\b|wedge|cheese/i],["Panels & Walls",/panel|wall|fence/i],["Windows & Doors",/window|door|glass|windscreen/i],["Plants & Nature",/plant|flower|leaf|stem|tree/i],["Minifigs & Accessories",/minifig|torso|\bhead\b|\blegs?\b|helmet|hair|utensil/i]];
 function catFallback(name){const n=name||"";for(let i=0;i<CATS.length;i++)if(CATS[i][1].test(n))return CATS[i][0];return "Other parts";}
 
-let DB={sets:{},order:[],current:null,theme:"system",seeded:false,imgSize:64,lowThreshold:10,lowThreshOn:true,grabModel:"add"};
+let DB={sets:{},order:[],current:null,theme:"system",seeded:false,imgSize:64,lowThreshold:10,lowThreshOn:true};
 let catMS=null,colorMS=null;
 function save(){try{localStorage.setItem(LS,JSON.stringify(DB));}catch(e){}}
 function load(){try{const r=localStorage.getItem(LS);if(r)DB=JSON.parse(r);}catch(e){}}
@@ -2607,7 +2592,7 @@ function renderList(){
   if(set.hideGrab)agg=agg.filter(g=>gotOf(set,g)<g.grand);
   if(set.grabbedOnly)agg=agg.filter(g=>gotOf(set,g)>0);
   if(!agg.length){box.innerHTML='<div class="empty"><h3>No matching parts</h3>Turn on more bags, or clear the search / filters.</div>';renderPrintHead();return;}
-  const showCats=(set.sort||"cat")==="cat";let lastCat=null;const lowOn=DB.lowThreshOn!==false;const lowT=lowOn?(Number.isFinite(DB.lowThreshold)?DB.lowThreshold:10):-1;const model=DB.grabModel||"add";
+  const showCats=(set.sort||"cat")==="cat";let lastCat=null;const lowOn=DB.lowThreshOn!==false;const lowT=lowOn?(Number.isFinite(DB.lowThreshold)?DB.lowThreshold:10):-1;
   agg.forEach(g=>{
     if(showCats&&g.catLabel!==lastCat){lastCat=g.catLabel;const c=document.createElement("div");c.className="catrow";c.textContent=g.catLabel;box.appendChild(c);}
     const selNeed=g.total,grand=g.grand,got=gotOf(set,g),remaining=grand-got,remLater=grand-Math.max(got,selNeed),done=got>=grand;
@@ -2624,45 +2609,21 @@ function renderList(){
     if(otherTotal>0)prog+=' <span class="other">&middot; '+otherTotal+' more in bag'+(otherBags.length>1?"s":"")+' '+otherBags.join(", ")+'</span>';
     let cta;
     if(done)cta='<button class="gcta gdone">Grabbed '+got+'/'+grand+'</button>';
-    else if(model==="set")cta='<button class="gcta gqty">Set '+got+'/'+grand+'</button>';
-    else if(model==="live")cta='<button class="gcta gqty">Grab all</button>';
-    else if(model==="dialog")cta=(selNeed>0&&got>=selNeed)?'<button class="gcta gdone">Grabbed '+selNeed+'/'+grand+'</button>':'<button class="gcta gqty">Grab '+selNeed+'/'+grand+'</button>';
     else cta='<button class="gcta gqty">Grab '+selNeed+'/'+grand+'</button>';
-    const stepperHTML='<div class="gstep"><button class="gminus" aria-label="one fewer">−</button><input class="ginput" type="number" inputmode="numeric" min="0" max="'+grand+'" value="'+(model==="add"?selNeed:got)+'" aria-label="quantity to record"><button class="gplus" aria-label="one more">+</button></div>';
-    const grabbtnsHTML=model==="dialog"?('<button class="gtext genter">Enter amount</button>'+(done?'':'<button class="gtext gall '+progCls+'">Grab all ('+grand+'/'+grand+')</button>')+cta):(stepperHTML+cta);
+    const grabbtnsHTML='<button class="gtext genter">Enter amount</button>'+(done?'':'<button class="gtext gall '+progCls+'">Grab all ('+grand+'/'+grand+')</button>')+cta;
     row.innerHTML=
       '<img class="thumb" loading="lazy" alt="" src="'+esc(g.img||PLACE)+'" onerror="this.onerror=null;this.src=\''+PLACE+'\'">'+
       '<div class="rbody"><div class="rtop">'+
         '<div class="pinfo"><div class="pname"><span class="qty">'+selNeed+'×</span>'+esc(g.dispName)+'</div>'+
           '<div class="pmeta"><span class="cattag">'+esc(g.catLabel)+'</span>'+meta.join('<span class="sep">·</span>')+'</div>'+
           '<div class="bagline">'+bagLine+'</div>'+
-          '<div class="progrow"><div class="prog '+progCls+'">'+prog+'</div>'+((model==="live"||model==="dialog")?'':'<button class="gtext gall '+progCls+'">Grab all ('+grand+'/'+grand+')</button>')+'</div>'+
+          '<div class="progrow"><div class="prog '+progCls+'">'+prog+'</div></div>'+
         '</div>'+
         '<div class="grab"><button class="gtext greset"'+(got>0?'':' disabled')+'>Reset</button><div class="grabbtns">'+grabbtnsHTML+'</div></div>'+
       '</div></div>';
     const grab=row.querySelector(".grab");
     if(!done){
-      if(model==="dialog"){
-        const dq=grab.querySelector(".gqty");if(dq)dq.addEventListener("click",()=>grabAction(set,g,got+selNeed));
-      }else{
-        const gi=grab.querySelector(".ginput");
-        const gqtyBtn=grab.querySelector(".gqty");
-        const fieldVal=()=>{let v=parseInt(gi.value,10);if(!isFinite(v)||v<0)v=0;if(v>grand)v=grand;return v;};
-        if(model==="live"){
-          grab.querySelector(".gminus").addEventListener("click",()=>setGot(set,g,got-1));
-          grab.querySelector(".gplus").addEventListener("click",()=>setGot(set,g,got+1));
-          gi.addEventListener("change",()=>setGot(set,g,fieldVal()));
-          gqtyBtn.addEventListener("click",()=>setGot(set,g,grand));
-        }else{
-          const commit=()=>model==="set"?setGot(set,g,fieldVal()):grabAction(set,g,got+fieldVal());
-          const updLabels=()=>{gqtyBtn.textContent=(model==="set"?"Set ":"Grab ")+fieldVal()+"/"+grand;};
-          grab.querySelector(".gminus").addEventListener("click",()=>{gi.value=Math.max(0,fieldVal()-1);updLabels();});
-          grab.querySelector(".gplus").addEventListener("click",()=>{gi.value=Math.min(grand,fieldVal()+1);updLabels();});
-          gi.addEventListener("input",updLabels);
-          gi.addEventListener("keydown",ev=>{if(ev.key==="Enter"){ev.preventDefault();commit();}});
-          gqtyBtn.addEventListener("click",commit);
-        }
-      }
+      const dq=grab.querySelector(".gqty");if(dq)dq.addEventListener("click",()=>grabAction(set,g,got+selNeed));
     }
     const enterBtn=row.querySelector(".genter");if(enterBtn)enterBtn.addEventListener("click",()=>openAmountDialog(set,g));
     grab.querySelector(".greset").addEventListener("click",()=>setGot(set,g,0));
@@ -2736,8 +2697,8 @@ function deleteCurrent(){const s=curSet();if(!s)return;if(!confirm("Delete “"+
 
 function init(){
   load();
-  if(!DB||!DB.sets)DB={sets:{},order:[],current:null,theme:"system",seeded:false,imgSize:64,lowThreshold:10,lowThreshOn:true,grabModel:"add"};
-  if(!DB.imgSize)DB.imgSize=64;if(!Number.isFinite(DB.lowThreshold))DB.lowThreshold=10;if(DB.lowThreshOn===undefined)DB.lowThreshOn=true;if(!DB.grabModel)DB.grabModel="add";
+  if(!DB||!DB.sets)DB={sets:{},order:[],current:null,theme:"system",seeded:false,imgSize:64,lowThreshold:10,lowThreshOn:true};
+  if(!DB.imgSize)DB.imgSize=64;if(!Number.isFinite(DB.lowThreshold))DB.lowThreshold=10;if(DB.lowThreshOn===undefined)DB.lowThreshOn=true;
   DB.order=(DB.order||[]).filter(id=>DB.sets[id]);
   DB.order.filter(id=>DB.sets[id]&&DB.sets[id].sample).forEach(id=>delete DB.sets[id]);
   DB.order=DB.order.filter(id=>DB.sets[id]);
@@ -2769,7 +2730,6 @@ function init(){
   $("#imgSizeSel").addEventListener("change",e=>{DB.imgSize=parseInt(e.target.value,10)||64;applyImgSize();save();});
   $("#lowThresh").addEventListener("input",e=>{let v=parseInt(e.target.value,10);if(!Number.isFinite(v)||v<0)v=0;if(v>9999)v=9999;DB.lowThreshold=v;save();renderList();});
   $("#lowThreshOn").addEventListener("change",e=>{DB.lowThreshOn=e.target.checked;$("#lowThresh").disabled=!e.target.checked;save();renderList();});
-  (function(){const mm=$("#modelMenu");function mark(){$$("#modelMenu .mm-opt").forEach(b=>b.classList.toggle("on",b.getAttribute("data-model")===(DB.grabModel||"add")));}$("#grabModeBtn").addEventListener("click",ev=>{ev.stopPropagation();mm.classList.toggle("hide");mark();});$$("#modelMenu .mm-opt").forEach(b=>b.addEventListener("click",()=>{DB.grabModel=b.getAttribute("data-model");save();mark();mm.classList.add("hide");renderList();}));document.addEventListener("click",ev=>{if(!ev.target.closest(".modelwrap"))mm.classList.add("hide");});})();
   $("#hideGrab").addEventListener("change",e=>{const s=curSet();if(s){s.hideGrab=e.target.checked;save();renderList();}});
   $("#grabbedOnly").addEventListener("change",e=>{const s=curSet();if(s){s.grabbedOnly=e.target.checked;save();renderList();}});
   $("#resetGrab").addEventListener("click",()=>{const s=curSet();if(!s)return;const n=Object.keys(s.grabbed||{}).length;if(!n)return alert("Nothing is marked yet.");if(!confirm("Clear grabbed progress for all "+n+" parts in this set?"))return;s.grabbed={};s.grabPrev={};save();renderStats();renderBags();renderList();});
