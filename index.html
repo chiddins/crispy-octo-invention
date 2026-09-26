@@ -186,8 +186,6 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
 .progrow .prog{margin-top:0}
 .grab{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px 12px;margin-top:10px}
 .grableft{display:flex;align-items:center;gap:6px}
-.gflag{color:var(--ink);border-color:var(--line);background:var(--surface)}
-.gflag:hover{border-color:var(--faint)}
 .grabbtns{display:flex;align-items:center;flex-wrap:wrap;justify-content:flex-end;gap:6px}
 .gedit-lbl{display:none}
 @media (max-width:560px){
@@ -204,6 +202,8 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
 .greset{color:var(--ink);border-color:var(--line);background:var(--surface)}
 .greset:hover:not(:disabled){background:var(--danger-soft);border-color:var(--danger);color:var(--danger)}
 .greset:disabled{color:var(--faint);opacity:.55;cursor:default}
+.gflag{color:var(--ink);border-color:var(--line);background:var(--surface)}
+.gflag:hover{border-color:var(--faint)}
 .gall{color:var(--ink);border-color:var(--line);background:var(--surface)}
 .gall:hover{border-color:var(--faint)}
 .genter{color:var(--ink);border-color:var(--line);background:var(--surface)}
@@ -2517,6 +2517,7 @@ function defaultSelect(set){bagsOf(set).forEach(b=>{if(!(b in set.selected))set.
 function newSet(name){const id=uid();DB.sets[id]={id,name:name||"New set",entries:[],selected:{},grabbed:{},collected:{},missing:{},grabPrev:{},view:"all",sort:"cat",search:"",fCat:[],fColor:[]};DB.order.push(id);DB.current=id;return DB.sets[id];}
 function bagQ(g,b){return Number(g.allByBag[b])||0;}
 function collectedQtyOf(set,g){const col=set.collected&&set.collected[g.key];if(!col)return 0;let s=0;for(const b in g.allByBag){if(b in col){const v=col[b];s+=(v===true?bagQ(g,b):(Number(v)||0));}}return s;}
+function grabNowOf(set,g){const col=set.collected&&set.collected[g.key];let n=0;for(const b in g.byBag){if(!(col&&(b in col)))n+=(Number(g.byBag[b])||0);}return n;}
 function missOf(set,g){return Math.max(0,Math.min(g.grand,(set.missing&&set.missing[g.key])||0));}
 function gotOf(set,g){if((DB.grabModel||"bybag")==="bybag")return Math.max(0,Math.min(g.grand,collectedQtyOf(set,g)));return Math.max(0,Math.min(g.grand,Number(set.grabbed[g.key])||0));}
 function setGot(set,g,v){v=Math.floor(Number(v));if(!isFinite(v))v=0;v=Math.max(0,Math.min(g.grand,v));if(v<=0)delete set.grabbed[g.key];else set.grabbed[g.key]=v;save();renderStats();renderList();}
@@ -2636,12 +2637,12 @@ function renderList(){
   if(set.fCat&&set.fCat.length)agg=agg.filter(g=>set.fCat.indexOf(g.catLabel)>=0);
   if(set.fColor&&set.fColor.length)agg=agg.filter(g=>set.fColor.indexOf(String(g.color))>=0);
   const view=set.view||"all";
-  const nAll=agg.length,nPicked=agg.filter(g=>gotOf(set,g)>=g.grand).length,nMiss=agg.filter(g=>missOf(set,g)>0).length;
+  const nAll=agg.length,nUnpicked=agg.filter(g=>grabNowOf(set,g)>0).length,nMiss=agg.filter(g=>missOf(set,g)>0).length;
   const setBadge=(id,n)=>{const el=$("#"+id);if(el)el.textContent=n;};
-  setBadge("tvAll",nAll);setBadge("tvUnpicked",nAll-nPicked);setBadge("tvPicked",nPicked);setBadge("tvMissing",nMiss);
+  setBadge("tvAll",nAll);setBadge("tvUnpicked",nUnpicked);setBadge("tvPicked",nAll-nUnpicked);setBadge("tvMissing",nMiss);
   $$("#viewTabs .vtab").forEach(b=>b.classList.toggle("on",b.getAttribute("data-view")===view));
-  if(view==="unpicked")agg=agg.filter(g=>gotOf(set,g)<g.grand);
-  else if(view==="picked")agg=agg.filter(g=>gotOf(set,g)>=g.grand);
+  if(view==="unpicked")agg=agg.filter(g=>grabNowOf(set,g)>0);
+  else if(view==="picked")agg=agg.filter(g=>grabNowOf(set,g)<=0);
   else if(view==="missing")agg=agg.filter(g=>missOf(set,g)>0);
   if(!agg.length){box.innerHTML='<div class="empty"><h3>No matching parts</h3>Nothing in this view — try another tab, more bags, or clear the search / filters.</div>';renderPrintHead();return;}
   const showCats=(set.sort||"cat")==="cat";let lastCat=null;const lowOn=DB.lowThreshOn!==false;const lowT=lowOn?(Number.isFinite(DB.lowThreshold)?DB.lowThreshold:10):-1;
