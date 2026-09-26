@@ -58,7 +58,7 @@ header.app{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;backgroun
 .logo span{display:block;width:7px;height:7px;border-radius:50%;background:var(--accent-ink);box-shadow:11px 0 0 var(--accent-ink),0 11px 0 var(--accent-ink),11px 11px 0 var(--accent-ink);margin:-9px 0 0 -9px}
 .brand h1{font-size:18px;font-weight:800;letter-spacing:-.01em}
 .brand h1 .ver{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.02em;vertical-align:2px;margin-left:5px}
-.brand .tag{font-size:11.5px;color:var(--muted);font-weight:600;letter-spacing:.02em}
+.brand .tagline{font-size:11.5px;color:var(--muted);font-weight:600;letter-spacing:.02em}
 .hspace{flex:1}
 
 .btn,.iconbtn,.setsel,select.ctl,input.ctl,.toggle{height:var(--ctl);box-sizing:border-box}
@@ -112,12 +112,10 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
 .listhead{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .listhead .search{flex:1;min-width:150px}
 .listhead .search input{width:100%;height:var(--ctl)}
-.viewtabs{display:flex;gap:6px;flex-wrap:wrap;padding:10px 15px;border-bottom:1px solid var(--line)}
-.vtab{display:inline-flex;align-items:center;gap:7px;background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:9px;height:34px;padding:0 12px;font-weight:700;font-size:13px}
-.vtab:hover{border-color:var(--faint);color:var(--ink)}
-.vtab.on{background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent-text)}
-.vbadge{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--surface-3);color:var(--muted);font-size:11px;font-weight:800;font-variant-numeric:tabular-nums}
-.vbadge-miss{background:var(--danger);color:#fff}
+.viewtabs{display:flex;gap:8px;flex-wrap:wrap;padding:10px 15px;border-bottom:1px solid var(--line)}
+.viewtabs .toggle{height:34px}
+.vbadge{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--surface-2);border:1px solid var(--line);color:var(--muted);font-size:11px;font-weight:800;font-variant-numeric:tabular-nums}
+.vbadge-miss{background:var(--danger);border-color:var(--danger);color:#fff}
 .lhead{flex-direction:column;align-items:stretch;gap:12px}
 .cbox{width:20px;height:20px;flex:none;border-radius:6px;border:2px solid var(--faint);display:grid;place-items:center;background:var(--surface)}
 .cbox svg{width:12px;height:12px;opacity:0;color:var(--accent-ink)}
@@ -167,14 +165,20 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
 .pname{font-weight:600;word-break:break-word}
 .pmeta{margin-top:3px;font-size:12px;color:var(--muted);line-height:1.7}
 .pmeta .sep{color:var(--faint);margin:0 7px}
-.pmeta .dot{display:inline-block;width:11px;height:11px;border-radius:50%;border:1px solid rgba(0,0,0,.25);vertical-align:-1px;margin-right:5px}
+.metaid{color:var(--muted);vertical-align:1px;font-variant-numeric:tabular-nums}
 .pmeta .lnk{color:var(--link);text-decoration:none}
 .pmeta .lnk:hover{text-decoration:underline}
 .plinks{margin-top:3px;font-size:12px;line-height:1.6}
 .plinks .lnk{color:var(--link);text-decoration:none}
 .plinks .lnk:hover{text-decoration:underline}
 .plinks .sep{color:var(--faint);margin:0 7px}
-.cattag{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);background:var(--surface-2);border:1px solid var(--line);border-radius:5px;padding:1px 6px;margin-right:8px;vertical-align:1px}
+.tag{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;line-height:1.5;letter-spacing:.02em;color:var(--muted);background:var(--surface-2);border:1px solid var(--line);border-radius:6px;padding:1px 7px;margin-right:8px;vertical-align:1px;white-space:nowrap}
+.tag.cattag{text-transform:uppercase;letter-spacing:.05em}
+.tag.misstag{color:var(--danger);background:var(--danger-soft);border-color:var(--danger);cursor:pointer;font-family:var(--font-ui)}
+.tag.misstag:hover{filter:brightness(1.08);text-decoration:underline}
+.pname .tag{margin-right:0;margin-left:8px}
+.swatch{display:inline-block;width:11px;height:11px;border-radius:3px;border:1px solid rgba(0,0,0,.28);flex:none}
+.swline{display:inline-flex;align-items:center;gap:7px;min-width:0}
 .bagline{margin-top:3px;font-size:11.5px;color:var(--faint);font-variant-numeric:tabular-nums}
 .prog{margin-top:4px;font-size:12px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
 .prog.low{color:var(--warn)}
@@ -224,13 +228,9 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
 .gall.done{color:var(--grab-bright)}
 .qty.qtypicked{color:var(--grab-bright)}
 .nametick{display:inline-flex;align-items:center;vertical-align:-3px;margin-left:5px;color:var(--grab-bright)}
-.misstag{display:inline-block;font-family:var(--font-ui);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--danger);background:var(--danger-soft);border:1px solid var(--danger);border-radius:5px;padding:2px 6px;margin-right:8px;vertical-align:1px;cursor:pointer}
-.misstag:hover{filter:brightness(1.08);text-decoration:underline}
 .amtother{color:var(--faint);font-weight:600}
 .gedit{min-width:34px;padding:0 8px;display:inline-flex;align-items:center;justify-content:center;gap:8px;color:var(--ink);border-color:var(--line);background:var(--surface)}
 .gedit:hover{border-color:var(--faint)}
-.missbadge{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--danger);color:#fff;font-size:11px;font-weight:800;margin-left:6px}
-.missbadge.hide{display:none}
 .empty{padding:40px 22px;text-align:center;color:var(--muted)}
 .empty h3{font-size:16px;color:var(--ink);margin-bottom:6px}.empty .btn{margin-top:12px}
 
@@ -290,7 +290,7 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
   <div class="wrap hbar">
     <div class="brand">
       <span class="logo" aria-hidden="true"><span></span></span>
-      <div style="min-width:0"><h1>Brick Bag Merge <span class="ver">v39</span></h1><div class="tag">Pick bags &middot; sum the parts &middot; one pick&#8209;list</div></div>
+      <div style="min-width:0"><h1>Brick Bag Merge <span class="ver">v40</span></h1><div class="tagline">Pick bags &middot; sum the parts &middot; one pick&#8209;list</div></div>
     </div>
     <div class="hspace"></div>
     <button class="iconbtn" id="themeBtn" title="Toggle light / dark" aria-label="Toggle theme"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg></button>
@@ -338,10 +338,10 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
       </div>
       <div id="printHead"></div>
       <div class="viewtabs" id="viewTabs">
-        <button class="vtab on" data-view="all">All <span class="vbadge" id="tvAll">0</span></button>
-        <button class="vtab" data-view="unpicked">Unpicked <span class="vbadge" id="tvUnpicked">0</span></button>
-        <button class="vtab" data-view="picked">Picked <span class="vbadge" id="tvPicked">0</span></button>
-        <button class="vtab" data-view="missing">Missing <span class="vbadge" id="tvMissing">0</span></button>
+        <label class="toggle vtab" data-view="all"><input type="checkbox" class="cbx" data-view="all"><span class="cbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg></span>All <span class="vbadge" id="tvAll">0</span></label>
+        <label class="toggle vtab" data-view="unpicked"><input type="checkbox" class="cbx" data-view="unpicked"><span class="cbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg></span>Unpicked <span class="vbadge" id="tvUnpicked">0</span></label>
+        <label class="toggle vtab" data-view="picked"><input type="checkbox" class="cbx" data-view="picked"><span class="cbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg></span>Picked <span class="vbadge" id="tvPicked">0</span></label>
+        <label class="toggle vtab" data-view="missing"><input type="checkbox" class="cbx" data-view="missing"><span class="cbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg></span>Missing <span class="vbadge" id="tvMissing">0</span></label>
       </div>
       <div class="parts" id="parts"></div>
     </main>
@@ -2493,7 +2493,9 @@ function partName(id){const p=lookupPart(id);return p?p[0]:null;}
 function partCat(id){const p=lookupPart(id);return p&&PARTS.cats[p[1]]?PARTS.cats[p[1]]:null;}
 function baLink(id){return "https://brickarchitect.com/parts/"+encodeURIComponent(id);}
 function bsDesign(id){return String(id).replace(/(p[brx]\w+|c\d\d.*)$/i,"")||id;}
-function bsLink(id){return "https://brickset.com/search?query="+encodeURIComponent(bsDesign(id));}
+const BSN={"1":"White","2":"Brick yellow","3":"Bright yellow","4":"Bright orange","5":"Bright red","6":"Dark green","7":"Bright Blue","8":"Earth Orange","9":"Grey","10":"Dark grey","11":"Black","12":"Transparent","13":"Tr. Brown","14":"Tr. Blue","15":"Tr. Lg blue","16":"Tr. Flu. Green","17":"Tr. Red","18":"Tr. Flu. Reddish orange","19":"Tr. Yellow","20":"Tr. Green","21":"Metalized Gold","22":"Metalized Silver","23":"L.REDVIOL","24":"Bright violet","25":"Medium Red","26":"Light red","28":"Nougat","29":"L.ORABROWN","31":"Br. yellowish orange","32":"Medium Yellowish Orange","33":"Light yellow","34":"Br. yellowish green","35":"Lig. yellowish green","36":"Bright Green","37":"Medium green","38":"Light green","39":"Bright bluish green","40":"Med. bluish green","41":"Light bluish green","42":"Medium blue","43":"Bright Bluish Violet","44":"Light bluish violet","46":"Phosp. White","47":"Bright Purple","48":"Sand green","49":"Light grey","50":"Tr. Medi. reddish violet","51":"Tr. Bright bluish violet","54":"Sand violet","55":"Sand blue","56":"Light Pink","58":"Sand red","59":"Dark red","60":"Nature","61":"Gold","62":"Light blue","63":"Earth blue","65":"GOLD INK","66":"Cool silver","67":"SILVER INK","68":"Dark Orange","69":"Sand yellow","71":"Bright reddish violet","72":"Pastel Blue","73":"Medium Bluish Violet","74":"Tr. Flu. Blue","76":"Med. yellowish green","77":"Titanium Metallic","78":"Sand blue metallic","80":"Earth Green","81":"Gold Metallic","83":"Metallic White","84":"Copper","85":"Dark stone grey","86":"Medium stone grey","87":"Dove blue","88":"Reddish Brown","89":"Medium Lilac","90":"Light Nougat","91":"BROWN","93":"Bright Reddish Lilac","94":"Medium Reddish Violet","95":"Silver Metallic","96":"Light Yellowish Orange","97":"R. BLUE","98":"Tr. Bright Orange","99":"Light stone grey","100":"Tr. Medium Reddish-Violet w. Glitter 2%","101":"Transparent Glitter","102":"Tr. Bright Bluish Violet w. Glitter 2%","103":"Cool Yellow","104":"Light Purple","105":"Light Royal blue","106":"Brick Red","107":"TR. BR. PURPLE","108":"Transparent Bright Green","109":"Dark Royal blue","110":"Flame yellowish orange","111":"CO. SILVER DIF","113":"Transparent Light Bluish Green","114":"TR. RED-LILAC","115":"Warm Gold","116":"COP. DIF.","117":"CO. SILVER DIF","118":"Phosphorescent Green","119":"Metallic Light Gray","120":"Dark Brown","121":"Transparent Fluorescent Yellow","150":"Medium Nougat","151":"Warm Gold, Diffuse","152":"Aqua","153":"Dark Azur","154":"Lavender","155":"Olive Green","156":"Medium Azure","157":"Medium Lavender","158":"Spring Yellow Green","159":"WHITE GLOW","160":"Light Brown","161":"Curry","162":"PCTR LI.BLUE W/","163":"TR.FL.GRE W/GLI","164":"TR. FL. YEL ORA","165":"Neon Orange","166":"Neon Green","167":"Red. Orange","168":"Umber Brown","169":"Sienna Brown","170":"Tr. Yellow Opal","171":"Lemon","172":"Warm Yellowish Orange","173":"Ochre Yellow","174":"Blue Violet","175":"Warm Pink","220":"Coral","221":"Transparent Light Green","222":"TR.BR:ORA W/GLI","223":"Transparent Blue Opal","224":"Transparent Medium Reddish Violet with Opalescence","225":"Dark Nougat","226":"Transparent Bright Yellowish Green","227":"RED. LILAC","228":"Transparent with Opalescence","229":"Transparent Brown With Opalescence","230":"Tr.Violet Opal","231":"Bright Reddish Orange","232":"Transparent Blue With Opalescence","233":"Transparent Green With Opalescence","234":"Transparent Bright Reddish Lilac","235":"Reddish Gold","236":"Vibrant Yellow","237":"Red Flip/Flop","238":"Yellow Flip/Flop","239":"Silver Flip/Flop","240":"Medium Brown","241":"Warm Tan","242":"Dark Army Green","244":"Metallic Black","245":"Lilac","246":"Light Lilac","247":"Tiny Blue","248":"Pastel Green","249":"Copper Metallic","250":"COPPER, DR.LA.","251":"Tr. Black","252":"Metallic Bright Red","253":"Metallic Dark Green","254":"Metallic Bright Blue","255":"Metallic Earth Orange"};
+function bsName(color){if(color===""||color==null)return "";const s=String(color);if(/^-?\d+$/.test(s)&&BSN[s])return BSN[s];return colorLabel(color);}
+function bsLink(id,color){const design=bsDesign(id);const nm=bsName(color);return "https://brickset.com/parts?query="+encodeURIComponent(nm?(design+" "+nm):design);}
 
 const CATS=[["Technic",/technic|liftarm|beam|axle|\bpin\b|bush|gear/i],["Bricks, Round & Modified",/round brick|modified brick|headlight|snot/i],["Bricks",/\bbrick\b/i],["Plates, Round & Modified",/round plate|modified plate|jumper/i],["Plates",/\bplate\b/i],["Tiles",/\btile\b/i],["Slopes",/\bslope\b|wedge|cheese/i],["Panels & Walls",/panel|wall|fence/i],["Windows & Doors",/window|door|glass|windscreen/i],["Plants & Nature",/plant|flower|leaf|stem|tree/i],["Minifigs & Accessories",/minifig|torso|\bhead\b|\blegs?\b|helmet|hair|utensil/i]];
 function catFallback(name){const n=name||"";for(let i=0;i<CATS.length;i++)if(CATS[i][1].test(n))return CATS[i][0];return "Other parts";}
@@ -2508,7 +2510,7 @@ function sortBags(bags){return bags.slice().sort((a,b)=>bagKeyNum(a)-bagKeyNum(b
 function bagsOf(set){const s=new Set();set.entries.forEach(e=>s.add(String(e.bag)));return sortBags([...s]);}
 function groupKey(e){const base=e.id&&String(e.id).trim()?("#"+norm(e.id)):norm(e.name||"");return base+"|"+norm(String(e.color));}
 function defaultSelect(set){bagsOf(set).forEach(b=>{if(!(b in set.selected))set.selected[b]=true;});}
-function newSet(name){const id=uid();DB.sets[id]={id,name:name||"New set",entries:[],selected:{},grabbed:{},collected:{},missing:{},grabPrev:{},view:"all",sort:"cat",search:"",fCat:[],fColor:[]};DB.order.push(id);DB.current=id;return DB.sets[id];}
+function newSet(name){const id=uid();DB.sets[id]={id,name:name||"New set",entries:[],selected:{},grabbed:{},collected:{},missing:{},grabPrev:{},views:[],sort:"cat",search:"",fCat:[],fColor:[]};DB.order.push(id);DB.current=id;return DB.sets[id];}
 function bagQ(g,b){return Number(g.allByBag[b])||0;}
 function collectedQtyOf(set,g){const col=set.collected&&set.collected[g.key];if(!col)return 0;let s=0;for(const b in g.allByBag){if(b in col){const v=col[b];s+=(v===true?bagQ(g,b):(Number(v)||0));}}return s;}
 function grabNowOf(set,g){const col=set.collected&&set.collected[g.key];let n=0;for(const b in g.byBag){if(!(col&&(b in col)))n+=(Number(g.byBag[b])||0);}return n;}
@@ -2596,7 +2598,7 @@ function renderStats(){
   [[selCount+" / "+bags.length,"bags selected"],[agg.length,"part types"],[pieces,"total pieces"],[done+" / "+agg.length,"picked"]].forEach(d=>{const el=document.createElement("div");el.className="stat";el.innerHTML="<b>"+d[0]+"</b><span>"+d[1]+"</span>";box.appendChild(el);});
 }
 function colorLabel(color){const s=String(color);if(/^-?\d+$/.test(s)){const e=BLC[s];return e?e[0]:("Colour "+s);}return s;}
-function colorMeta(color){if(color===""||color==null)return "";return esc(colorLabel(color));}
+function colorTag(color){if(color===""||color==null)return "";const hex=colorHex(color),nm=esc(colorLabel(color));return '<span class="tag colortag">'+(hex?'<span class="swatch" style="background:'+esc(hex)+'"></span>':'')+nm+'</span>';}
 
 /* ---- multi-select ---- */
 const MSCHECK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg>';
@@ -2605,9 +2607,9 @@ function MultiSelect(host,opts){
   const input=document.createElement("input");input.className="ms-input";input.setAttribute("aria-label",opts.title||"filter");
   const clear=document.createElement("button");clear.type="button";clear.className="ms-clear hide";clear.setAttribute("aria-label","Clear filter");clear.textContent="×";
   const menu=document.createElement("div");menu.className="ms-menu hide";
-  let options=[],selected=[];const label=opts.label||(x=>x),onChange=opts.onChange||function(){},title=opts.title||"Filter";
+  let options=[],selected=[];const label=opts.label||(x=>x),render=opts.render||(o=>esc(label(o))),onChange=opts.onChange||function(){},title=opts.title||"Filter";
   function ph(){input.placeholder=selected.length?(title+" ("+selected.length+")"):title;clear.classList.toggle("hide",!selected.length);host.classList.toggle("has-sel",selected.length>0);}
-  function draw(){const q=norm(input.value);const list=options.filter(o=>!q||norm(label(o)).includes(q));menu.innerHTML="";if(!list.length){menu.classList.add("hide");return;}list.slice(0,150).forEach(o=>{const on=selected.indexOf(o)>=0;const d=document.createElement("div");d.className="ms-opt";d.innerHTML='<span class="cbox'+(on?" on":"")+'">'+MSCHECK+'</span>'+esc(label(o));d.addEventListener("mousedown",e=>{e.preventDefault();const i=selected.indexOf(o);if(i>=0)selected.splice(i,1);else selected.push(o);ph();draw();onChange(selected.slice());});menu.appendChild(d);});menu.classList.remove("hide");}
+  function draw(){const q=norm(input.value);const list=options.filter(o=>!q||norm(label(o)).includes(q));menu.innerHTML="";if(!list.length){menu.classList.add("hide");return;}list.slice(0,150).forEach(o=>{const on=selected.indexOf(o)>=0;const d=document.createElement("div");d.className="ms-opt";d.innerHTML='<span class="cbox'+(on?" on":"")+'">'+MSCHECK+'</span>'+render(o);d.addEventListener("mousedown",e=>{e.preventDefault();const i=selected.indexOf(o);if(i>=0)selected.splice(i,1);else selected.push(o);ph();draw();onChange(selected.slice());});menu.appendChild(d);});menu.classList.remove("hide");}
   input.addEventListener("focus",draw);
   input.addEventListener("input",draw);
   input.addEventListener("keydown",e=>{if(e.key==="Escape"){menu.classList.add("hide");input.blur();}});
@@ -2630,24 +2632,22 @@ function renderList(){
   if(q)agg=agg.filter(g=>norm(g.dispName).includes(q)||norm(String(g.color)).includes(q)||norm(g.id).includes(q));
   if(set.fCat&&set.fCat.length)agg=agg.filter(g=>set.fCat.indexOf(g.catLabel)>=0);
   if(set.fColor&&set.fColor.length)agg=agg.filter(g=>set.fColor.indexOf(String(g.color))>=0);
-  const view=set.view||"all";
+  const views=Array.isArray(set.views)?set.views:[];
   const nAll=agg.length,nUnpicked=agg.filter(g=>grabNowOf(set,g)>0).length,nMiss=agg.filter(g=>missOf(set,g)>0).length;
   const setBadge=(id,n)=>{const el=$("#"+id);if(el)el.textContent=n;};
   setBadge("tvAll",nAll);setBadge("tvUnpicked",nUnpicked);setBadge("tvPicked",nAll-nUnpicked);setBadge("tvMissing",nMiss);
   {const mb=$("#tvMissing");if(mb)mb.classList.toggle("vbadge-miss",nMiss>0);}
-  $$("#viewTabs .vtab").forEach(b=>b.classList.toggle("on",b.getAttribute("data-view")===view));
-  if(view==="unpicked")agg=agg.filter(g=>grabNowOf(set,g)>0);
-  else if(view==="picked")agg=agg.filter(g=>grabNowOf(set,g)<=0);
-  else if(view==="missing")agg=agg.filter(g=>missOf(set,g)>0);
+  {const on={all:views.length===0,unpicked:views.indexOf("unpicked")>=0,picked:views.indexOf("picked")>=0,missing:views.indexOf("missing")>=0};$$("#viewTabs .cbx").forEach(cb=>{cb.checked=!!on[cb.getAttribute("data-view")];});}
+  if(views.length)agg=agg.filter(g=>(views.indexOf("unpicked")>=0&&grabNowOf(set,g)>0)||(views.indexOf("picked")>=0&&grabNowOf(set,g)<=0)||(views.indexOf("missing")>=0&&missOf(set,g)>0));
   if(!agg.length){box.innerHTML='<div class="empty"><h3>No matching parts</h3>Nothing in this view — try another tab, more bags, or clear the search / filters.</div>';renderPrintHead();return;}
   const showCats=(set.sort||"cat")==="cat";let lastCat=null;const lowOn=DB.lowThreshOn!==false;const lowT=lowOn?(Number.isFinite(DB.lowThreshold)?DB.lowThreshold:10):-1;
   agg.forEach(g=>{
     if(showCats&&g.catLabel!==lastCat){lastCat=g.catLabel;const c=document.createElement("div");c.className="catrow";c.textContent=g.catLabel;box.appendChild(c);}
     const selNeed=g.total,grand=g.grand,got=gotOf(set,g);
     const otherTotal=grand-selNeed;const otherBags=sortBags(Object.keys(g.allByBag).filter(b=>!set.selected[b]));
-    const meta=[];const cm=colorMeta(g.color);if(cm)meta.push(cm);
-    if(g.id)meta.push('#'+esc(g.id));
-    const links=g.id?('<a class="lnk" href="'+baLink(g.id)+'" target="_blank" rel="noopener">Brick Architect ↗</a><span class="sep">·</span><a class="lnk" href="'+bsLink(g.id)+'" target="_blank" rel="noopener">Brickset ↗</a>'):'';
+    const colourTag=colorTag(g.color);
+    const idHTML=g.id?'<span class="metaid">#'+esc(g.id)+'</span>':'';
+    const links=g.id?('<a class="lnk" href="'+baLink(g.id)+'" target="_blank" rel="noopener">Brick Architect ↗</a><span class="sep">·</span><a class="lnk" href="'+bsLink(g.id,g.color)+'" target="_blank" rel="noopener">Brickset ↗</a>'):'';
     const bagLine=sortBags(Object.keys(g.byBag)).map(b=>"bag "+esc(b)+": "+g.byBag[b]).join(", ");
     let qtyBadge,progWord,progCls,cta,grabbtnsHTML,rowCls,onGrab,onGrabAll,missTag='',flagBtnHTML='',nameTick='',hasProg=false;
     {
@@ -2656,7 +2656,7 @@ function renderList(){
       const toPick=Math.max(0,grand-got),remLater=Math.max(0,toPick-grabNow),doneView=grabNow<=0,complete=got>=grand;
       hasProg=collQty>0||missCnt>0;progWord='picked';
       progCls=complete?"done":(((toPick>0&&toPick<=lowT)||(remLater>0&&remLater<=lowT))?"low":"");
-      if(missCnt>0)missTag='<button class="misstag" title="Update missing">'+missCnt+' missing</button>';
+      if(missCnt>0)missTag='<button class="tag misstag" title="Update missing">'+missCnt+' missing</button>';
       flagBtnHTML='<button class="gtext gflag">Flag missing</button>';
       if(grabNow>0){qtyBadge='<span class="qty">'+grabNow+'×</span>';}else{qtyBadge='<span class="qty qtypicked">'+selNeed+'×</span>';nameTick='<span class="nametick">'+CHECK+'</span>';}
       const edit=complete?'':'<button class="gtext gedit" title="Pick custom amount" aria-label="Pick custom amount">'+PENCIL+'<span class="gedit-lbl">Pick custom amount</span></button>';
@@ -2670,8 +2670,8 @@ function renderList(){
     if(otherTotal>0)prog+=' <span class="other">&middot; '+otherTotal+' more in bag'+(otherBags.length>1?"s":"")+' '+otherBags.join(", ")+'</span>';
     row.innerHTML=
       '<div class="rmain"><img class="thumb" loading="lazy" alt="" src="'+esc(g.img||PLACE)+'" onerror="this.onerror=null;this.src=\''+PLACE+'\'">'+
-        '<div class="rbody"><div class="pinfo"><div class="pname">'+qtyBadge+esc(g.dispName)+nameTick+'</div>'+
-          '<div class="pmeta"><span class="cattag">'+esc(g.catLabel)+'</span>'+missTag+meta.join('<span class="sep">·</span>')+'</div>'+
+        '<div class="rbody"><div class="pinfo"><div class="pname">'+qtyBadge+esc(g.dispName)+nameTick+missTag+'</div>'+
+          '<div class="pmeta"><span class="tag cattag">'+esc(g.catLabel)+'</span>'+colourTag+idHTML+'</div>'+
           (links?'<div class="plinks">'+links+'</div>':'')+
           '<div class="bagline">'+bagLine+'</div>'+
           '<div class="progrow"><div class="prog '+progCls+'">'+prog+'</div></div>'+
@@ -2697,7 +2697,7 @@ function openAmountDialog(set,g){
   const got=gotOf(set,g),grand=g.grand,selNeed=g.total;
   const bagLine=sortBags(Object.keys(g.byBag)).map(b=>"bag "+esc(b)+": "+g.byBag[b]).join(", ");
   const otherTotal=grand-selNeed,otherBags=sortBags(Object.keys(g.allByBag).filter(b=>!set.selected[b]));
-  const cm=colorMeta(g.color)||'';
+  const cm=colorTag(g.color);
   const ov=document.createElement("div");ov.className="overlay";
   const close=()=>{ov.remove();document.removeEventListener("keydown",onKey);};
   const onKey=e=>{if(e.key==="Escape"){e.preventDefault();close();}};
@@ -2712,7 +2712,7 @@ function openAmountDialog(set,g){
     '<div class="amtsum">'+
       '<img class="amtthumb" loading="lazy" alt="" src="'+esc(g.img||PLACE)+'" onerror="this.onerror=null;this.src=\''+PLACE+'\'">'+
       '<div class="amtinfo"><div class="amtname"><span class="qty">'+selNeed+'×</span>'+esc(g.dispName)+'</div>'+
-        '<div class="amtmeta"><span class="cattag">'+esc(g.catLabel)+'</span>'+cm+(g.id?'<span class="sep">·</span>#'+esc(g.id):'')+'</div>'+
+        '<div class="amtmeta"><span class="tag cattag">'+esc(g.catLabel)+'</span>'+cm+(g.id?'<span class="metaid">#'+esc(g.id)+'</span>':'')+'</div>'+
         (bagLine?'<div class="amtbags">'+bagLine+'</div>':'')+
         '<div class="amtcount">'+got+'/'+grand+' picked'+(otherTotal>0?' <span class="amtother">&middot; '+otherTotal+' more in bag'+(otherBags.length>1?"s":"")+' '+otherBags.join(", ")+'</span>':'')+'</div>'+
       '</div>'+
@@ -2731,7 +2731,7 @@ function openAmountDialog(set,g){
 }
 function openMissingDialog(set,g){
   const got=gotOf(set,g),grand=g.grand,selNeed=g.total,cur=missOf(set,g);
-  const cm=colorMeta(g.color)||'';
+  const cm=colorTag(g.color);
   const ov=document.createElement("div");ov.className="overlay";
   const close=()=>{ov.remove();document.removeEventListener("keydown",onKey);};
   const onKey=e=>{if(e.key==="Escape"){e.preventDefault();close();}};
@@ -2740,7 +2740,7 @@ function openMissingDialog(set,g){
     '<div class="amtsum">'+
       '<img class="amtthumb" loading="lazy" alt="" src="'+esc(g.img||PLACE)+'" onerror="this.onerror=null;this.src=\''+PLACE+'\'">'+
       '<div class="amtinfo"><div class="amtname"><span class="qty">'+selNeed+'×</span>'+esc(g.dispName)+'</div>'+
-        '<div class="amtmeta"><span class="cattag">'+esc(g.catLabel)+'</span>'+cm+(g.id?'<span class="sep">·</span>#'+esc(g.id):'')+'</div>'+
+        '<div class="amtmeta"><span class="tag cattag">'+esc(g.catLabel)+'</span>'+cm+(g.id?'<span class="metaid">#'+esc(g.id)+'</span>':'')+'</div>'+
         '<div class="amtcount">'+got+'/'+grand+' picked</div>'+
       '</div>'+
     '</div>'+
@@ -2795,11 +2795,11 @@ function init(){
   DB.order=DB.order.filter(id=>DB.sets[id]);
   if(!DB.order.length&&!DB.seeded){const e=seedEntries();if(e.length){const s=newSet("76178 Daily Bugle (bags 0–4)");s.entries=e;defaultSelect(s);}DB.seeded=true;}
   if(!DB.current||!DB.sets[DB.current])DB.current=DB.order[0]||null;
-  Object.values(DB.sets).forEach(s=>{if(s){if(s.entries)migrateGrabbed(s);if(!s.collected)s.collected={};if(!s.missing)s.missing={};if(!Array.isArray(s.fCat))s.fCat=[];if(!Array.isArray(s.fColor))s.fColor=[];}});
+  Object.values(DB.sets).forEach(s=>{if(s){if(s.entries)migrateGrabbed(s);if(!s.collected)s.collected={};if(!s.missing)s.missing={};if(!Array.isArray(s.fCat))s.fCat=[];if(!Array.isArray(s.fColor))s.fColor=[];if(!Array.isArray(s.views))s.views=(s.view&&s.view!=="all")?[s.view]:[];}});
   const cs=curSet();if(cs)defaultSelect(cs);
 
   catMS=MultiSelect($("#catFilter"),{title:"Categories",onChange:a=>{const s=curSet();if(s){s.fCat=a;save();renderList();}}});
-  colorMS=MultiSelect($("#colorFilter"),{title:"Colours",label:colorLabel,onChange:a=>{const s=curSet();if(s){s.fColor=a;save();renderList();}}});
+  colorMS=MultiSelect($("#colorFilter"),{title:"Colours",label:colorLabel,render:o=>{const hex=colorHex(o);return '<span class="swline">'+(hex?'<span class="swatch" style="background:'+esc(hex)+'"></span>':'')+esc(colorLabel(o))+'</span>';},onChange:a=>{const s=curSet();if(s){s.fColor=a;save();renderList();}}});
 
   applyTheme();applyImgSize();save();render();loadParts();
 
@@ -2821,7 +2821,7 @@ function init(){
   $("#imgSizeSel").addEventListener("change",e=>{DB.imgSize=parseInt(e.target.value,10)||64;applyImgSize();save();});
   $("#lowThresh").addEventListener("input",e=>{let v=parseInt(e.target.value,10);if(!Number.isFinite(v)||v<0)v=0;if(v>9999)v=9999;DB.lowThreshold=v;save();renderList();});
   $("#lowThreshOn").addEventListener("change",e=>{DB.lowThreshOn=e.target.checked;$("#lowThresh").disabled=!e.target.checked;save();renderList();});
-  $$("#viewTabs .vtab").forEach(b=>b.addEventListener("click",()=>{const s=curSet();if(s){s.view=b.getAttribute("data-view");save();renderList();}}));
+  $$("#viewTabs .cbx").forEach(cb=>cb.addEventListener("change",()=>{const s=curSet();if(!s)return;const v=cb.getAttribute("data-view");let views=Array.isArray(s.views)?s.views.slice():[];if(v==="all"){views=[];}else{const i=views.indexOf(v);if(cb.checked){if(i<0)views.push(v);}else if(i>=0)views.splice(i,1);}s.views=views;save();renderList();}));
   $("#resetGrab").addEventListener("click",()=>{const s=curSet();if(!s)return;const n=Object.keys(s.grabbed||{}).length+Object.keys(s.collected||{}).length;if(!n)return alert("Nothing is marked yet.");if(!confirm("Clear picked progress for all "+n+" parts in this set?"))return;s.grabbed={};s.collected={};s.missing={};s.grabPrev={};save();renderStats();renderBags();renderList();});
 
   let staged=[];
@@ -2846,9 +2846,9 @@ function init(){
   $("#addRowBtn").addEventListener("click",()=>{let s=curSet();if(!s)s=newSet("New set");const bags=bagsOf(s);const bag=bags[bags.length-1]||"1";s.entries.push({bag,qty:1,name:"",color:"",id:"",img:""});if(!(bag in s.selected))s.selected[bag]=true;save();renderEdit();renderBags();renderStats();});
 
   $("#backupDownload").addEventListener("click",()=>{const ok=downloadText("brick-bag-merge-backup.json",JSON.stringify(DB));if(!ok){switchTab("backup");$("#backupText").value=JSON.stringify(DB,null,2);alert("Download blocked here — copy the text backup instead.");}});
-  $("#backupFile").addEventListener("change",async e=>{const f=(e.target.files||[])[0];if(!f)return;try{const d=JSON.parse(await readFileText(f));if(!d.sets||!d.order)throw new Error("not a backup");if(!confirm("Replace everything with this backup file?"))return;DB=d;if(!DB.imgSize)DB.imgSize=64;if(!Number.isFinite(DB.lowThreshold))DB.lowThreshold=10;Object.values(DB.sets).forEach(s=>{if(s){if(s.entries)migrateGrabbed(s);if(!Array.isArray(s.fCat))s.fCat=[];if(!Array.isArray(s.fColor))s.fColor=[];}});save();applyTheme();applyImgSize();$("#lowThresh").value=String(DB.lowThreshold);render();alert("Restored.");closeModal();}catch(x){alert("Couldn’t read that backup: "+x.message);}e.target.value="";});
+  $("#backupFile").addEventListener("change",async e=>{const f=(e.target.files||[])[0];if(!f)return;try{const d=JSON.parse(await readFileText(f));if(!d.sets||!d.order)throw new Error("not a backup");if(!confirm("Replace everything with this backup file?"))return;DB=d;if(!DB.imgSize)DB.imgSize=64;if(!Number.isFinite(DB.lowThreshold))DB.lowThreshold=10;Object.values(DB.sets).forEach(s=>{if(s){if(s.entries)migrateGrabbed(s);if(!Array.isArray(s.fCat))s.fCat=[];if(!Array.isArray(s.fColor))s.fColor=[];if(!Array.isArray(s.views))s.views=(s.view&&s.view!=="all")?[s.view]:[];}});save();applyTheme();applyImgSize();$("#lowThresh").value=String(DB.lowThreshold);render();alert("Restored.");closeModal();}catch(x){alert("Couldn’t read that backup: "+x.message);}e.target.value="";});
   $("#backupCopy").addEventListener("click",()=>{const t=$("#backupText");t.focus();t.select();try{document.execCommand("copy");}catch(e){}try{navigator.clipboard&&navigator.clipboard.writeText(t.value);}catch(e){}});
-  $("#backupRestore").addEventListener("click",()=>{try{const d=JSON.parse($("#backupText").value);if(!d.sets||!d.order)throw new Error("not a backup");if(!confirm("Replace everything with this backup?"))return;DB=d;if(!DB.imgSize)DB.imgSize=64;if(!Number.isFinite(DB.lowThreshold))DB.lowThreshold=10;Object.values(DB.sets).forEach(s=>{if(s){if(s.entries)migrateGrabbed(s);if(!Array.isArray(s.fCat))s.fCat=[];if(!Array.isArray(s.fColor))s.fColor=[];}});save();applyTheme();applyImgSize();$("#lowThresh").value=String(DB.lowThreshold);render();alert("Restored.");closeModal();}catch(x){alert("Couldn’t restore: "+x.message);}});
+  $("#backupRestore").addEventListener("click",()=>{try{const d=JSON.parse($("#backupText").value);if(!d.sets||!d.order)throw new Error("not a backup");if(!confirm("Replace everything with this backup?"))return;DB=d;if(!DB.imgSize)DB.imgSize=64;if(!Number.isFinite(DB.lowThreshold))DB.lowThreshold=10;Object.values(DB.sets).forEach(s=>{if(s){if(s.entries)migrateGrabbed(s);if(!Array.isArray(s.fCat))s.fCat=[];if(!Array.isArray(s.fColor))s.fColor=[];if(!Array.isArray(s.views))s.views=(s.view&&s.view!=="all")?[s.view]:[];}});save();applyTheme();applyImgSize();$("#lowThresh").value=String(DB.lowThreshold);render();alert("Restored.");closeModal();}catch(x){alert("Couldn’t restore: "+x.message);}});
 
   const s0=curSet();if(s0){$("#sortSel").value=s0.sort||"cat";$("#searchInp").value=s0.search||"";}
   $("#imgSizeSel").value=String(DB.imgSize||64);
