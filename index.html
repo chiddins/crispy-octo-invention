@@ -108,9 +108,17 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
 .bagchip.on .box{background:var(--accent);border-color:var(--accent-line)}
 .bagchip.on .box svg{opacity:1}
 
-.listhead{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.listhead .search{flex:1;min-width:150px}
+.listhead{display:grid;width:100%;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px;align-items:center}
+.listhead .search{min-width:0}
 .listhead .search input{width:100%;height:var(--ctl)}
+.listhead .ms{width:auto}
+.listhead .numctl{flex-wrap:wrap;height:auto;min-height:var(--ctl);row-gap:2px}
+.viewtabs{display:flex;gap:6px;flex-wrap:wrap;padding:10px 15px;border-bottom:1px solid var(--line)}
+.vtab{display:inline-flex;align-items:center;gap:7px;background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:9px;height:34px;padding:0 12px;font-weight:700;font-size:13px}
+.vtab:hover{border-color:var(--faint);color:var(--ink)}
+.vtab.on{background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent-text)}
+.vbadge{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--surface-3);color:var(--muted);font-size:11px;font-weight:800;font-variant-numeric:tabular-nums}
+.vbadge-miss{background:var(--danger);color:#fff}
 .lhead{flex-direction:column;align-items:stretch;gap:12px}
 .cbox{width:20px;height:20px;flex:none;border-radius:6px;border:2px solid var(--faint);display:grid;place-items:center;background:var(--surface)}
 .cbox svg{width:12px;height:12px;opacity:0;color:var(--accent-ink)}
@@ -272,7 +280,7 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 #printHead{display:none}
 @media print{
-  header.app,.toolbar,aside,.listhead,.overlay,.lightbox,small.foot,.stats{display:none!important}
+  header.app,.toolbar,aside,.listhead,.viewtabs,.overlay,.lightbox,small.foot,.stats{display:none!important}
   body{background:#fff;color:#000;font-size:12px}
   .wrap{max-width:none;padding:0}.grid{display:block;padding:0}
   .panel{border:0;box-shadow:none}.panel .phead{display:none}
@@ -335,13 +343,16 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
           <div class="ms" id="colorFilter"></div>
           <select class="ctl" id="imgSizeSel" aria-label="Image size"><option value="44">Image size: S</option><option value="64">Image size: M</option><option value="104">Image size: L</option><option value="152">Image size: XL</option></select>
           <div class="numctl"><input type="checkbox" id="lowThreshOn" class="numctl-cbx" checked aria-label="Enable remaining-parts highlight"><label for="lowThreshOn">Remaining parts threshold</label><input type="number" id="lowThresh" min="0" max="9999" inputmode="numeric" aria-label="Remaining parts threshold"></div>
-          <label class="toggle"><input type="checkbox" class="cbx" id="hideGrab"><span class="cbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg></span> Hide picked</label>
-          <label class="toggle"><input type="checkbox" class="cbx" id="grabbedOnly"><span class="cbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg></span> Picked</label>
-          <label class="toggle"><input type="checkbox" class="cbx" id="showMissing"><span class="cbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg></span> Show missing <span class="missbadge hide" id="missBadge">0</span></label>
           <button class="btn danger-h" id="resetGrab">Reset</button>
         </div>
       </div>
       <div id="printHead"></div>
+      <div class="viewtabs" id="viewTabs">
+        <button class="vtab on" data-view="all">All <span class="vbadge" id="tvAll">0</span></button>
+        <button class="vtab" data-view="unpicked">Unpicked <span class="vbadge" id="tvUnpicked">0</span></button>
+        <button class="vtab" data-view="picked">Picked <span class="vbadge" id="tvPicked">0</span></button>
+        <button class="vtab" data-view="missing">Missing <span class="vbadge vbadge-miss" id="tvMissing">0</span></button>
+      </div>
       <div class="parts" id="parts"></div>
     </main>
   </div>
@@ -2507,7 +2518,7 @@ function sortBags(bags){return bags.slice().sort((a,b)=>bagKeyNum(a)-bagKeyNum(b
 function bagsOf(set){const s=new Set();set.entries.forEach(e=>s.add(String(e.bag)));return sortBags([...s]);}
 function groupKey(e){const base=e.id&&String(e.id).trim()?("#"+norm(e.id)):norm(e.name||"");return base+"|"+norm(String(e.color));}
 function defaultSelect(set){bagsOf(set).forEach(b=>{if(!(b in set.selected))set.selected[b]=true;});}
-function newSet(name){const id=uid();DB.sets[id]={id,name:name||"New set",entries:[],selected:{},grabbed:{},collected:{},missing:{},grabPrev:{},hideGrab:false,grabbedOnly:false,showMissing:false,sort:"cat",search:"",fCat:[],fColor:[]};DB.order.push(id);DB.current=id;return DB.sets[id];}
+function newSet(name){const id=uid();DB.sets[id]={id,name:name||"New set",entries:[],selected:{},grabbed:{},collected:{},missing:{},grabPrev:{},view:"all",sort:"cat",search:"",fCat:[],fColor:[]};DB.order.push(id);DB.current=id;return DB.sets[id];}
 function bagQ(g,b){return Number(g.allByBag[b])||0;}
 function collectedQtyOf(set,g){const col=set.collected&&set.collected[g.key];if(!col)return 0;let s=0;for(const b in g.allByBag){if(b in col){const v=col[b];s+=(v===true?bagQ(g,b):(Number(v)||0));}}return s;}
 function missOf(set,g){return Math.max(0,Math.min(g.grand,(set.missing&&set.missing[g.key])||0));}
@@ -2620,7 +2631,6 @@ function renderList(){
   const set=curSet();const box=$("#parts");box.innerHTML="";
   if(!set||!set.entries.length){box.innerHTML='<div class="empty"><h3>Nothing here yet</h3>Tap <b>Import (.BSX)</b> to add a set — or load the 76178 example.<br><button class="btn primary" id="emptyImport">Import (.BSX)</button></div>';const b=$("#emptyImport");if(b)b.addEventListener("click",()=>openModal("bsx"));if(catMS)catMS.setOptions([]);if(colorMS)colorMS.setOptions([]);renderPrintHead();return;}
   let agg=aggregate(set);
-  {let mt=0;agg.forEach(g=>mt+=missOf(set,g));const mb=$("#missBadge");if(mb){mb.textContent=mt;mb.classList.toggle("hide",mt<=0);}}
   const cats=[...new Set(agg.map(g=>g.catLabel))].sort();
   const cols=[...new Set(agg.map(g=>String(g.color)).filter(c=>c!==""))].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
   if(catMS)catMS.setOptions(cats);if(colorMS)colorMS.setOptions(cols);
@@ -2629,10 +2639,15 @@ function renderList(){
   if(q)agg=agg.filter(g=>norm(g.dispName).includes(q)||norm(String(g.color)).includes(q)||norm(g.id).includes(q));
   if(set.fCat&&set.fCat.length)agg=agg.filter(g=>set.fCat.indexOf(g.catLabel)>=0);
   if(set.fColor&&set.fColor.length)agg=agg.filter(g=>set.fColor.indexOf(String(g.color))>=0);
-  if(set.hideGrab)agg=agg.filter(g=>gotOf(set,g)<g.grand);
-  if(set.grabbedOnly)agg=agg.filter(g=>gotOf(set,g)>0);
-  if(set.showMissing)agg=agg.filter(g=>missOf(set,g)>0);
-  if(!agg.length){box.innerHTML='<div class="empty"><h3>No matching parts</h3>Turn on more bags, or clear the search / filters.</div>';renderPrintHead();return;}
+  const view=set.view||"all";
+  const nAll=agg.length,nPicked=agg.filter(g=>gotOf(set,g)>=g.grand).length,nMiss=agg.filter(g=>missOf(set,g)>0).length;
+  const setBadge=(id,n)=>{const el=$("#"+id);if(el)el.textContent=n;};
+  setBadge("tvAll",nAll);setBadge("tvUnpicked",nAll-nPicked);setBadge("tvPicked",nPicked);setBadge("tvMissing",nMiss);
+  $$("#viewTabs .vtab").forEach(b=>b.classList.toggle("on",b.getAttribute("data-view")===view));
+  if(view==="unpicked")agg=agg.filter(g=>gotOf(set,g)<g.grand);
+  else if(view==="picked")agg=agg.filter(g=>gotOf(set,g)>=g.grand);
+  else if(view==="missing")agg=agg.filter(g=>missOf(set,g)>0);
+  if(!agg.length){box.innerHTML='<div class="empty"><h3>No matching parts</h3>Nothing in this view — try another tab, more bags, or clear the search / filters.</div>';renderPrintHead();return;}
   const showCats=(set.sort||"cat")==="cat";let lastCat=null;const lowOn=DB.lowThreshOn!==false;const lowT=lowOn?(Number.isFinite(DB.lowThreshold)?DB.lowThreshold:10):-1;
   agg.forEach(g=>{
     if(showCats&&g.catLabel!==lastCat){lastCat=g.catLabel;const c=document.createElement("div");c.className="catrow";c.textContent=g.catLabel;box.appendChild(c);}
@@ -2835,9 +2850,7 @@ function init(){
   $("#lowThresh").addEventListener("input",e=>{let v=parseInt(e.target.value,10);if(!Number.isFinite(v)||v<0)v=0;if(v>9999)v=9999;DB.lowThreshold=v;save();renderList();});
   $("#lowThreshOn").addEventListener("change",e=>{DB.lowThreshOn=e.target.checked;$("#lowThresh").disabled=!e.target.checked;save();renderList();});
   (function(){const mm=$("#modelMenu");if(!mm)return;function mark(){$$("#modelMenu .mm-opt").forEach(b=>b.classList.toggle("on",b.getAttribute("data-model")===(DB.grabModel||"bybag")));}$("#grabModeBtn").addEventListener("click",ev=>{ev.stopPropagation();mm.classList.toggle("hide");mark();});$$("#modelMenu .mm-opt").forEach(b=>b.addEventListener("click",()=>{DB.grabModel=b.getAttribute("data-model");save();mark();mm.classList.add("hide");renderStats();renderList();}));document.addEventListener("click",ev=>{if(!ev.target.closest(".modelwrap"))mm.classList.add("hide");});})();
-  $("#hideGrab").addEventListener("change",e=>{const s=curSet();if(s){s.hideGrab=e.target.checked;save();renderList();}});
-  $("#grabbedOnly").addEventListener("change",e=>{const s=curSet();if(s){s.grabbedOnly=e.target.checked;save();renderList();}});
-  $("#showMissing").addEventListener("change",e=>{const s=curSet();if(s){s.showMissing=e.target.checked;save();renderList();}});
+  $$("#viewTabs .vtab").forEach(b=>b.addEventListener("click",()=>{const s=curSet();if(s){s.view=b.getAttribute("data-view");save();renderList();}}));
   $("#resetGrab").addEventListener("click",()=>{const s=curSet();if(!s)return;const n=Object.keys(s.grabbed||{}).length+Object.keys(s.collected||{}).length;if(!n)return alert("Nothing is marked yet.");if(!confirm("Clear picked progress for all "+n+" parts in this set?"))return;s.grabbed={};s.collected={};s.missing={};s.grabPrev={};save();renderStats();renderBags();renderList();});
 
   let staged=[];
@@ -2866,7 +2879,7 @@ function init(){
   $("#backupCopy").addEventListener("click",()=>{const t=$("#backupText");t.focus();t.select();try{document.execCommand("copy");}catch(e){}try{navigator.clipboard&&navigator.clipboard.writeText(t.value);}catch(e){}});
   $("#backupRestore").addEventListener("click",()=>{try{const d=JSON.parse($("#backupText").value);if(!d.sets||!d.order)throw new Error("not a backup");if(!confirm("Replace everything with this backup?"))return;DB=d;if(!DB.imgSize)DB.imgSize=64;if(!Number.isFinite(DB.lowThreshold))DB.lowThreshold=10;Object.values(DB.sets).forEach(s=>{if(s){if(s.entries)migrateGrabbed(s);if(!Array.isArray(s.fCat))s.fCat=[];if(!Array.isArray(s.fColor))s.fColor=[];}});save();applyTheme();applyImgSize();$("#lowThresh").value=String(DB.lowThreshold);render();alert("Restored.");closeModal();}catch(x){alert("Couldn’t restore: "+x.message);}});
 
-  const s0=curSet();if(s0){$("#sortSel").value=s0.sort||"cat";$("#searchInp").value=s0.search||"";$("#hideGrab").checked=!!s0.hideGrab;$("#grabbedOnly").checked=!!s0.grabbedOnly;$("#showMissing").checked=!!s0.showMissing;}
+  const s0=curSet();if(s0){$("#sortSel").value=s0.sort||"cat";$("#searchInp").value=s0.search||"";}
   $("#imgSizeSel").value=String(DB.imgSize||64);
   $("#lowThresh").value=String(Number.isFinite(DB.lowThreshold)?DB.lowThreshold:10);
   $("#lowThreshOn").checked=DB.lowThreshOn!==false;$("#lowThresh").disabled=DB.lowThreshOn===false;
