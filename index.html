@@ -173,12 +173,12 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
 .pinfo{flex:1 1 210px;min-width:0}
 .qty{font-family:var(--font-head);font-size:18px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.02em;margin-right:6px;color:var(--accent-text)}
 .pname{font-weight:600;word-break:break-word}
-.pmeta{margin-top:3px;font-size:14.4px;color:var(--muted);line-height:1.7}
+.pmeta{margin-top:8px;font-size:14.4px;color:var(--muted);line-height:1.7}
 .pmeta .sep{color:var(--faint);margin:0 7px}
 .metaid{color:var(--muted);font-variant-numeric:tabular-nums}
 .pmeta .lnk{color:var(--link);text-decoration:none}
 .pmeta .lnk:hover{text-decoration:underline}
-.plinks{margin-top:3px;font-size:14.4px;line-height:1.6}
+.plinks{margin-top:8px;font-size:14.4px;line-height:1.6}
 .plinks .lnk{color:var(--link);text-decoration:none}
 .plinks .lnk:hover{text-decoration:underline}
 .plinks .sep{color:var(--faint);margin:0 7px}
@@ -190,7 +190,6 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
 .swatch{display:inline-block;width:14px;height:14px;border-radius:3px;border:1px solid rgba(0,0,0,.28);flex:none}
 .tag .swatch{margin-left:-3.5px}
 .swline{display:inline-flex;align-items:center;gap:7px;min-width:0}
-.bagline{margin-top:3px;font-size:13.8px;color:var(--faint);font-variant-numeric:tabular-nums}
 .prog{margin-top:4px;font-size:14.4px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
 .prog.low{color:var(--warn)}
 .prog.done{color:var(--grab-bright)}
@@ -198,7 +197,7 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
 .prog.low .other{color:var(--warn)}
 .lowinfo{display:inline-flex;align-items:center;vertical-align:-2.5px;margin-right:5px;color:var(--warn)}
 .doneinfo{display:inline-flex;align-items:center;vertical-align:-2.5px;margin-right:5px;color:var(--grab-bright)}
-.progrow{display:flex;align-items:center;gap:6px 10px;flex-wrap:wrap;margin-top:4px}
+.progrow{display:flex;align-items:center;gap:6px 10px;flex-wrap:wrap;margin-top:8px}
 .progrow .prog{margin-top:0}
 .grab{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px 12px;margin-top:10px}
 .grableft{display:flex;align-items:center;gap:6px}
@@ -306,7 +305,7 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
   <div class="wrap hbar">
     <div class="brand">
       <span class="logo" aria-hidden="true"><span></span></span>
-      <div style="min-width:0"><h1>Brick Bag Merge <span class="ver">v44</span></h1><div class="tagline">Pick bags &middot; sum the parts &middot; one pick&#8209;list</div></div>
+      <div style="min-width:0"><h1>Brick Bag Merge <span class="ver">v45</span></h1><div class="tagline">Pick bags &middot; sum the parts &middot; one pick&#8209;list</div></div>
     </div>
     <div class="hspace"></div>
     <button class="iconbtn s-none" id="syncBtn" title="Sync: not set up" aria-label="Sync: not set up"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg></button>
@@ -2684,7 +2683,6 @@ function renderList(){
     const colourTag=colorTag(g.color);
     const idHTML=g.id?'<span class="metaid">Part '+esc(g.id)+'</span>':'';
     const links=g.id?('<a class="lnk" href="'+baLink(g.id)+'" target="_blank" rel="noopener">Brick Architect ↗</a><span class="sep">·</span><a class="lnk" href="'+bsLink(g.id,g.color)+'" target="_blank" rel="noopener">Brickset ↗</a>'):'';
-    const bagLine=sortBags(Object.keys(g.byBag)).map(b=>"bag "+esc(b)+": "+g.byBag[b]).join(", ");
     let qtyBadge,progWord,progCls,cta,grabbtnsHTML,rowCls,onGrab,onGrabAll,missTag='',flagBtnHTML='',nameTick='',hasProg=false;
     {
       const missCnt=missOf(set,g),collQty=collectedQtyOf(set,g);
@@ -2709,7 +2707,6 @@ function renderList(){
         '<div class="rbody"><div class="pinfo"><div class="pname">'+qtyBadge+esc(g.dispName)+nameTick+missTag+'</div>'+
           '<div class="pmeta"><span class="tag cattag">'+esc(g.catLabel)+'</span>'+colourTag+'</div>'+
           (links?'<div class="plinks">'+idHTML+'<span class="sep">·</span>'+links+'</div>':'')+
-          '<div class="bagline">'+bagLine+'</div>'+
           '<div class="progrow"><div class="prog '+progCls+'">'+prog+'</div></div>'+
         '</div></div>'+
       '</div>'+
