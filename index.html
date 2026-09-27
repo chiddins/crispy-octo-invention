@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Brick Bag Merge</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="theme-color" content="#141519" id="themeColor">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&display=swap">
@@ -79,7 +83,7 @@ header.app{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;backgroun
 #deleteSetBtn:hover,#delSetBtn:hover{border-color:var(--danger);color:var(--danger)}
 
 .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding-block:14px}
-input[type=text],input[type=search]{background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:0 11px;color:var(--ink);box-shadow:var(--shadow)}
+input[type=text],input[type=search],input[type=password]{background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:0 11px;color:var(--ink);box-shadow:var(--shadow)}
 input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none;display:none}
 select.ctl{background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:0 34px 0 11px;color:var(--ink);box-shadow:var(--shadow);appearance:none;-webkit-appearance:none;background-image:var(--chev);background-repeat:no-repeat;background-position:right 11px center}
 input:hover,select.ctl:hover{border-color:var(--faint)}
@@ -115,6 +119,7 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
 .listhead{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .listhead .search{flex:1;min-width:150px}
 .listhead .search input{width:100%;height:var(--ctl)}
+.listhead input,.listhead select.ctl{font-weight:600}.listhead input::placeholder{color:var(--muted);opacity:1}
 .viewtabs{display:flex;gap:8px;flex-wrap:wrap;padding:10px 15px;border-bottom:1px solid var(--line)}
 .viewtabs .toggle{height:34px}
 .vbadge{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--surface-2);border:1px solid var(--line);color:var(--muted);font-size:13.2px;font-weight:800;font-variant-numeric:tabular-nums}
@@ -126,12 +131,13 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
 .cbox.on svg,.cbx:checked+.cbox svg{opacity:1}
 .cbx{position:absolute;opacity:0;width:0;height:0;pointer-events:none}
 .cbx:focus-visible+.cbox{outline:2px solid var(--secondary);outline-offset:2px}
-.toggle{display:inline-flex;align-items:center;gap:8px;padding:0 12px;border:1px solid var(--line);border-radius:9px;background:var(--surface);box-shadow:var(--shadow);font-weight:600;font-size:15.6px;color:var(--ink);cursor:pointer;user-select:none;white-space:nowrap}
+.toggle{display:inline-flex;align-items:center;gap:8px;padding:0 12px;border:1px solid var(--line);border-radius:9px;background:var(--surface);box-shadow:var(--shadow);font-weight:600;font-size:16.8px;color:var(--ink);cursor:pointer;user-select:none;white-space:nowrap}
 .toggle:hover{border-color:var(--faint)}
 .toggle:has(.cbx:checked){border:2px solid var(--secondary);padding:0 11px}
-.numctl{display:inline-flex;align-items:center;gap:7px;height:var(--ctl);border:1px solid var(--line);border-radius:9px;background:var(--surface);box-shadow:var(--shadow);padding:0 12px;font-weight:600;font-size:15.6px;color:var(--muted);white-space:nowrap}
+.numctl{display:inline-flex;align-items:center;gap:7px;height:var(--ctl);border:1px solid var(--line);border-radius:9px;background:var(--surface);box-shadow:var(--shadow);padding:0 12px;font-weight:600;font-size:16.8px;color:var(--muted);white-space:nowrap}
 .numctl:hover{border-color:var(--faint)}
-.numctl input[type=number]{width:52px;height:28px;border:1px solid var(--line);border-radius:7px;background:var(--surface-2);color:var(--ink);text-align:center;font-weight:700;font-variant-numeric:tabular-nums;-moz-appearance:textfield}
+.numctl:has(.cbx:checked){color:var(--ink)}
+.numctl input[type=number]{width:52px;height:28px;border:1px solid var(--line);border-radius:7px;background:var(--surface-2);color:var(--ink);text-align:center;font-weight:600;font-variant-numeric:tabular-nums;-moz-appearance:textfield}
 .numctl input[type=number]::-webkit-outer-spin-button,.numctl input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .numctl input[type=number]:disabled{opacity:.45;cursor:not-allowed}
 .numctl-lbl{display:inline-flex;align-items:center;gap:8px;cursor:pointer}
@@ -140,10 +146,10 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
 .ms{position:relative;display:flex;align-items:center;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:0 6px 0 11px;box-shadow:var(--shadow);width:190px;height:var(--ctl);cursor:text}
 .ms:hover{border-color:var(--faint)}
 .ms.has-sel{border:2px solid var(--secondary);padding:0 5px 0 10px}
-.ms-input{flex:1;min-width:0;border:0;background:transparent;color:var(--ink);height:100%;padding:0}
+.ms-input{flex:1;min-width:0;border:0;background:transparent;color:var(--ink);height:100%;padding:0;font-weight:600}
 .ms-input:focus{outline:none}
 .ms-input::placeholder{color:var(--muted);font-weight:600}
-.ms.has-sel .ms-input::placeholder{color:var(--secondary);font-weight:700}
+.ms.has-sel .ms-input::placeholder{color:var(--ink);font-weight:600}
 .ms-clear{border:0;background:transparent;color:var(--muted);width:24px;height:24px;padding:0;border-radius:6px;flex:none;display:grid;place-items:center}
 .ms-clear svg{width:16px;height:16px}
 .ms-clear:hover{background:var(--surface-2);color:var(--danger)}
@@ -151,7 +157,7 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
 .search input{padding-right:34px}
 .search .ms-clear{position:absolute;right:7px;top:50%;transform:translateY(-50%)}
 .ms-menu{position:absolute;top:calc(100% + 4px);left:0;min-width:100%;max-width:300px;max-height:260px;overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:9px;box-shadow:0 12px 34px rgba(0,0,0,.28);z-index:40}
-.ms-opt{display:flex;align-items:center;gap:9px;padding:7px 11px;font-size:15.6px;cursor:pointer;white-space:nowrap}
+.ms-opt{display:flex;align-items:center;gap:9px;padding:7px 11px;font-size:16.8px;font-weight:600;cursor:pointer;white-space:nowrap}
 .ms-opt:hover{background:var(--surface-2)}
 
 .parts{display:flex;flex-direction:column}
@@ -249,6 +255,10 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 72px)}
 .tab.on{color:var(--ink);border-bottom-color:var(--secondary);background:var(--surface-2)}
 .tabpane{padding:16px 18px}
 .tabpane p.hint{color:var(--muted);margin:0 0 12px}
+.steps{margin:0 0 14px;padding-left:22px;color:var(--muted);line-height:1.55}.steps li{margin-bottom:6px}.steps b{color:var(--ink)}.steps a{color:var(--link)}
+.syncstate{margin:0 0 12px;font-weight:700}.syncstate.err{color:var(--danger)}
+#syncBtn.s-ok{color:var(--grab-bright)}#syncBtn.s-err{color:var(--danger)}#syncBtn.s-none,#syncBtn.s-off,#syncBtn.s-wait{color:var(--muted)}
+#syncBtn.s-busy{color:var(--ink)}#syncBtn.s-busy svg{animation:syncpulse 1s ease-in-out infinite}@keyframes syncpulse{50%{opacity:.3}}
 textarea{width:100%;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:11px;color:var(--ink);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:15px;line-height:1.5;resize:vertical}
 .field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
 .field label{font-size:14.4px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
@@ -274,7 +284,7 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
 .lightbox .cap{color:#fff;font-weight:700;text-align:center;max-width:90vw}
 .lightbox .cap small{display:block;color:#c9ccd2;font-weight:500;margin-top:3px}
 
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}#syncBtn.s-busy svg{animation:none}}
 #printHead{display:none}
 @media print{
   header.app,.toolbar,aside,.listhead,.viewtabs,.overlay,.lightbox,small.foot,.stats{display:none!important}
@@ -296,9 +306,10 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
   <div class="wrap hbar">
     <div class="brand">
       <span class="logo" aria-hidden="true"><span></span></span>
-      <div style="min-width:0"><h1>Brick Bag Merge <span class="ver">v43</span></h1><div class="tagline">Pick bags &middot; sum the parts &middot; one pick&#8209;list</div></div>
+      <div style="min-width:0"><h1>Brick Bag Merge <span class="ver">v44</span></h1><div class="tagline">Pick bags &middot; sum the parts &middot; one pick&#8209;list</div></div>
     </div>
     <div class="hspace"></div>
+    <button class="iconbtn s-none" id="syncBtn" title="Sync: not set up" aria-label="Sync: not set up"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg></button>
     <button class="iconbtn" id="themeBtn" title="Toggle light / dark" aria-label="Toggle theme"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg></button>
   </div>
 </header>
@@ -359,7 +370,7 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
 <div class="overlay hide" id="overlay">
   <div class="modal" role="dialog" aria-modal="true" aria-label="Import and manage data">
     <div class="mhead"><h2>Import &amp; edit</h2><button class="iconbtn" id="closeModal" aria-label="Close"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
-    <div class="tabs" id="tabs"><button class="tab on" data-tab="bsx">.BSX</button><button class="tab" data-tab="edit">Edit rows</button><button class="tab" data-tab="backup">Backup</button></div>
+    <div class="tabs" id="tabs"><button class="tab on" data-tab="bsx">.BSX</button><button class="tab" data-tab="edit">Edit rows</button><button class="tab" data-tab="backup">Backup</button><button class="tab" data-tab="sync">Sync</button></div>
     <div class="tabpane" data-pane="bsx">
       <p class="hint">In <b>BrickStore</b>, export each bag as a <b>.bsx</b> file (one per bag). Pick them all here — the app reads the real parts, colours and quantities. Filenames like <code>…bag-3.bsx</code> set the bag number automatically.</p>
       <div class="field"><label>Choose your .bsx bag files (pick several at once)</label><button class="btn primary" id="bsxChoose" type="button" style="align-self:flex-start">📁 Choose .bsx files</button><input type="file" id="bsxFiles" multiple class="vh"></div>
@@ -380,9 +391,26 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
       <div class="mactions"><button class="btn primary" id="addRowBtn">＋ Add row</button></div>
     </div>
     <div class="tabpane hide" data-pane="backup">
-      <p class="hint">Your sets live in this browser only. Save a backup file to keep them safe or move them to another device, then load it there.</p>
+      <p class="hint">Your sets are saved in this browser. Turn on <b>Sync</b> to keep them on GitHub automatically, or save a backup file here and load it on another device.</p>
       <div class="mactions" style="justify-content:flex-start"><button class="btn primary" id="backupDownload">⬇ Save backup file</button><label class="btn" for="backupFile" style="margin:0">⬆ Load backup file</label><input type="file" id="backupFile" accept=".json,application/json" class="hide"></div>
       <details style="margin-top:14px"><summary style="cursor:pointer;font-weight:700;color:var(--muted)">Or copy / paste as text</summary><textarea id="backupText" rows="8" spellcheck="false" style="margin-top:10px"></textarea><div class="mactions"><button class="btn" id="backupCopy">Copy</button><button class="btn" id="backupRestore">Restore from text</button></div></details>
+    </div>
+    <div class="tabpane hide" data-pane="sync">
+      <div id="syncSetup">
+        <p class="hint">Keep your sets and picking progress in a private gist on your GitHub account, so your tablet and phone stay in sync. Only this app&rsquo;s data is stored there.</p>
+        <p class="syncstate err hide" id="syncSetupMsg"></p>
+        <ol class="steps">
+          <li><a href="https://github.com/settings/tokens/new?scopes=gist&amp;description=Brick%20Bag%20Merge%20sync" target="_blank" rel="noopener">Create a GitHub token &#8599;</a>. The <b>gist</b> permission is already ticked. Pick an expiry (<b>No expiration</b> is easiest), tap <b>Generate token</b> and copy it.</li>
+          <li>Paste it below and tap <b>Connect</b>. Do the same on each device.</li>
+        </ol>
+        <div class="field"><label for="syncToken">GitHub token</label><input type="password" id="syncToken" autocomplete="off" spellcheck="false" placeholder="ghp_&hellip;"></div>
+        <div class="mactions"><button class="btn primary" id="syncConnectBtn">Connect</button></div>
+      </div>
+      <div id="syncOn" class="hide">
+        <p class="syncstate" id="syncState"></p>
+        <p class="hint">Changes save on this device straight away and upload a few seconds later. Your other devices pick them up when you open or switch back to the app. GitHub keeps every version in the gist&rsquo;s revision history.</p>
+        <div class="mactions" style="justify-content:flex-start"><button class="btn primary" id="syncNowBtn">Sync now</button><a class="btn" id="syncGistLink" target="_blank" rel="noopener">Open gist &#8599;</a><button class="btn danger-h" id="syncOffBtn">Disconnect</button></div>
+      </div>
     </div>
   </div>
 </div>
@@ -2508,7 +2536,7 @@ function catFallback(name){const n=name||"";for(let i=0;i<CATS.length;i++)if(CAT
 
 let DB={sets:{},order:[],current:null,theme:"system",seeded:false,imgSize:64,lowThreshold:10,lowThreshOn:true};
 let catMS=null,colorMS=null;
-function save(){try{localStorage.setItem(LS,JSON.stringify(DB));}catch(e){}}
+function save(){try{localStorage.setItem(LS,JSON.stringify(DB));}catch(e){}syncDirty();}
 function load(){try{const r=localStorage.getItem(LS);if(r)DB=JSON.parse(r);}catch(e){}}
 function curSet(){return DB.sets[DB.current]||null;}
 function bagKeyNum(b){const m=String(b).match(/\d+/);return m?parseInt(m[0],10):9999;}
@@ -2784,9 +2812,9 @@ function renderEdit(){
 
 function openModal(tab){$("#overlay").classList.remove("hide");if(tab)switchTab(tab);document.body.style.overflow="hidden";}
 function closeModal(){$("#overlay").classList.add("hide");document.body.style.overflow="";}
-function switchTab(name){$$(".tab").forEach(t=>t.classList.toggle("on",t.dataset.tab===name));$$(".tabpane").forEach(p=>p.classList.toggle("hide",p.dataset.pane!==name));if(name==="edit")renderEdit();if(name==="backup"){try{$("#backupText").value=JSON.stringify(DB,null,2);}catch(e){}}}
+function switchTab(name){$$(".tab").forEach(t=>t.classList.toggle("on",t.dataset.tab===name));$$(".tabpane").forEach(p=>p.classList.toggle("hide",p.dataset.pane!==name));if(name==="edit")renderEdit();if(name==="sync")renderSyncPane();if(name==="backup"){try{$("#backupText").value=JSON.stringify(DB,null,2);}catch(e){}}}
 
-function applyTheme(){const t=DB.theme;if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);else document.documentElement.removeAttribute("data-theme");}
+function applyTheme(){const t=DB.theme;if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);else document.documentElement.removeAttribute("data-theme");const m=$("#themeColor");if(m)m.content=getComputedStyle(document.documentElement).getPropertyValue("--bg").trim()||"#141519";}
 function toggleTheme(){const cur=document.documentElement.getAttribute("data-theme");const isDark=cur?cur==="dark":matchMedia("(prefers-color-scheme: dark)").matches;DB.theme=isDark?"light":"dark";applyTheme();save();}
 function applyImgSize(){document.documentElement.style.setProperty("--thumb",(DB.imgSize||64)+"px");}
 
@@ -2794,8 +2822,119 @@ function downloadText(filename,text){try{const blob=new Blob([text],{type:"appli
 function renameCurrent(){const s=curSet();if(!s)return;const n=prompt("Rename set:",s.name);if(n!=null){s.name=n.trim()||s.name;save();render();}}
 function deleteCurrent(){const s=curSet();if(!s)return;if(!confirm("Delete “"+s.name+"”? This can’t be undone."))return;delete DB.sets[s.id];DB.order=DB.order.filter(x=>x!==s.id);DB.current=DB.order[0]||null;save();render();}
 
+/* ---- GitHub Gist sync: one gist file holds a snapshot of the app data. Theme, image size and the open set stay per device. ---- */
+const SYNC_KEY="brickBagMerge.sync",GIST_FILE="brick-bag-merge.json",GIST_COPY="brick-bag-merge-replaced.json",DEMO_NAME="76178 Daily Bugle (bags 0–4)";
+let SYNC=null,syncTimer=null,syncBusy=false,syncAgain=false,syncMsg="";
+function syncLoad(){try{SYNC=JSON.parse(localStorage.getItem(SYNC_KEY)||"null");}catch(e){SYNC=null;}}
+function syncStore(){try{if(SYNC)localStorage.setItem(SYNC_KEY,JSON.stringify(SYNC));else localStorage.removeItem(SYNC_KEY);}catch(e){}}
+function syncOn(){return !!(SYNC&&SYNC.token&&SYNC.gistId);}
+function syncData(d){const o=Object.assign({},d||DB);delete o.theme;delete o.imgSize;delete o.current;return o;}
+function hashStr(t){let h=2166136261;for(let i=0;i<t.length;i++){h^=t.charCodeAt(i);h=Math.imul(h,16777619);}return (h>>>0).toString(36);}
+function syncHash(d){return hashStr(JSON.stringify(syncData(d)));}
+function deviceName(){const u=navigator.userAgent;if(/Android/.test(u))return /Mobile/.test(u)?"Android phone":"Android tablet";if(/iPhone/.test(u))return "iPhone";if(/iPad/.test(u)||(/Macintosh/.test(u)&&navigator.maxTouchPoints>1))return "iPad";if(/Mac/.test(u))return "Mac";if(/Windows/.test(u))return "Windows PC";return "other device";}
+function syncContent(rev,data){return JSON.stringify({app:"brick-bag-merge",v:1,rev,savedAt:new Date().toISOString(),device:deviceName(),db:data},null,1);}
+function ago(iso){const s=Math.round((Date.now()-new Date(iso).getTime())/1000);if(!(s>=0))return "";if(s<45)return "just now";const m=Math.round(s/60);if(m<60)return m+" min ago";const h=Math.round(m/60);if(h<24)return h+" h ago";return "on "+new Date(iso).toLocaleDateString();}
+function fmtWhen(iso){const t=new Date(iso);return isNaN(t)?"recently":t.toLocaleString([],{dateStyle:"medium",timeStyle:"short"});}
+function progressSummary(db){let sets=0,pcs=0;Object.values(db.sets||{}).forEach(s=>{if(!s)return;sets++;const c=s.collected||{};for(const k in c)for(const b in c[k])pcs+=Number(c[k][b])||0;});return sets+" set"+(sets===1?"":"s")+", "+pcs+" piece"+(pcs===1?"":"s")+" picked";}
+function worthKeeping(r){const rs=(r&&r.sets)||{};return Object.values(DB.sets).some(s=>s&&(Object.keys(s.collected||{}).length>0||Object.keys(s.missing||{}).length>0||(!rs[s.id]&&s.name!==DEMO_NAME)));}
+
+async function gh(path,opts){const r=await fetch("https://api.github.com"+path,Object.assign({cache:"no-store",headers:{Authorization:"Bearer "+SYNC.token,Accept:"application/vnd.github+json","Content-Type":"application/json"}},opts||{}));if(!r.ok){const e=new Error("GitHub "+r.status);e.status=r.status;throw e;}return r.json();}
+async function ghFind(){for(let p=1;p<=10;p++){const list=await gh("/gists?per_page=100&page="+p);const g=list.find(x=>x.files&&x.files[GIST_FILE]);if(g)return g.id;if(list.length<100)break;}return null;}
+async function ghRead(id){const g=await gh("/gists/"+id);const f=g.files&&g.files[GIST_FILE];if(!f){const e=new Error("missing");e.status=404;throw e;}const t=f.truncated?await (await fetch(f.raw_url,{cache:"no-store"})).text():f.content;const d=JSON.parse(t);if(!d||!d.db||!d.db.sets||!d.db.order)throw new Error("not Brick Bag Merge data");return d;}
+async function ghWrite(id,rev){const data=syncData();await gh("/gists/"+id,{method:"PATCH",body:JSON.stringify({files:{[GIST_FILE]:{content:syncContent(rev,data)}}})});return hashStr(JSON.stringify(data));}
+function ghSaveCopy(id){return gh("/gists/"+id,{method:"PATCH",body:JSON.stringify({files:{[GIST_COPY]:{content:syncContent(0,syncData())}}})});}
+
+function refreshControls(){const s=curSet();$("#sortSel").value=(s&&s.sort)||"cat";$("#searchInp").value=(s&&s.search)||"";$("#searchClear").classList.toggle("hide",!$("#searchInp").value);$("#lowThresh").value=String(Number.isFinite(DB.lowThreshold)?DB.lowThreshold:10);$("#lowThreshOn").checked=DB.lowThreshOn!==false;$("#lowThresh").disabled=DB.lowThreshOn===false;}
+function adoptRemote(d){
+  const keep={theme:DB.theme,imgSize:DB.imgSize,current:DB.current};
+  DB=Object.assign({},d.db,keep);
+  if(!Number.isFinite(DB.lowThreshold))DB.lowThreshold=10;if(DB.lowThreshOn===undefined)DB.lowThreshOn=true;
+  DB.order=(DB.order||[]).filter(id=>DB.sets[id]);
+  if(!DB.current||!DB.sets[DB.current])DB.current=DB.order[0]||null;
+  Object.values(DB.sets).forEach(s=>{if(s){if(s.entries)migrateGrabbed(s);if(!s.collected)s.collected={};if(!s.missing)s.missing={};if(!Array.isArray(s.fCat))s.fCat=[];if(!Array.isArray(s.fColor))s.fColor=[];if(!Array.isArray(s.views))s.views=(s.view&&s.view!=="all")?[s.view]:[];}});
+  try{localStorage.setItem(LS,JSON.stringify(DB));}catch(e){}
+  SYNC.rev=Number(d.rev)||0;SYNC.hash=syncHash();SYNC.dirty=false;
+  refreshControls();render();
+}
+function choose(title,html,labels){return new Promise(done=>{const ov=document.createElement("div");ov.className="overlay";ov.style.zIndex="70";ov.innerHTML='<div class="modal" role="alertdialog" aria-modal="true" style="max-width:480px"><div class="mhead"><h2></h2></div><div class="tabpane"><p class="hint" style="margin:0"></p><div class="mactions"></div></div></div>';ov.querySelector("h2").textContent=title;ov.querySelector(".hint").innerHTML=html;const acts=ov.querySelector(".mactions");labels.forEach((l,i)=>{const b=document.createElement("button");b.type="button";b.className="btn"+(i===0?" primary":"");b.textContent=l;b.addEventListener("click",()=>{ov.remove();done(i);});acts.appendChild(b);});document.body.appendChild(ov);acts.querySelector("button").focus();});}
+function syncConflict(d){const other=d.device||"other device";return choose("Changes on two devices","This device and your "+esc(other)+" both changed things since they last synced.<br><br><b>This device:</b> "+esc(progressSummary(DB))+"<br><b>"+esc(other.charAt(0).toUpperCase()+other.slice(1))+"</b> ("+esc(fmtWhen(d.savedAt))+"): "+esc(progressSummary(d.db))+"<br><br>Choose which to keep. The other version stays in your gist, so nothing is lost.",["Keep this device’s","Use "+other+"’s"]);}
+
+function syncDirty(){if(!syncOn())return;const dirty=syncHash()!==SYNC.hash;if(dirty!==!!SYNC.dirty){SYNC.dirty=dirty;syncStore();}if(dirty){clearTimeout(syncTimer);syncTimer=setTimeout(syncNow,2500);}syncStatus();}
+async function syncPush(rev){const h=await ghWrite(SYNC.gistId,rev);SYNC.rev=rev;SYNC.hash=h;SYNC.dirty=syncHash()!==h;}
+async function syncNow(){
+  if(!syncOn()||syncMsg==="auth")return;
+  if(syncBusy){syncAgain=true;return;}
+  clearTimeout(syncTimer);
+  if(navigator.onLine===false){syncMsg="offline";return syncStatus();}
+  syncBusy=true;syncMsg="busy";syncStatus();
+  try{
+    const d=await ghRead(SYNC.gistId);
+    const remoteRev=Number(d.rev)||0,localRev=Number(SYNC.rev)||0;
+    if(remoteRev>localRev){
+      if(!SYNC.dirty||syncHash(d.db)===syncHash())adoptRemote(d);
+      else if(await syncConflict(d)===1){await ghSaveCopy(SYNC.gistId);adoptRemote(d);}
+      else await syncPush(remoteRev+1);
+    }else if(SYNC.dirty)await syncPush(Math.max(remoteRev,localRev)+1);
+    SYNC.lastSync=new Date().toISOString();syncMsg="";
+  }catch(e){
+    syncMsg=e.status===401?"auth":e.status===404?"gone":e.status?"error":"offline";
+    if(e.status===404)SYNC.gistId=null;
+  }finally{
+    syncStore();syncBusy=false;syncStatus();
+    if(syncMsg==="auth"||syncMsg==="gone")renderSyncPane();
+    if(syncAgain){syncAgain=false;syncNow();}
+    else if(syncOn()&&SYNC.dirty&&!syncMsg)syncTimer=setTimeout(syncNow,2500);
+  }
+}
+function setupMsg(t){const m=$("#syncSetupMsg");m.textContent=t;m.classList.toggle("hide",!t);}
+async function syncConnect(){
+  const token=$("#syncToken").value.trim();if(!token)return $("#syncToken").focus();
+  const prev=SYNC,btn=$("#syncConnectBtn");btn.disabled=true;btn.textContent="Connecting…";setupMsg("");
+  SYNC={token,gistId:null,rev:0,hash:"",dirty:false};
+  try{
+    SYNC.login=(await gh("/user")).login;
+    const id=await ghFind();
+    if(id){
+      const d=await ghRead(id);SYNC.gistId=id;
+      if(prev&&prev.gistId===id&&Number(prev.rev)===Number(d.rev)){SYNC.rev=prev.rev;SYNC.hash=prev.hash;SYNC.dirty=syncHash()!==prev.hash;}
+      else if(!worthKeeping(d.db))adoptRemote(d);
+      else if(await choose("Synced data found","Your GitHub already has Brick Bag Merge data.<br><br><b>On GitHub</b> (from your "+esc(d.device||"other device")+", "+esc(fmtWhen(d.savedAt))+"): "+esc(progressSummary(d.db))+"<br><b>This device:</b> "+esc(progressSummary(DB))+"<br><br>Which should this device use? The other version stays in your gist, so nothing is lost.",["Use GitHub’s","Keep this device’s"])===0){await ghSaveCopy(id);adoptRemote(d);}
+      else{SYNC.rev=Number(d.rev)||0;SYNC.hash="";SYNC.dirty=true;}
+    }else{
+      const data=syncData();const g=await gh("/gists",{method:"POST",body:JSON.stringify({description:"Brick Bag Merge sync (sets and picking progress)",public:false,files:{[GIST_FILE]:{content:syncContent(1,data)}}})});
+      SYNC.gistId=g.id;SYNC.rev=1;SYNC.hash=hashStr(JSON.stringify(data));SYNC.dirty=false;
+    }
+    SYNC.lastSync=new Date().toISOString();syncMsg="";syncStore();$("#syncToken").value="";
+  }catch(e){
+    SYNC=prev;setupMsg(e.status===401?"GitHub didn’t accept that token. Check you copied all of it.":e.status?"GitHub returned an error ("+e.status+"). Try again in a moment.":"Couldn’t reach GitHub. Check your connection and try again.");
+  }finally{btn.disabled=false;btn.textContent="Connect";renderSyncPane();if(syncOn()&&SYNC.dirty)syncNow();}
+}
+function syncDisconnect(){if(!confirm("Stop syncing on this device? Your data stays on this device and in your gist."))return;SYNC=null;syncMsg="";clearTimeout(syncTimer);syncStore();setupMsg("");renderSyncPane();}
+function syncStatus(){
+  const b=$("#syncBtn");if(!b)return;
+  let cls="s-none",t="Sync: not set up";
+  if(SYNC&&SYNC.token){
+    if(syncMsg==="auth"){cls="s-err";t="Sync paused: GitHub didn’t accept the token";}
+    else if(syncMsg==="gone"||!SYNC.gistId){cls="s-err";t="Sync paused: the gist was deleted";}
+    else if(syncMsg==="busy"){cls="s-busy";t="Syncing…";}
+    else if(syncMsg==="offline"){cls="s-off";t="Offline: changes are saved here and will sync later";}
+    else if(syncMsg==="error"){cls="s-err";t="Couldn’t sync, will retry";}
+    else if(SYNC.dirty){cls="s-wait";t="Changes waiting to sync";}
+    else{cls="s-ok";t="Synced "+ago(SYNC.lastSync);}
+  }
+  b.className="iconbtn "+cls;b.title=t;b.setAttribute("aria-label",t);
+  const st=$("#syncState");if(st){st.textContent=t+(SYNC&&SYNC.login?" · GitHub @"+SYNC.login:"");st.classList.toggle("err",cls==="s-err");}
+}
+function renderSyncPane(){
+  const connected=syncOn()&&syncMsg!=="auth";
+  $("#syncSetup").classList.toggle("hide",connected);$("#syncOn").classList.toggle("hide",!connected);
+  if(!connected&&SYNC&&SYNC.token)setupMsg(syncMsg==="auth"?"GitHub stopped accepting the saved token (it may have expired). Paste a new one to carry on. Your data is safe.":"The synced gist was deleted. Connect again to start a new one.");
+  if(SYNC&&SYNC.gistId)$("#syncGistLink").href="https://gist.github.com/"+(SYNC.login?SYNC.login+"/":"")+SYNC.gistId;
+  syncStatus();
+}
+
 function init(){
-  load();
+  load();syncLoad();
   if(!DB||!DB.sets)DB={sets:{},order:[],current:null,theme:"system",seeded:false,imgSize:64,lowThreshold:10,lowThreshOn:true};
   if(!DB.imgSize)DB.imgSize=64;if(!Number.isFinite(DB.lowThreshold))DB.lowThreshold=10;if(DB.lowThreshOn===undefined)DB.lowThreshOn=true;
   DB.order=(DB.order||[]).filter(id=>DB.sets[id]);
@@ -2810,8 +2949,19 @@ function init(){
   colorMS=MultiSelect($("#colorFilter"),{title:"Colours",label:colorLabel,render:o=>{const hex=colorHex(o);return '<span class="swline">'+(hex?'<span class="swatch" style="background:'+esc(hex)+'"></span>':'')+esc(colorLabel(o))+'</span>';},onChange:a=>{const s=curSet();if(s){s.fColor=a;save();renderList();}}});
 
   applyTheme();applyImgSize();save();render();loadParts();
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change",applyTheme);
+  if("serviceWorker" in navigator&&window.isSecureContext)navigator.serviceWorker.register("sw.js").catch(()=>{});
+  if(navigator.storage&&navigator.storage.persist)navigator.storage.persisted().then(p=>p||navigator.storage.persist()).catch(()=>{});
 
   $("#themeBtn").addEventListener("click",toggleTheme);
+  $("#syncBtn").addEventListener("click",()=>openModal("sync"));
+  $("#syncConnectBtn").addEventListener("click",syncConnect);
+  $("#syncToken").addEventListener("keydown",e=>{if(e.key==="Enter")syncConnect();});
+  $("#syncNowBtn").addEventListener("click",()=>syncNow());
+  $("#syncOffBtn").addEventListener("click",syncDisconnect);
+  document.addEventListener("visibilitychange",()=>syncNow());
+  window.addEventListener("online",()=>{if(syncMsg==="offline")syncMsg="";syncNow();});
+  setInterval(()=>{if(document.visibilityState==="visible")syncNow();},45000);
   $("#importBtn").addEventListener("click",()=>openModal("bsx"));
   $("#closeModal").addEventListener("click",closeModal);
   $("#overlay").addEventListener("click",e=>{if(e.target===$("#overlay"))closeModal();});
@@ -2857,12 +3007,13 @@ function init(){
   $("#addRowBtn").addEventListener("click",()=>{let s=curSet();if(!s)s=newSet("New set");const bags=bagsOf(s);const bag=bags[bags.length-1]||"1";s.entries.push({bag,qty:1,name:"",color:"",id:"",img:""});if(!(bag in s.selected))s.selected[bag]=true;save();renderEdit();renderBags();renderStats();});
 
   $("#backupDownload").addEventListener("click",()=>{const ok=downloadText("brick-bag-merge-backup.json",JSON.stringify(DB));if(!ok){switchTab("backup");$("#backupText").value=JSON.stringify(DB,null,2);alert("Download blocked here — copy the text backup instead.");}});
-  $("#backupFile").addEventListener("change",async e=>{const f=(e.target.files||[])[0];if(!f)return;try{const d=JSON.parse(await readFileText(f));if(!d.sets||!d.order)throw new Error("not a backup");if(!confirm("Replace everything with this backup file?"))return;DB=d;if(!DB.imgSize)DB.imgSize=64;if(!Number.isFinite(DB.lowThreshold))DB.lowThreshold=10;Object.values(DB.sets).forEach(s=>{if(s){if(s.entries)migrateGrabbed(s);if(!Array.isArray(s.fCat))s.fCat=[];if(!Array.isArray(s.fColor))s.fColor=[];if(!Array.isArray(s.views))s.views=(s.view&&s.view!=="all")?[s.view]:[];}});save();applyTheme();applyImgSize();$("#lowThresh").value=String(DB.lowThreshold);render();alert("Restored.");closeModal();}catch(x){alert("Couldn’t read that backup: "+x.message);}e.target.value="";});
+  $("#backupFile").addEventListener("change",async e=>{const f=(e.target.files||[])[0];if(!f)return;try{let d=JSON.parse(await readFileText(f));if(d&&d.db&&d.db.sets)d=Object.assign({},d.db,{theme:DB.theme,imgSize:DB.imgSize,current:DB.current});if(!d.sets||!d.order)throw new Error("not a backup");if(!confirm("Replace everything with this backup file?"))return;DB=d;if(!DB.imgSize)DB.imgSize=64;if(!Number.isFinite(DB.lowThreshold))DB.lowThreshold=10;Object.values(DB.sets).forEach(s=>{if(s){if(s.entries)migrateGrabbed(s);if(!Array.isArray(s.fCat))s.fCat=[];if(!Array.isArray(s.fColor))s.fColor=[];if(!Array.isArray(s.views))s.views=(s.view&&s.view!=="all")?[s.view]:[];}});save();applyTheme();applyImgSize();$("#lowThresh").value=String(DB.lowThreshold);render();alert("Restored.");closeModal();}catch(x){alert("Couldn’t read that backup: "+x.message);}e.target.value="";});
   $("#backupCopy").addEventListener("click",()=>{const t=$("#backupText");t.focus();t.select();try{document.execCommand("copy");}catch(e){}try{navigator.clipboard&&navigator.clipboard.writeText(t.value);}catch(e){}});
-  $("#backupRestore").addEventListener("click",()=>{try{const d=JSON.parse($("#backupText").value);if(!d.sets||!d.order)throw new Error("not a backup");if(!confirm("Replace everything with this backup?"))return;DB=d;if(!DB.imgSize)DB.imgSize=64;if(!Number.isFinite(DB.lowThreshold))DB.lowThreshold=10;Object.values(DB.sets).forEach(s=>{if(s){if(s.entries)migrateGrabbed(s);if(!Array.isArray(s.fCat))s.fCat=[];if(!Array.isArray(s.fColor))s.fColor=[];if(!Array.isArray(s.views))s.views=(s.view&&s.view!=="all")?[s.view]:[];}});save();applyTheme();applyImgSize();$("#lowThresh").value=String(DB.lowThreshold);render();alert("Restored.");closeModal();}catch(x){alert("Couldn’t restore: "+x.message);}});
+  $("#backupRestore").addEventListener("click",()=>{try{let d=JSON.parse($("#backupText").value);if(d&&d.db&&d.db.sets)d=Object.assign({},d.db,{theme:DB.theme,imgSize:DB.imgSize,current:DB.current});if(!d.sets||!d.order)throw new Error("not a backup");if(!confirm("Replace everything with this backup?"))return;DB=d;if(!DB.imgSize)DB.imgSize=64;if(!Number.isFinite(DB.lowThreshold))DB.lowThreshold=10;Object.values(DB.sets).forEach(s=>{if(s){if(s.entries)migrateGrabbed(s);if(!Array.isArray(s.fCat))s.fCat=[];if(!Array.isArray(s.fColor))s.fColor=[];if(!Array.isArray(s.views))s.views=(s.view&&s.view!=="all")?[s.view]:[];}});save();applyTheme();applyImgSize();$("#lowThresh").value=String(DB.lowThreshold);render();alert("Restored.");closeModal();}catch(x){alert("Couldn’t restore: "+x.message);}});
 
   const s0=curSet();if(s0){$("#sortSel").value=s0.sort||"cat";searchInp.value=s0.search||"";}
   syncSearchClear();
+  renderSyncPane();syncNow();
   $("#imgSizeSel").value=String(DB.imgSize||64);
   $("#lowThresh").value=String(Number.isFinite(DB.lowThreshold)?DB.lowThreshold:10);
   $("#lowThreshOn").checked=DB.lowThreshOn!==false;$("#lowThresh").disabled=DB.lowThreshOn===false;
