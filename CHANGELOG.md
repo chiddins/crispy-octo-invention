@@ -7,6 +7,10 @@ the last one. It becomes `1.0.0` once it's stable.
 Builds before 0.8.3 showed a plain build number in the header (v39 to v46). Each
 version below lists that old number and the commits it covers.
 
+## 0.10.1 (2026-10-05)
+- The two progress bars moved from the floating footer into the header, stacked:
+  beside the title on wide screens, on their own row under it on narrower ones.
+
 ## 0.10.0 (2026-10-05)
 - Floating progress bar at the bottom of the screen: pieces picked and left for the
   selected bags, and for the whole set.
