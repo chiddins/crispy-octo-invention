@@ -7,6 +7,12 @@ the last one. It becomes `1.0.0` once it's stable.
 Builds before 0.8.3 showed a plain build number in the header (v39 to v46). Each
 version below lists that old number and the commits it covers.
 
+## 0.10.0 (2026-10-05)
+- Floating progress bar at the bottom of the screen: pieces picked and left for the
+  selected bags, and for the whole set.
+- The header now stays at the top however far you scroll (it used to scroll away
+  after the first screen).
+
 ## 0.9.0 (2026-10-05)
 - Copy button next to each part number: tap it to copy just the number (it shows a
   green tick when copied).
