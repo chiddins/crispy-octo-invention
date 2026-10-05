@@ -7,6 +7,12 @@ the last one. It becomes `1.0.0` once it's stable.
 Builds before 0.8.3 showed a plain build number in the header (v39 to v46). Each
 version below lists that old number and the commits it covers.
 
+## 0.10.5 (2026-10-05)
+- Fixed: the custom amount (pencil) was capped at the selected bags' total, so
+  entering 10 for a part with 8 in the selected bags and 30 overall saved 8. The
+  number is now your total for the part, up to everything in all bags; selected
+  bags fill first, then the others. The dialog says so when other bags are involved.
+
 ## 0.10.4 (2026-10-05)
 - Fixed: on wide screens the Bags panel ran behind the sticky footer, hiding the
   last bags. It now fits between the header and footer, and its list scrolls
