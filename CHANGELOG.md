@@ -7,6 +7,13 @@ the last one. It becomes `1.0.0` once it's stable.
 Builds before 0.8.3 showed a plain build number in the header (v39 to v46). Each
 version below lists that old number and the commits it covers.
 
+## 0.10.2 (2026-10-05)
+- Fixed: picking a custom amount (pencil button) marked the whole bag as done, so
+  the row showed as fully picked with no way to pick the rest. Rows now show how
+  many are still to get and a Pick button for them; entering 0 leaves the part
+  unpicked; half-picked parts count as Unpicked.
+- Enter on the keyboard confirms the custom-amount and Flag missing dialogs.
+
 ## 0.10.1 (2026-10-05)
 - The two progress bars moved from the floating footer into the header, stacked:
   beside the title on wide screens, on their own row under it on narrower ones.

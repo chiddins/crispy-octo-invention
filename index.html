@@ -318,7 +318,7 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
   <div class="wrap hbar">
     <div class="brand">
       <span class="logo" aria-hidden="true"><span></span></span>
-      <div style="min-width:0"><h1>Brick Bag Merge <span class="verwrap"><span class="ver">v0.10.1</span><span class="beta">Beta</span></span></h1><div class="tagline">Pick bags &middot; sum the parts &middot; one pick&#8209;list</div></div>
+      <div style="min-width:0"><h1>Brick Bag Merge <span class="verwrap"><span class="ver">v0.10.2</span><span class="beta">Beta</span></span></h1><div class="tagline">Pick bags &middot; sum the parts &middot; one pick&#8209;list</div></div>
     </div>
     <div class="hspace"></div>
     <div class="hprog hide" id="hProg"><span class="hpl">Selected bags</span><div class="hpbar" id="hpSelBar" role="progressbar" aria-label="Selected bags progress" aria-valuemin="0"><span></span></div><span class="hpn" id="hpSelNum"></span><span class="hpp" id="hpSelPct"></span><span class="hpl">Whole set</span><div class="hpbar" id="hpAllBar" role="progressbar" aria-label="Whole set progress" aria-valuemin="0"><span></span></div><span class="hpn" id="hpAllNum"></span><span class="hpp" id="hpAllPct"></span></div>
@@ -2560,7 +2560,7 @@ function defaultSelect(set){bagsOf(set).forEach(b=>{if(!(b in set.selected))set.
 function newSet(name){const id=uid();DB.sets[id]={id,name:name||"New set",entries:[],selected:{},grabbed:{},collected:{},missing:{},grabPrev:{},views:[],sort:"cat",search:"",fCat:[],fColor:[]};DB.order.push(id);DB.current=id;return DB.sets[id];}
 function bagQ(g,b){return Number(g.allByBag[b])||0;}
 function collectedQtyOf(set,g){const col=set.collected&&set.collected[g.key];if(!col)return 0;let s=0;for(const b in g.allByBag){if(b in col){const v=col[b];s+=(v===true?bagQ(g,b):(Number(v)||0));}}return s;}
-function grabNowOf(set,g){const col=set.collected&&set.collected[g.key];let n=0;for(const b in g.byBag){if(!(col&&(b in col)))n+=(Number(g.byBag[b])||0);}return n;}
+function grabNowOf(set,g){const col=(set.collected&&set.collected[g.key])||{};let n=0;for(const b in g.byBag){const q=Number(g.byBag[b])||0,c=col[b];n+=Math.max(0,q-(c===true?q:(Number(c)||0)));}return n;}
 function missOf(set,g){return Math.max(0,Math.min(g.grand,(set.missing&&set.missing[g.key])||0));}
 function gotOf(set,g){return Math.max(0,Math.min(g.grand,collectedQtyOf(set,g)));}
 function setGot(set,g,v){v=Math.floor(Number(v));if(!isFinite(v))v=0;v=Math.max(0,Math.min(g.grand,v));if(v<=0)delete set.grabbed[g.key];else set.grabbed[g.key]=v;save();renderStats();renderList();}
@@ -2705,7 +2705,7 @@ function renderList(){
     let qtyBadge,progWord,progCls,cta,grabbtnsHTML,rowCls,onGrab,onGrabAll,missTag='',flagBtnHTML='',nameTick='',hasProg=false;
     {
       const missCnt=missOf(set,g),collQty=collectedQtyOf(set,g);
-      let grabNow=0;{const col=set.collected&&set.collected[g.key];for(const b in g.byBag){if(!(col&&(b in col)))grabNow+=(Number(g.byBag[b])||0);}}
+      const grabNow=grabNowOf(set,g);
       const toPick=Math.max(0,grand-got),remLater=Math.max(0,toPick-grabNow),doneView=grabNow<=0,complete=got>=grand;
       hasProg=collQty>0||missCnt>0;progWord='picked';
       progCls=complete?"done":(((toPick>0&&toPick<=lowT)||(remLater>0&&remLater<=lowT))?"low":"");
@@ -2753,7 +2753,7 @@ function openAmountDialog(set,g){
   const cm=colorTag(g.color);
   const ov=document.createElement("div");ov.className="overlay";
   const close=()=>{ov.remove();document.removeEventListener("keydown",onKey);};
-  const onKey=e=>{if(e.key==="Escape"){e.preventDefault();close();}};
+  const onKey=e=>{if(e.key==="Escape"){e.preventDefault();close();}else if(e.key==="Enter"&&e.target.matches&&e.target.matches("#amtPick,#amtMiss")){e.preventDefault();const b=ov.querySelector('[data-a="pick"],[data-a="miss"]');if(b)b.click();}};
   const clampN=(sel,max)=>{let v=parseInt(ov.querySelector(sel).value,10);if(!isFinite(v)||v<0)v=0;if(v>max)v=max;return v;};
   let haveSel=0;{const col=set.collected&&set.collected[g.key];if(col)for(const b in g.byBag){if(b in col){const v=col[b];haveSel+=(v===true?bagQ(g,b):(Number(v)||0));}}}
   const prefill=haveSel>0?haveSel:selNeed;
@@ -2787,7 +2787,7 @@ function openMissingDialog(set,g){
   const cm=colorTag(g.color);
   const ov=document.createElement("div");ov.className="overlay";
   const close=()=>{ov.remove();document.removeEventListener("keydown",onKey);};
-  const onKey=e=>{if(e.key==="Escape"){e.preventDefault();close();}};
+  const onKey=e=>{if(e.key==="Escape"){e.preventDefault();close();}else if(e.key==="Enter"&&e.target.matches&&e.target.matches("#amtPick,#amtMiss")){e.preventDefault();const b=ov.querySelector('[data-a="pick"],[data-a="miss"]');if(b)b.click();}};
   ov.innerHTML='<div class="modal" style="max-width:400px">'+
     '<div class="mhead"><h2>Flag missing</h2><button class="iconbtn" data-a="cancel" aria-label="Close"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>'+
     '<div class="amtsum">'+
