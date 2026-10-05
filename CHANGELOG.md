@@ -7,6 +7,18 @@ the last one. It becomes `1.0.0` once it's stable.
 Builds before 0.8.3 showed a plain build number in the header (v39 to v46). Each
 version below lists that old number and the commits it covers.
 
+## 0.12.0 (2026-10-05)
+- Picking more of a part that's flagged missing asks about the flag first:
+  "Pick and remove flag" if you found them, "Pick, keep flag" if they're still
+  missing (say you picked that part for another bag), or Cancel. Picking every last
+  one always clears the flag.
+- Flagged parts get a "Remove flag" button next to "Flag missing". The button in the
+  Flag missing dialog is called "Remove flag" too (it was "Mark all found (clear)").
+- Each bag in the Bags panel shows its picked pieces on a second line under the
+  name ("12 / 145 pieces"), with a green tick next to the name once it's complete.
+- On phones the Reset / Flag missing / Remove flag buttons share the row evenly, and
+  question dialogs stack their buttons full width.
+
 ## 0.11.0 (2026-10-05)
 - The progress bars are back in the header, behind a "Show progress" switch to the
   right of the sync button. Tick it and the header grows to show both bars (selected

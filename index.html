@@ -126,7 +126,9 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--hdrh,69px) +
 @media (min-width:821px){aside .panel{display:flex;flex-direction:column;max-height:calc(100vh - env(safe-area-inset-top,0px) - var(--hdrh,69px) - 15px);max-height:calc(100dvh - env(safe-area-inset-top,0px) - var(--hdrh,69px) - 15px)}aside .pbody{display:flex;flex-direction:column;min-height:0}aside .bag-list{flex:1 1 auto;min-height:0;max-height:none}}
 .bagchip{display:flex;align-items:center;gap:10px;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:var(--surface-2);text-align:left;font-weight:600}
 .bagchip:hover{border-color:var(--faint)}
-.bagchip .nm{flex:1;min-width:0}
+.bagchip .bagtxt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.bagchip .nm{display:flex;align-items:center;gap:6px}
+.bagchip .bagok{display:inline-flex;flex:none;color:var(--grab-bright)}
 .bagchip .ct{font-size:13.8px;color:var(--muted);font-variant-numeric:tabular-nums}
 .bagchip.on{border:2px solid var(--secondary);padding:8px 10px}
 
@@ -221,7 +223,8 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--hdrh,69px) +
 .gedit-lbl{display:none}
 @media (max-width:560px){
   .grab{flex-direction:column;align-items:stretch;gap:8px}
-  .grableft{order:2;width:100%;justify-content:space-between}
+  .grableft{order:2;width:100%;justify-content:space-between;flex-wrap:wrap}
+  .grableft>*{flex:1 1 auto}
   .grabbtns{flex-direction:column-reverse;align-items:stretch;width:100%;gap:8px}
   .grabbtns>*{width:100%}
   .gedit-lbl{display:inline}
@@ -283,6 +286,7 @@ textarea{width:100%;background:var(--surface-2);border:1px solid var(--line);bor
 .field label{font-size:14.4px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
 .field input{height:var(--ctl)}
 .mactions{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;margin-top:12px}
+@media (max-width:520px){[role=alertdialog] .mactions{flex-direction:column;align-items:stretch}[role=alertdialog] .mactions .btn{justify-content:center}}
 .previewbox{background:var(--surface-2);border:1px dashed var(--line);border-radius:10px;padding:11px 13px;font-size:15.6px;margin-top:12px;color:var(--muted)}
 .previewbox b{color:var(--ink)}
 .etable{width:100%;border-collapse:collapse;font-size:15.6px}
@@ -325,7 +329,7 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
   <div class="wrap hbar">
     <div class="brand">
       <span class="logo" aria-hidden="true"><span></span></span>
-      <div style="min-width:0"><h1>Brick Bag Merge <span class="verwrap"><span class="ver">v0.11.0</span><span class="beta">Beta</span></span></h1><div class="tagline">Pick bags &middot; sum the parts &middot; one pick&#8209;list</div></div>
+      <div style="min-width:0"><h1>Brick Bag Merge <span class="verwrap"><span class="ver">v0.12.0</span><span class="beta">Beta</span></span></h1><div class="tagline">Pick bags &middot; sum the parts &middot; one pick&#8209;list</div></div>
     </div>
     <button class="iconbtn s-none" id="syncBtn" title="Sync: not set up" aria-label="Sync: not set up"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/><path class="ico-ok" d="m8.8 13.6 2.3 2.3 4.4-4.6"/><path class="ico-err" d="m9.9 11.4 4.4 4.4m0-4.4-4.4 4.4"/></svg><span class="synclbl" id="syncLbl"></span></button>
     <label class="toggle hdrtog hide" id="progToggle" title="Show progress"><input type="checkbox" class="cbx" id="progOn" aria-label="Show progress"><span class="cbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg></span><svg class="tgicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M4 8h16M4 16h16" opacity=".35"/><path d="M4 8h10M4 16h5"/></svg><span class="tglbl">Show progress</span></label>
@@ -2574,10 +2578,32 @@ function gotOf(set,g){return Math.max(0,Math.min(g.grand,collectedQtyOf(set,g)))
 function setGot(set,g,v){v=Math.floor(Number(v));if(!isFinite(v))v=0;v=Math.max(0,Math.min(g.grand,v));if(v<=0)delete set.grabbed[g.key];else set.grabbed[g.key]=v;save();renderStats();renderList();}
 function grabAction(set,g,v){const cur=Math.max(0,Math.min(g.grand,Number(set.grabbed[g.key])||0));v=Math.max(0,Math.min(g.grand,Math.floor(Number(v))||0));if(v!==cur)setGot(set,g,v);}
 /* per-bag "collected" model: which bags each part has been pulled from */
-function collectView(set,g){if(!set.collected)set.collected={};const c=set.collected[g.key]||(set.collected[g.key]={});let ch=false;for(const b in g.byBag){const q=bagQ(g,b);if(c[b]!==q){c[b]=q;ch=true;}}if(ch){save();renderStats();renderList();}}
-function collectAll(set,g){if(!set.collected)set.collected={};const c=set.collected[g.key]||(set.collected[g.key]={});let ch=false;for(const b in g.allByBag){const q=bagQ(g,b);if(c[b]!==q){c[b]=q;ch=true;}}if(ch){save();renderStats();renderList();}}
-function pickCount(set,g,picked){if(!set.collected)set.collected={};const c=set.collected[g.key]||(set.collected[g.key]={});let rem=Math.max(0,Math.min(g.grand,Math.floor(picked)||0));const bags=sortBags(Object.keys(g.allByBag));bags.filter(b=>set.selected[b]).concat(bags.filter(b=>!set.selected[b])).forEach(b=>{const take=Math.min(rem,bagQ(g,b));if(take>0)c[b]=take;else delete c[b];rem-=take;});if(!Object.keys(c).length)delete set.collected[g.key];save();renderStats();renderList();}
-function clearCollected(set,g){let ch=false;if(set.collected&&set.collected[g.key]){delete set.collected[g.key];ch=true;}if(set.missing&&set.missing[g.key]){delete set.missing[g.key];ch=true;}if(ch){save();renderStats();renderList();}}
+function afterPick(){save();renderStats();renderBags();renderList();}
+/* kind "view": fill the selected bags; "all": fill every bag; "count": n picked in total, selected bags first */
+function applyPick(set,g,kind,n){if(!set.collected)set.collected={};const c=set.collected[g.key]||(set.collected[g.key]={});if(kind==="count"){let rem=Math.max(0,Math.min(g.grand,Math.floor(n)||0));const bags=sortBags(Object.keys(g.allByBag));bags.filter(b=>set.selected[b]).concat(bags.filter(b=>!set.selected[b])).forEach(b=>{const take=Math.min(rem,bagQ(g,b));if(take>0)c[b]=take;else delete c[b];rem-=take;});}else{for(const b in (kind==="all"?g.allByBag:g.byBag))c[b]=bagQ(g,b);}if(!Object.keys(c).length)delete set.collected[g.key];}
+/* picking more of a part that is flagged missing asks whether that clears the flag */
+function commitPick(set,g,kind,n){
+  const snap=JSON.stringify((set.collected||{})[g.key]||null),before=gotOf(set,g),miss=missOf(set,g);
+  applyPick(set,g,kind,n);
+  if(JSON.stringify((set.collected||{})[g.key]||null)===snap)return;
+  const after=gotOf(set,g);
+  if(!(miss>0&&after>before)){afterPick();return;}
+  const was=JSON.parse(snap);if(was)set.collected[g.key]=was;else delete set.collected[g.key];
+  const keepN=Math.min(miss,Math.max(0,g.grand-after)),them=miss===1?"it":"them";
+  const labels=["Pick and remove flag"].concat(keepN?[keepN===miss?"Pick, keep flag":"Pick, keep "+keepN+" missing"]:[],["Cancel"]);
+  const what="<b>"+esc(g.dispName)+"</b>"+(g.color!==""?" ("+esc(colorLabel(g.color))+")":"")+" is flagged with <b>"+miss+" missing</b>. ";
+  choose("Remove the missing flag?",what+(keepN?"If you found "+them+", picking removes the flag.":"Picking all of them removes the flag."),labels).then(i=>{
+    if(i===labels.length-1)return;
+    const s=DB.sets[set.id];if(s!==set){/* replaced by a sync while the question was open */const g2=s&&aggregate(s).find(x=>x.key===g.key);if(!g2)return;set=s;g=g2;}
+    applyPick(set,g,kind,n);if(!set.missing)set.missing={};
+    if(i===0)delete set.missing[g.key];else{const k=Math.min(missOf(set,g),Math.max(0,g.grand-gotOf(set,g)));if(k>0)set.missing[g.key]=k;else delete set.missing[g.key];}
+    afterPick();
+  });
+}
+function collectView(set,g){commitPick(set,g,"view");}
+function collectAll(set,g){commitPick(set,g,"all");}
+function pickCount(set,g,picked){commitPick(set,g,"count",picked);}
+function clearCollected(set,g){let ch=false;if(set.collected&&set.collected[g.key]){delete set.collected[g.key];ch=true;}if(set.missing&&set.missing[g.key]){delete set.missing[g.key];ch=true;}if(ch)afterPick();}
 function setMissing(set,g,n){if(!set.missing)set.missing={};n=Math.max(0,Math.min(g.grand,Math.floor(n)||0));if(n>0)set.missing[g.key]=n;else delete set.missing[g.key];save();renderStats();renderList();}
 function migrateGrabbed(set){if(!set.grabbed)return;const all={};for(const e of set.entries){const k=groupKey(e);all[k]=(all[k]||0)+(Number(e.qty)||0);}for(const k in set.grabbed){const v=set.grabbed[k];let n;if(typeof v==="number")n=v;else if(v===true)n=all[k]||0;else if(v&&typeof v==="object")n=Object.keys(v).reduce((a,b)=>a+(Number(v[b])||0),0);else n=0;n=Math.max(0,Math.min(all[k]||0,n));if(n>0)set.grabbed[k]=n;else delete set.grabbed[k];}}
 
@@ -2635,12 +2661,13 @@ function syncFilters(){const s=curSet();if(catMS)catMS.setSelected(s?(s.fCat||[]
 function renderBags(){
   const set=curSet();const wrap=$("#bagList");wrap.innerHTML="";
   if(!set){$("#bagSummary").textContent="";$("#bagTotal").textContent="";return;}
-  const bags=bagsOf(set);const counts={};set.entries.forEach(e=>{counts[String(e.bag)]=(counts[String(e.bag)]||0)+(Number(e.qty)||0);});
+  const bags=bagsOf(set),prog=bagProgress(set),n=x=>x.toLocaleString();
   let on=0;
   bags.forEach(b=>{
     const active=!!set.selected[b];if(active)on++;
-    const btn=document.createElement("button");btn.className="bagchip"+(active?" on":"");btn.type="button";
-    btn.innerHTML='<span class="cbox'+(active?' on':'')+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg></span><span class="nm">Bag '+esc(b)+'</span><span class="ct">'+counts[b]+' pcs</span>';
+    const p=prog[b]||{got:0,total:0},done=p.total>0&&p.got>=p.total;
+    const btn=document.createElement("button");btn.className="bagchip"+(active?" on":"")+(done?" done":"");btn.type="button";
+    btn.innerHTML='<span class="cbox'+(active?' on':'')+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg></span><span class="bagtxt"><span class="nm">Bag '+esc(b)+(done?'<span class="bagok" role="img" aria-label="all picked" title="All picked">'+OKICON(18)+'</span>':'')+'</span><span class="ct">'+n(p.got)+' / '+n(p.total)+' pieces</span></span>';
     btn.addEventListener("click",()=>{set.selected[b]=!set.selected[b];save();renderBags();renderStats();renderList();});
     wrap.appendChild(btn);
   });
@@ -2650,7 +2677,9 @@ function renderBags(){
   const selectAllCb=$("#selectAllBags");if(selectAllCb){selectAllCb.checked=on===bags.length;selectAllCb.indeterminate=(on>0&&on<bags.length);}
   if(!bags.length)wrap.innerHTML='<div style="color:var(--muted);font-size:15.6px">No bags yet — import a set.</div>';
 }
-function setProgress(set){const qty={};set.entries.forEach(e=>{const k=groupKey(e),b=String(e.bag),m=qty[k]||(qty[k]={});m[b]=(m[b]||0)+(Number(e.qty)||0);});const out={sel:{got:0,total:0},all:{got:0,total:0}};for(const k in qty){const col=(set.collected&&set.collected[k])||{};for(const b in qty[k]){const q=qty[k][b],c=col[b],got=Math.min(q,c===true?q:(Number(c)||0));out.all.total+=q;out.all.got+=got;if(set.selected[b]){out.sel.total+=q;out.sel.got+=got;}}}return out;}
+/* pieces picked / needed per bag (a part's picks count only up to what that bag needs) */
+function bagProgress(set){const qty={},out={};set.entries.forEach(e=>{const k=groupKey(e),b=String(e.bag),m=qty[k]||(qty[k]={});m[b]=(m[b]||0)+(Number(e.qty)||0);});for(const k in qty){const col=(set.collected&&set.collected[k])||{};for(const b in qty[k]){const q=qty[k][b],c=col[b],o=out[b]||(out[b]={got:0,total:0});o.total+=q;o.got+=Math.min(q,c===true?q:(Number(c)||0));}}return out;}
+function setProgress(set){const bp=bagProgress(set),out={sel:{got:0,total:0},all:{got:0,total:0}};for(const b in bp){const v=bp[b];out.all.got+=v.got;out.all.total+=v.total;if(set.selected[b]){out.sel.got+=v.got;out.sel.total+=v.total;}}return out;}
 function renderProgress(){const box=$("#hProg"),s=curSet(),has=!!(s&&s.entries.length);$("#progToggle").classList.toggle("hide",!has);$("#progOn").checked=!!DB.showProgress;if(!has||!DB.showProgress){box.classList.add("hide");return;}const p=setProgress(s),n=x=>x.toLocaleString();[["Sel",p.sel],["All",p.all]].forEach(([k,v])=>{const bar=$("#hp"+k+"Bar"),pc=$("#hp"+k+"Pct"),pct=v.total?Math.floor(v.got/v.total*100):0;$("#hp"+k+"Num").textContent=v.total?n(v.got)+" / "+n(v.total)+" · "+n(v.total-v.got)+" left":"No bags selected";pc.textContent=v.total?pct+"%":"";pc.classList.toggle("done",v.total>0&&v.got>=v.total);bar.setAttribute("aria-valuemax",v.total);bar.setAttribute("aria-valuenow",v.got);bar.firstChild.style.width=(v.total?v.got/v.total*100:0)+"%";});box.classList.remove("hide");}
 function renderStats(){renderProgress();
   const set=curSet();const box=$("#stats");box.innerHTML="";if(!set)return;
@@ -2718,7 +2747,7 @@ function renderList(){
       hasProg=collQty>0||missCnt>0;progWord='picked';
       progCls=complete?"done":(((toPick>0&&toPick<=lowT)||(remLater>0&&remLater<=lowT))?"low":"");
       if(missCnt>0)missTag='<button class="tag misstag" title="Update missing">'+missCnt+' missing</button>';
-      flagBtnHTML='<button class="gtext gflag">Flag missing</button>';
+      flagBtnHTML='<button class="gtext gflag">Flag missing</button>'+(missCnt>0?'<button class="gtext gflag gunflag">Remove flag</button>':'');
       if(grabNow>0){qtyBadge='<span class="qty">'+grabNow+'×</span>';}else{qtyBadge='<span class="qty qtypicked">'+selNeed+'×</span>';nameTick='<span class="nametick">'+OKICON(18)+'</span>';}
       const edit=complete?'':'<button class="gtext gedit" title="Pick custom amount" aria-label="Pick custom amount">'+PENCIL+'<span class="gedit-lbl">Pick custom amount</span></button>';
       const showRem=toPick>grabNow;const remBtn=showRem?'<button class="gtext gall '+progCls+'">Pick remaining ('+toPick+')</button>':'';
@@ -2743,7 +2772,8 @@ function renderList(){
     const gallBtn=grab.querySelector(".gall");if(gallBtn)gallBtn.addEventListener("click",onGrabAll);
     const editBtn=grab.querySelector(".gedit");if(editBtn)editBtn.addEventListener("click",()=>openAmountDialog(set,g));
     const enterBtn=row.querySelector(".genter");if(enterBtn)enterBtn.addEventListener("click",()=>openAmountDialog(set,g));
-    const flagBtn=grab.querySelector(".gflag");if(flagBtn)flagBtn.addEventListener("click",()=>openMissingDialog(set,g));
+    const flagBtn=grab.querySelector(".gflag:not(.gunflag)");if(flagBtn)flagBtn.addEventListener("click",()=>openMissingDialog(set,g));
+    const unflagBtn=grab.querySelector(".gunflag");if(unflagBtn)unflagBtn.addEventListener("click",()=>setMissing(set,g,0));
     const missBtn=row.querySelector(".misstag");if(missBtn)missBtn.addEventListener("click",()=>openMissingDialog(set,g));
     grab.querySelector(".greset").addEventListener("click",()=>clearCollected(set,g));
     const cp=row.querySelector(".copyid");if(cp)cp.addEventListener("click",()=>copyText(String(g.id)).then(ok=>{if(!ok)return;cp.classList.add("done");cp.innerHTML=COPIEDICON;cp.title="Copied";clearTimeout(cp._t);cp._t=setTimeout(()=>{cp.classList.remove("done");cp.innerHTML=COPYICON;cp.title="Copy part number";},1500);}));
@@ -2806,7 +2836,7 @@ function openMissingDialog(set,g){
     '</div>'+
     '<div class="tabpane">'+
       '<div class="field"><label for="amtMiss">How many are missing?</label><div class="amtrow"><input type="number" id="amtMiss" min="0" max="'+grand+'" inputmode="numeric" value="'+cur+'"><button class="btn primary" data-a="miss">Save</button></div></div>'+
-      (cur>0?'<button class="btn" data-a="clear" style="width:100%;margin-top:8px">Mark all found (clear)</button>':'')+
+      (cur>0?'<button class="btn" data-a="clear" style="width:100%;margin-top:8px">Remove flag</button>':'')+
     '</div></div>';
   ov.addEventListener("click",e=>{
     if(e.target===ov)return close();
