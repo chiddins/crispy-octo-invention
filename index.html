@@ -52,7 +52,7 @@
   --chev:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239aa0ac' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
 }
 *{box-sizing:border-box}
-html{height:100%}body{min-height:100%;display:flex;flex-direction:column}body>.wrap{flex:1 0 auto;width:100%}
+html{height:100%}body{min-height:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-ui);font-size:16.8px;line-height:1.45;-webkit-text-size-adjust:100%}
 h1,h2,h3{font-family:var(--font-head);margin:0;line-height:1.15;text-wrap:balance}
 button,input,select,textarea{font:inherit;color:inherit}
@@ -69,13 +69,19 @@ header.app{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;backgroun
 .brand h1{font-size:21.6px;font-weight:800;letter-spacing:-.01em}
 .brand h1 .ver{font-size:13.2px;font-weight:700;color:var(--muted);letter-spacing:.02em;vertical-align:2px;margin-left:5px}
 .brand h1 .beta{display:inline-block;font-family:var(--font-ui);font-size:11.4px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;line-height:1;padding:3px 6px;border-radius:5px;background:var(--secondary);color:var(--secondary-ink);vertical-align:3px;margin-left:6px}
-@media (max-width:520px){.brand .tagline{display:none}.brand h1 .verwrap{display:block;margin-top:4px}.brand h1 .ver{margin-left:0}}
 .brand .tagline{font-size:13.8px;color:var(--muted);font-weight:600;letter-spacing:.02em}
 .hspace{flex:1}
-.pfoot{position:sticky;bottom:0;z-index:20;background:var(--surface);background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(8px);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
-.hprog{display:grid;grid-template-columns:auto minmax(48px,1fr) auto auto;align-items:center;column-gap:12px;row-gap:8px;padding-block:12px;font-size:14.4px;font-weight:600;color:var(--muted);white-space:nowrap}
+.hbar>#syncBtn{margin-left:auto}.hbar>#syncBtn,.hbar>.hdrtog,.hbar>#themeBtn{flex:none}.brand h1,.brand .tagline{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hprog{display:grid;grid-template-columns:auto minmax(48px,1fr) auto auto;align-items:center;column-gap:12px;row-gap:8px;padding-bottom:14px;font-size:14.4px;font-weight:600;color:var(--muted);white-space:nowrap}
+.hbar .hdrtog .tgicon{display:none;width:22px;height:22px;flex:none}
+@media (max-width:900px){.brand .tagline{display:none}.brand h1 .verwrap{display:block;margin-top:4px}.brand h1 .ver{margin-left:0}}
+@media (max-width:760px){.hbar .synclbl{display:none}}
+@media (max-width:600px){.hbar{gap:10px}.hbar .hdrtog .tglbl,.hbar .hdrtog .cbox{display:none}.hbar .hdrtog .tgicon{display:block}.hbar .hdrtog{justify-content:center;min-width:var(--ctl);padding:0 8px}.hbar .hdrtog:has(.cbx:checked){padding:0 7px}.hbar .hdrtog:has(.cbx:focus-visible){outline:2px solid var(--secondary);outline-offset:2px}}
+@media (max-width:520px){.hprog{grid-template-columns:1fr auto auto;grid-auto-flow:row dense;column-gap:10px;row-gap:6px}.hpbar{grid-column:1/-1}#hpSelBar{margin-bottom:6px}}
+@media (max-width:359px){.hprog{grid-template-columns:minmax(0,1fr) auto auto}.hpl,.hpn{white-space:normal}.hpn{text-align:right}}
+@media (max-width:420px){.hbar{gap:8px}.brand{gap:9px}.brand h1{font-size:clamp(16px,calc(12.5vw - 28px),21.6px)}}
 .hpl{color:var(--ink);font-weight:700}.hpn{font-variant-numeric:tabular-nums}.hpp{min-width:3.1em;text-align:right;color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums}.hpp.done{color:var(--grab-bright)}
-.hpbar{height:8px;border-radius:99px;background:var(--surface-3);overflow:hidden}.hpbar span{display:block;height:100%;width:0;background:var(--grab-bright);border-radius:inherit;transition:width .25s}
+.hpbar{height:8px;border-radius:99px;background:color-mix(in srgb,var(--faint) 35%,transparent);overflow:hidden}.hpbar span{display:block;height:100%;width:0;background:var(--grab-bright);border-radius:inherit;transition:width .25s}
 
 .btn,.iconbtn,.setsel,select.ctl,input.ctl,.toggle{height:var(--ctl);box-sizing:border-box}
 .iconbtn{background:var(--surface);border:1px solid var(--line);border-radius:9px;width:var(--ctl);display:inline-grid;place-items:center;color:var(--ink);box-shadow:var(--shadow)}
@@ -102,7 +108,7 @@ select.setsel{max-width:100%;background-color:transparent;border:0;padding:0 26p
 .stat span{font-size:13.8px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
 
 .grid{display:grid;grid-template-columns:262px 1fr;gap:18px;padding-block:16px 40px;align-items:start}
-@media (max-width:820px){.grid{grid-template-columns:1fr}}
+@media (max-width:820px){.grid{grid-template-columns:minmax(0,1fr)}}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
 .panel .phead{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:13px 15px;border-bottom:1px solid var(--line)}
 .panel .phead h2{font-size:15.6px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700}
@@ -117,7 +123,7 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--hdrh,69px) +
 .bagtotal b{color:var(--ink);font-family:var(--font-head);font-variant-numeric:tabular-nums}
 .bag-list{display:flex;flex-direction:column;gap:6px;max-height:min(56vh,560px);overflow:auto}
 @media (max-width:820px){.bag-list{max-height:none}}
-@media (min-width:821px){aside .panel{display:flex;flex-direction:column;max-height:calc(100vh - env(safe-area-inset-top,0px) - var(--hdrh,69px) - var(--footh,0px) - 15px);max-height:calc(100dvh - env(safe-area-inset-top,0px) - var(--hdrh,69px) - var(--footh,0px) - 15px)}aside .pbody{display:flex;flex-direction:column;min-height:0}aside .bag-list{flex:1 1 auto;min-height:0;max-height:none}}
+@media (min-width:821px){aside .panel{display:flex;flex-direction:column;max-height:calc(100vh - env(safe-area-inset-top,0px) - var(--hdrh,69px) - 15px);max-height:calc(100dvh - env(safe-area-inset-top,0px) - var(--hdrh,69px) - 15px)}aside .pbody{display:flex;flex-direction:column;min-height:0}aside .bag-list{flex:1 1 auto;min-height:0;max-height:none}}
 .bagchip{display:flex;align-items:center;gap:10px;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:var(--surface-2);text-align:left;font-weight:600}
 .bagchip:hover{border-color:var(--faint)}
 .bagchip .nm{flex:1;min-width:0}
@@ -149,6 +155,7 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--hdrh,69px) +
 .numctl input[type=number]::-webkit-outer-spin-button,.numctl input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .numctl input[type=number]:disabled{opacity:.45;cursor:not-allowed}
 .numctl-lbl{display:inline-flex;align-items:center;gap:8px;cursor:pointer}
+@media (max-width:420px){.numctl{height:auto;min-height:var(--ctl);padding-block:5px;white-space:normal;line-height:1.25}.numctl-lbl{min-width:0}}
 
 /* multi-select */
 .ms{position:relative;display:flex;align-items:center;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:0 6px 0 11px;box-shadow:var(--shadow);width:190px;height:var(--ctl);cursor:text}
@@ -266,7 +273,7 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--hdrh,69px) +
 .steps{margin:0 0 14px;padding-left:22px;color:var(--muted);line-height:1.55}.steps li{margin-bottom:6px}.steps b{color:var(--ink)}.steps a{color:var(--link)}
 .syncstate{margin:0 0 12px;font-weight:700}.syncstate.err{color:var(--danger)}
 #syncBtn{width:auto;min-width:var(--ctl);padding:0 9px;display:inline-flex;align-items:center;justify-content:center;gap:7px}
-#syncBtn svg{flex:none}@media (max-width:520px){.synclbl{display:none}}
+#syncBtn svg{flex:none}
 #syncBtn .ico-ok,#syncBtn .ico-err{display:none}#syncBtn.s-ok .ico-ok,#syncBtn.s-err .ico-err{display:inline}
 .synclbl{font-size:14.4px;font-weight:600;color:var(--muted);white-space:nowrap}.synclbl:empty{display:none}#syncBtn.s-err .synclbl{color:var(--danger)}
 #syncBtn.s-ok{color:var(--grab-bright)}#syncBtn.s-err{color:var(--danger)}#syncBtn.s-none,#syncBtn.s-off,#syncBtn.s-wait{color:var(--muted)}
@@ -299,7 +306,7 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
 @media (prefers-reduced-motion:reduce){*{transition:none!important}#syncBtn.s-busy svg{animation:none}}
 #printHead{display:none}
 @media print{
-  header.app,.toolbar,aside,.listhead,.viewtabs,.overlay,.lightbox,small.foot,.stats,.pfoot{display:none!important}
+  header.app,.toolbar,aside,.listhead,.viewtabs,.overlay,.lightbox,small.foot,.stats{display:none!important}
   body{background:#fff;color:#000;font-size:14.4px}
   .wrap{max-width:none;padding:0}.grid{display:block;padding:0}
   .panel{border:0;box-shadow:none}.panel .phead{display:none}
@@ -318,12 +325,13 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
   <div class="wrap hbar">
     <div class="brand">
       <span class="logo" aria-hidden="true"><span></span></span>
-      <div style="min-width:0"><h1>Brick Bag Merge <span class="verwrap"><span class="ver">v0.10.5</span><span class="beta">Beta</span></span></h1><div class="tagline">Pick bags &middot; sum the parts &middot; one pick&#8209;list</div></div>
+      <div style="min-width:0"><h1>Brick Bag Merge <span class="verwrap"><span class="ver">v0.11.0</span><span class="beta">Beta</span></span></h1><div class="tagline">Pick bags &middot; sum the parts &middot; one pick&#8209;list</div></div>
     </div>
-    <div class="hspace"></div>
     <button class="iconbtn s-none" id="syncBtn" title="Sync: not set up" aria-label="Sync: not set up"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/><path class="ico-ok" d="m8.8 13.6 2.3 2.3 4.4-4.6"/><path class="ico-err" d="m9.9 11.4 4.4 4.4m0-4.4-4.4 4.4"/></svg><span class="synclbl" id="syncLbl"></span></button>
+    <label class="toggle hdrtog hide" id="progToggle" title="Show progress"><input type="checkbox" class="cbx" id="progOn" aria-label="Show progress"><span class="cbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg></span><svg class="tgicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M4 8h16M4 16h16" opacity=".35"/><path d="M4 8h10M4 16h5"/></svg><span class="tglbl">Show progress</span></label>
     <button class="iconbtn" id="themeBtn" title="Toggle light / dark" aria-label="Toggle theme"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg></button>
   </div>
+  <div class="wrap hprog hide" id="hProg"><span class="hpl">Selected bags</span><div class="hpbar" id="hpSelBar" role="progressbar" aria-label="Selected bags progress" aria-valuemin="0"><span></span></div><span class="hpn" id="hpSelNum"></span><span class="hpp" id="hpSelPct"></span><span class="hpl">Whole set</span><div class="hpbar" id="hpAllBar" role="progressbar" aria-label="Whole set progress" aria-valuemin="0"><span></span></div><span class="hpn" id="hpAllNum"></span><span class="hpp" id="hpAllPct"></span></div>
 </header>
 
 <div class="wrap">
@@ -379,7 +387,6 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
   <small class="foot">Brick Bag Merge — a personal build helper. Part names/photos © BrickLink &amp; Rebrickable data; your inventories stay in your browser.</small>
 </div>
 
-<footer class="pfoot hide" id="hProg"><div class="wrap hprog"><span class="hpl">Selected bags</span><div class="hpbar" id="hpSelBar" role="progressbar" aria-label="Selected bags progress" aria-valuemin="0"><span></span></div><span class="hpn" id="hpSelNum"></span><span class="hpp" id="hpSelPct"></span><span class="hpl">Whole set</span><div class="hpbar" id="hpAllBar" role="progressbar" aria-label="Whole set progress" aria-valuemin="0"><span></span></div><span class="hpn" id="hpAllNum"></span><span class="hpp" id="hpAllPct"></span></div></footer>
 
 <div class="overlay hide" id="overlay">
   <div class="modal" role="dialog" aria-modal="true" aria-label="Import and manage data">
@@ -2644,7 +2651,7 @@ function renderBags(){
   if(!bags.length)wrap.innerHTML='<div style="color:var(--muted);font-size:15.6px">No bags yet — import a set.</div>';
 }
 function setProgress(set){const qty={};set.entries.forEach(e=>{const k=groupKey(e),b=String(e.bag),m=qty[k]||(qty[k]={});m[b]=(m[b]||0)+(Number(e.qty)||0);});const out={sel:{got:0,total:0},all:{got:0,total:0}};for(const k in qty){const col=(set.collected&&set.collected[k])||{};for(const b in qty[k]){const q=qty[k][b],c=col[b],got=Math.min(q,c===true?q:(Number(c)||0));out.all.total+=q;out.all.got+=got;if(set.selected[b]){out.sel.total+=q;out.sel.got+=got;}}}return out;}
-function renderProgress(){const box=$("#hProg"),s=curSet();if(!s||!s.entries.length){box.classList.add("hide");return;}const p=setProgress(s),n=x=>x.toLocaleString();[["Sel",p.sel],["All",p.all]].forEach(([k,v])=>{const bar=$("#hp"+k+"Bar"),pc=$("#hp"+k+"Pct"),pct=v.total?Math.floor(v.got/v.total*100):0;$("#hp"+k+"Num").textContent=v.total?n(v.got)+" / "+n(v.total)+" · "+n(v.total-v.got)+" left":"No bags selected";pc.textContent=v.total?pct+"%":"";pc.classList.toggle("done",v.total>0&&v.got>=v.total);bar.setAttribute("aria-valuemax",v.total);bar.setAttribute("aria-valuenow",v.got);bar.firstChild.style.width=(v.total?v.got/v.total*100:0)+"%";});box.classList.remove("hide");}
+function renderProgress(){const box=$("#hProg"),s=curSet(),has=!!(s&&s.entries.length);$("#progToggle").classList.toggle("hide",!has);$("#progOn").checked=!!DB.showProgress;if(!has||!DB.showProgress){box.classList.add("hide");return;}const p=setProgress(s),n=x=>x.toLocaleString();[["Sel",p.sel],["All",p.all]].forEach(([k,v])=>{const bar=$("#hp"+k+"Bar"),pc=$("#hp"+k+"Pct"),pct=v.total?Math.floor(v.got/v.total*100):0;$("#hp"+k+"Num").textContent=v.total?n(v.got)+" / "+n(v.total)+" · "+n(v.total-v.got)+" left":"No bags selected";pc.textContent=v.total?pct+"%":"";pc.classList.toggle("done",v.total>0&&v.got>=v.total);bar.setAttribute("aria-valuemax",v.total);bar.setAttribute("aria-valuenow",v.got);bar.firstChild.style.width=(v.total?v.got/v.total*100:0)+"%";});box.classList.remove("hide");}
 function renderStats(){renderProgress();
   const set=curSet();const box=$("#stats");box.innerHTML="";if(!set)return;
   const bags=bagsOf(set);const selCount=bags.filter(b=>set.selected[b]).length;
@@ -2847,7 +2854,7 @@ let SYNC=null,syncTimer=null,syncBusy=false,syncAgain=false,syncMsg="";
 function syncLoad(){try{SYNC=JSON.parse(localStorage.getItem(SYNC_KEY)||"null");}catch(e){SYNC=null;}}
 function syncStore(){try{if(SYNC)localStorage.setItem(SYNC_KEY,JSON.stringify(SYNC));else localStorage.removeItem(SYNC_KEY);}catch(e){}}
 function syncOn(){return !!(SYNC&&SYNC.token&&SYNC.gistId);}
-function syncData(d){const o=Object.assign({},d||DB);delete o.theme;delete o.imgSize;delete o.current;return o;}
+function syncData(d){const o=Object.assign({},d||DB);delete o.theme;delete o.imgSize;delete o.current;delete o.showProgress;return o;}
 function hashStr(t){let h=2166136261;for(let i=0;i<t.length;i++){h^=t.charCodeAt(i);h=Math.imul(h,16777619);}return (h>>>0).toString(36);}
 function syncHash(d){return hashStr(JSON.stringify(syncData(d)));}
 function deviceName(){const u=navigator.userAgent;if(/Android/.test(u))return /Mobile/.test(u)?"Android phone":"Android tablet";if(/iPhone/.test(u))return "iPhone";if(/iPad/.test(u)||(/Macintosh/.test(u)&&navigator.maxTouchPoints>1))return "iPad";if(/Mac/.test(u))return "Mac";if(/Windows/.test(u))return "Windows PC";return "other device";}
@@ -2865,7 +2872,7 @@ function ghSaveCopy(id){return gh("/gists/"+id,{method:"PATCH",body:JSON.stringi
 
 function refreshControls(){const s=curSet();$("#sortSel").value=(s&&s.sort)||"cat";$("#searchInp").value=(s&&s.search)||"";$("#searchClear").classList.toggle("hide",!$("#searchInp").value);$("#lowThresh").value=String(Number.isFinite(DB.lowThreshold)?DB.lowThreshold:10);$("#lowThreshOn").checked=DB.lowThreshOn!==false;$("#lowThresh").disabled=DB.lowThreshOn===false;}
 function adoptRemote(d){
-  const keep={theme:DB.theme,imgSize:DB.imgSize,current:DB.current};
+  const keep={theme:DB.theme,imgSize:DB.imgSize,current:DB.current,showProgress:DB.showProgress};
   DB=Object.assign({},d.db,keep);
   if(!Number.isFinite(DB.lowThreshold))DB.lowThreshold=10;if(DB.lowThreshOn===undefined)DB.lowThreshOn=true;
   DB.order=(DB.order||[]).filter(id=>DB.sets[id]);
@@ -2971,12 +2978,13 @@ function init(){
 
   applyTheme();applyImgSize();save();render();loadParts();
   matchMedia("(prefers-color-scheme: dark)").addEventListener("change",applyTheme);
-  {const h=$("header.app"),f=$("#hProg"),st=document.documentElement.style,fit=()=>{st.setProperty("--hdrh",h.offsetHeight+"px");st.setProperty("--footh",f.offsetHeight+"px");};if(window.ResizeObserver){const ro=new ResizeObserver(fit);ro.observe(h);ro.observe(f);}fit();}
+  {const h=$("header.app"),fit=()=>document.documentElement.style.setProperty("--hdrh",h.offsetHeight+"px");if(window.ResizeObserver)new ResizeObserver(fit).observe(h);fit();}
   if("serviceWorker" in navigator&&window.isSecureContext)navigator.serviceWorker.register("sw.js").catch(()=>{});
   if(navigator.storage&&navigator.storage.persist)navigator.storage.persisted().then(p=>p||navigator.storage.persist()).catch(()=>{});
 
   $("#themeBtn").addEventListener("click",toggleTheme);
   $("#syncBtn").addEventListener("click",()=>openModal("sync"));
+  $("#progOn").addEventListener("change",e=>{DB.showProgress=e.target.checked;save();renderProgress();});
   $("#syncConnectBtn").addEventListener("click",syncConnect);
   $("#syncToken").addEventListener("keydown",e=>{if(e.key==="Enter")syncConnect();});
   $("#syncNowBtn").addEventListener("click",()=>syncNow());
@@ -3030,9 +3038,9 @@ function init(){
   $("#addRowBtn").addEventListener("click",()=>{let s=curSet();if(!s)s=newSet("New set");const bags=bagsOf(s);const bag=bags[bags.length-1]||"1";s.entries.push({bag,qty:1,name:"",color:"",id:"",img:""});if(!(bag in s.selected))s.selected[bag]=true;save();renderEdit();renderBags();renderStats();});
 
   $("#backupDownload").addEventListener("click",()=>{const ok=downloadText("brick-bag-merge-backup.json",JSON.stringify(DB));if(!ok){switchTab("backup");$("#backupText").value=JSON.stringify(DB,null,2);alert("Download blocked here — copy the text backup instead.");}});
-  $("#backupFile").addEventListener("change",async e=>{const f=(e.target.files||[])[0];if(!f)return;try{let d=JSON.parse(await readFileText(f));if(d&&d.db&&d.db.sets)d=Object.assign({},d.db,{theme:DB.theme,imgSize:DB.imgSize,current:DB.current});if(!d.sets||!d.order)throw new Error("not a backup");if(!confirm("Replace everything with this backup file?"))return;DB=d;if(!DB.imgSize)DB.imgSize=64;if(!Number.isFinite(DB.lowThreshold))DB.lowThreshold=10;Object.values(DB.sets).forEach(s=>{if(s){if(s.entries)migrateGrabbed(s);if(!Array.isArray(s.fCat))s.fCat=[];if(!Array.isArray(s.fColor))s.fColor=[];if(!Array.isArray(s.views))s.views=(s.view&&s.view!=="all")?[s.view]:[];}});save();applyTheme();applyImgSize();$("#lowThresh").value=String(DB.lowThreshold);render();alert("Restored.");closeModal();}catch(x){alert("Couldn’t read that backup: "+x.message);}e.target.value="";});
+  $("#backupFile").addEventListener("change",async e=>{const f=(e.target.files||[])[0];if(!f)return;try{let d=JSON.parse(await readFileText(f));if(d&&d.db&&d.db.sets)d=Object.assign({},d.db,{theme:DB.theme,imgSize:DB.imgSize,current:DB.current,showProgress:DB.showProgress});if(!d.sets||!d.order)throw new Error("not a backup");if(!confirm("Replace everything with this backup file?"))return;DB=d;if(!DB.imgSize)DB.imgSize=64;if(!Number.isFinite(DB.lowThreshold))DB.lowThreshold=10;Object.values(DB.sets).forEach(s=>{if(s){if(s.entries)migrateGrabbed(s);if(!Array.isArray(s.fCat))s.fCat=[];if(!Array.isArray(s.fColor))s.fColor=[];if(!Array.isArray(s.views))s.views=(s.view&&s.view!=="all")?[s.view]:[];}});save();applyTheme();applyImgSize();$("#lowThresh").value=String(DB.lowThreshold);render();alert("Restored.");closeModal();}catch(x){alert("Couldn’t read that backup: "+x.message);}e.target.value="";});
   $("#backupCopy").addEventListener("click",()=>{const t=$("#backupText");t.focus();t.select();try{document.execCommand("copy");}catch(e){}try{navigator.clipboard&&navigator.clipboard.writeText(t.value);}catch(e){}});
-  $("#backupRestore").addEventListener("click",()=>{try{let d=JSON.parse($("#backupText").value);if(d&&d.db&&d.db.sets)d=Object.assign({},d.db,{theme:DB.theme,imgSize:DB.imgSize,current:DB.current});if(!d.sets||!d.order)throw new Error("not a backup");if(!confirm("Replace everything with this backup?"))return;DB=d;if(!DB.imgSize)DB.imgSize=64;if(!Number.isFinite(DB.lowThreshold))DB.lowThreshold=10;Object.values(DB.sets).forEach(s=>{if(s){if(s.entries)migrateGrabbed(s);if(!Array.isArray(s.fCat))s.fCat=[];if(!Array.isArray(s.fColor))s.fColor=[];if(!Array.isArray(s.views))s.views=(s.view&&s.view!=="all")?[s.view]:[];}});save();applyTheme();applyImgSize();$("#lowThresh").value=String(DB.lowThreshold);render();alert("Restored.");closeModal();}catch(x){alert("Couldn’t restore: "+x.message);}});
+  $("#backupRestore").addEventListener("click",()=>{try{let d=JSON.parse($("#backupText").value);if(d&&d.db&&d.db.sets)d=Object.assign({},d.db,{theme:DB.theme,imgSize:DB.imgSize,current:DB.current,showProgress:DB.showProgress});if(!d.sets||!d.order)throw new Error("not a backup");if(!confirm("Replace everything with this backup?"))return;DB=d;if(!DB.imgSize)DB.imgSize=64;if(!Number.isFinite(DB.lowThreshold))DB.lowThreshold=10;Object.values(DB.sets).forEach(s=>{if(s){if(s.entries)migrateGrabbed(s);if(!Array.isArray(s.fCat))s.fCat=[];if(!Array.isArray(s.fColor))s.fColor=[];if(!Array.isArray(s.views))s.views=(s.view&&s.view!=="all")?[s.view]:[];}});save();applyTheme();applyImgSize();$("#lowThresh").value=String(DB.lowThreshold);render();alert("Restored.");closeModal();}catch(x){alert("Couldn’t restore: "+x.message);}});
 
   const s0=curSet();if(s0){$("#sortSel").value=s0.sort||"cat";searchInp.value=s0.search||"";}
   syncSearchClear();

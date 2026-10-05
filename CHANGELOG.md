@@ -7,6 +7,19 @@ the last one. It becomes `1.0.0` once it's stable.
 Builds before 0.8.3 showed a plain build number in the header (v39 to v46). Each
 version below lists that old number and the commits it covers.
 
+## 0.11.0 (2026-10-05)
+- The progress bars are back in the header, behind a "Show progress" switch to the
+  right of the sync button. Tick it and the header grows to show both bars (selected
+  bags and whole set); untick it to get the space back. The sticky footer is gone.
+  The switch is remembered on each device and isn't synced.
+- The header stays on one row at every width. On narrower screens the tagline goes,
+  then the sync label, and on phones "Show progress" becomes an icon button.
+- On phones each progress bar sits under its own numbers so nothing runs off the
+  screen.
+- Fixed: on 360px-wide phones the part list ran 8px past the right edge of the
+  screen.
+- Fixed: in light mode the empty part of a progress bar was almost invisible.
+
 ## 0.10.5 (2026-10-05)
 - Fixed: the custom amount (pencil) was capped at the selected bags' total, so
   entering 10 for a part with 8 in the selected bags and 30 overall saved 8. The
