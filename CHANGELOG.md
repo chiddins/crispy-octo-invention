@@ -7,6 +7,24 @@ the last one. It becomes `1.0.0` once it's stable.
 Builds before 0.8.3 showed a plain build number in the header (v39 to v46). Each
 version below lists that old number and the commits it covers.
 
+## 0.13.0 (2026-10-05)
+- Progress bars are yellow while there's still picking to do and turn green at 100%,
+  along with their numbers ("520 / 520 · 0 left"), with the green tick before the
+  percentage.
+- Each bag in the Bags panel has a thin progress bar under its piece count, yellow
+  until the bag is done, then green.
+- A settings button (gear) replaces the light/dark button. Its menu has a Dark mode
+  switch and Refresh app, which reloads to the latest version (it saves any changes
+  waiting to sync first).
+- "Bags selected" and "Total pieces" moved into the Bags panel. "Part types" and
+  "Picked" are gone ("Picked" counted fully picked part types, not pieces). Select all
+  moved up next to the Bags heading.
+- Fixed: on tablets in landscape, the end of the Bags list could sit below the bottom
+  of the screen until you'd scrolled the parts list right down. The panel now always
+  fits on screen, so its last bag can always be scrolled into view.
+- Ticking Show progress no longer resizes the Bags panel; it just moves down with the
+  header.
+
 ## 0.12.0 (2026-10-05)
 - Picking more of a part that's flagged missing asks about the flag first:
   "Pick and remove flag" if you found them, "Pick, keep flag" if they're still
