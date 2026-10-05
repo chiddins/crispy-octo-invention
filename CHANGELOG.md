@@ -7,6 +7,10 @@ the last one. It becomes `1.0.0` once it's stable.
 Builds before 0.8.3 showed a plain build number in the header (v39 to v46). Each
 version below lists that old number and the commits it covers.
 
+## 0.10.3 (2026-10-05)
+- The stacked progress bars moved to a sticky footer along the bottom of the screen;
+  the header is back to a single row.
+
 ## 0.10.2 (2026-10-05)
 - Fixed: picking a custom amount (pencil button) marked the whole bag as done, so
   the row showed as fully picked with no way to pick the rest. Rows now show how
