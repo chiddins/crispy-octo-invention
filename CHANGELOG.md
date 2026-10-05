@@ -7,6 +7,10 @@ the last one. It becomes `1.0.0` once it's stable.
 Builds before 0.8.3 showed a plain build number in the header (v39 to v46). Each
 version below lists that old number and the commits it covers.
 
+## 0.9.0 (2026-10-05)
+- Copy button next to each part number: tap it to copy just the number (it shows a
+  green tick when copied).
+
 ## 0.8.3 (2026-10-05)
 - Tapped part photos scale up to fill the screen instead of staying at their small
   original size, and refit when the device rotates.
