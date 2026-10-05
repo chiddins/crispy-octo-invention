@@ -68,6 +68,8 @@ header.app{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;backgroun
 .logo span{display:block;width:7px;height:7px;border-radius:50%;background:var(--accent-ink);box-shadow:11px 0 0 var(--accent-ink),0 11px 0 var(--accent-ink),11px 11px 0 var(--accent-ink);margin:-9px 0 0 -9px}
 .brand h1{font-size:21.6px;font-weight:800;letter-spacing:-.01em}
 .brand h1 .ver{font-size:13.2px;font-weight:700;color:var(--muted);letter-spacing:.02em;vertical-align:2px;margin-left:5px}
+.brand h1 .beta{display:inline-block;font-family:var(--font-ui);font-size:11.4px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;line-height:1;padding:3px 6px;border-radius:5px;background:var(--secondary);color:var(--secondary-ink);vertical-align:3px;margin-left:6px}
+@media (max-width:520px){.brand .tagline{display:none}.brand h1 .verwrap{display:block;margin-top:4px}.brand h1 .ver{margin-left:0}}
 .brand .tagline{font-size:13.8px;color:var(--muted);font-weight:600;letter-spacing:.02em}
 .hspace{flex:1}
 
@@ -284,7 +286,7 @@ textarea{width:100%;background:var(--surface-2);border:1px solid var(--line);bor
 small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px;font-size:14.4px}
 
 .lightbox{position:fixed;inset:0;z-index:80;background:rgba(8,10,14,.82);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;cursor:zoom-out}
-.lightbox img{max-width:min(90vw,620px);max-height:78vh;background:#fff;border-radius:14px;padding:14px;box-shadow:0 24px 70px rgba(0,0,0,.5)}
+.lightbox img{background:#fff;border-radius:14px;padding:14px;box-shadow:0 24px 70px rgba(0,0,0,.5)}
 .lightbox .cap{color:#fff;font-weight:700;text-align:center;max-width:90vw}
 .lightbox .cap small{display:block;color:#c9ccd2;font-weight:500;margin-top:3px}
 
@@ -310,7 +312,7 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
   <div class="wrap hbar">
     <div class="brand">
       <span class="logo" aria-hidden="true"><span></span></span>
-      <div style="min-width:0"><h1>Brick Bag Merge <span class="ver">v46</span></h1><div class="tagline">Pick bags &middot; sum the parts &middot; one pick&#8209;list</div></div>
+      <div style="min-width:0"><h1>Brick Bag Merge <span class="verwrap"><span class="ver">v0.8.3</span><span class="beta">Beta</span></span></h1><div class="tagline">Pick bags &middot; sum the parts &middot; one pick&#8209;list</div></div>
     </div>
     <div class="hspace"></div>
     <button class="iconbtn s-none" id="syncBtn" title="Sync: not set up" aria-label="Sync: not set up"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/><path class="ico-ok" d="m8.8 13.6 2.3 2.3 4.4-4.6"/><path class="ico-err" d="m9.9 11.4 4.4 4.4m0-4.4-4.4 4.4"/></svg><span class="synclbl" id="syncLbl"></span></button>
@@ -2724,7 +2726,7 @@ function renderList(){
     const flagBtn=grab.querySelector(".gflag");if(flagBtn)flagBtn.addEventListener("click",()=>openMissingDialog(set,g));
     const missBtn=row.querySelector(".misstag");if(missBtn)missBtn.addEventListener("click",()=>openMissingDialog(set,g));
     grab.querySelector(".greset").addEventListener("click",()=>clearCollected(set,g));
-    row.querySelector(".thumb").addEventListener("click",()=>openLightbox(g.img||PLACE,g.dispName,colorLabel(g.color)+(g.id?" · #"+g.id:"")));
+    row.querySelector(".thumb").addEventListener("click",()=>openLightbox(g.img||PLACE,g.dispName,colorLabel(g.color)+(g.id?" · Part "+g.id:"")));
     box.appendChild(row);
   });
   renderPrintHead();
@@ -2798,7 +2800,9 @@ function openMissingDialog(set,g){
   document.body.appendChild(ov);
   const f=ov.querySelector("#amtMiss");if(f){f.focus();f.select();}
 }
-function openLightbox(src,name,sub){$("#lightboxImg").src=src;$("#lightboxCap").innerHTML=esc(name)+"<small>"+esc(sub)+"</small>";$("#lightbox").classList.remove("hide");}
+function openLightbox(src,name,sub){const img=$("#lightboxImg");img.style.cssText="visibility:hidden";img.onload=fitLightbox;img.onerror=()=>{img.onerror=null;img.src=PLACE;};img.src=src;$("#lightboxCap").innerHTML=esc(name)+"<small>"+esc(sub)+"</small>";$("#lightbox").classList.remove("hide");if(img.complete)fitLightbox();}
+/* scale the photo (up or down) to fill the space left by the caption, keeping its shape */
+function fitLightbox(){const lb=$("#lightbox"),img=$("#lightboxImg");if(lb.classList.contains("hide")||!img.complete)return;const cs=getComputedStyle(lb),ip=28;const aw=lb.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight)-ip;const ah=lb.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom)-(parseFloat(cs.rowGap)||0)-$("#lightboxCap").offsetHeight-ip;const nw=img.naturalWidth||1,nh=img.naturalHeight||1,k=Math.max(.1,Math.min(aw/nw,ah/nh));img.style.cssText="width:"+Math.floor(nw*k+ip)+"px;height:"+Math.floor(nh*k+ip)+"px";}
 function closeLightbox(){$("#lightbox").classList.add("hide");$("#lightboxImg").src="";}
 
 function renderEdit(){
@@ -2970,6 +2974,7 @@ function init(){
   $("#closeModal").addEventListener("click",closeModal);
   $("#overlay").addEventListener("click",e=>{if(e.target===$("#overlay"))closeModal();});
   $("#lightbox").addEventListener("click",closeLightbox);
+  window.addEventListener("resize",fitLightbox);
   document.addEventListener("keydown",e=>{if(e.key==="Escape"){if(!$("#lightbox").classList.contains("hide"))closeLightbox();else if(!$("#overlay").classList.contains("hide"))closeModal();}});
   $("#printBtn").addEventListener("click",()=>window.print());
   $("#renameSetBtn").addEventListener("click",renameCurrent);
