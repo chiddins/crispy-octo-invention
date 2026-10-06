@@ -7,6 +7,18 @@ the last one. It becomes `1.0.0` once it's stable.
 Builds before 0.8.3 showed a plain build number in the header (v39 to v46). Each
 version below lists that old number and the commits it covers.
 
+## 0.15.0 (2026-10-06)
+- The Categories and Colours filters show what you've picked as small chips inside the
+  field (colours keep their swatch). Each chip has its own × to remove it, and the
+  field grows to fit them.
+- Picking a value from the list adds its chip and clears whatever you'd typed, and
+  the full list comes back for the next pick. Enter picks the first match and
+  Backspace in an empty field removes the last chip.
+- The X in a filter now clears the picked values and any typed text. It also shows
+  as soon as you type.
+- Both filter lists are in alphabetical order. Colours used to be ordered by
+  BrickLink colour number.
+
 ## 0.14.4 (2026-10-06)
 - "Brick Architect ↗" and "Brickset ↗" no longer split across two lines, and neither
   does "Part 3001" with its copy button. When the row is too narrow, a whole link

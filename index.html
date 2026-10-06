@@ -166,10 +166,14 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--hdrh,69px) +
 @media (max-width:420px){.numctl{height:auto;min-height:var(--ctl);padding-block:5px;white-space:normal;line-height:1.25}.numctl-lbl{min-width:0}}
 
 /* multi-select */
-.ms{position:relative;display:flex;align-items:center;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:0 6px 0 11px;box-shadow:var(--shadow);width:190px;height:var(--ctl);cursor:text}
+.ms{position:relative;display:flex;flex-wrap:wrap;align-items:center;gap:4px 5px;background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:4px 36px 4px 11px;box-shadow:var(--shadow);min-width:190px;max-width:100%;min-height:var(--ctl);cursor:text}
 .ms:hover{border-color:var(--faint)}
-.ms.has-sel{border:2px solid var(--secondary);padding:0 5px 0 10px}
-.ms-input{flex:1;min-width:0;border:0;background:transparent;color:var(--ink);height:100%;padding:0;font-weight:600}
+.ms.has-sel{border:2px solid var(--secondary);padding:3px 35px 3px 4px}
+.ms-input{flex:1 1 64px;width:64px;min-width:64px;border:0;background:transparent;color:var(--ink);height:30px;padding:0;font-weight:600}.ms.has-sel .ms-input{padding-left:4px;flex-basis:24px;min-width:24px}.ms.has-sel .ms-input:focus{min-width:72px}
+.ms>.ms-clear{position:absolute;right:6px;top:7px}.ms.has-sel>.ms-clear{right:5px;top:6px}
+.ms-chip{display:inline-flex;align-items:center;gap:2px;max-width:100%;height:28px;padding:0 2px 0 8px;border:1px solid var(--line);border-radius:6px;background:var(--surface-2);color:var(--ink);font-size:14.4px;font-weight:600;white-space:nowrap;cursor:default}
+.ms-chip-l{display:flex;align-items:center;min-width:0;overflow:hidden}.ms-chip .swline{gap:6px}
+.ms-chip-x{display:grid;place-items:center;flex:none;width:24px;height:24px;padding:0;border:0;border-radius:5px;background:transparent;color:var(--muted)}.ms-chip-x svg{width:13px;height:13px}.ms-chip-x:hover{background:var(--surface-3);color:var(--danger)}
 .ms-input:focus{outline:none}
 .ms-input::placeholder{color:var(--muted);font-weight:600}
 .ms.has-sel .ms-input::placeholder{color:var(--ink);font-weight:600}
@@ -335,7 +339,7 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
   <div class="wrap hbar">
     <div class="brand">
       <span class="logo" aria-hidden="true"><span></span></span>
-      <div style="min-width:0"><h1>Brick Bag Merge <span class="verwrap"><span class="ver">v0.14.4</span><span class="beta">Beta</span></span></h1><div class="tagline">Pick bags &middot; sum the parts &middot; one pick&#8209;list</div></div>
+      <div style="min-width:0"><h1>Brick Bag Merge <span class="verwrap"><span class="ver">v0.15.0</span><span class="beta">Beta</span></span></h1><div class="tagline">Pick bags &middot; sum the parts &middot; one pick&#8209;list</div></div>
     </div>
     <button class="iconbtn s-none" id="syncBtn" title="Sync: not set up" aria-label="Sync: not set up"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/><path class="ico-ok" d="m8.8 13.6 2.3 2.3 4.4-4.6"/><path class="ico-err" d="m9.9 11.4 4.4 4.4m0-4.4-4.4 4.4"/></svg><span class="synclbl" id="syncLbl"></span></button>
     <label class="toggle hdrtog hide" id="progToggle" title="Show progress"><input type="checkbox" class="cbx" id="progOn" aria-label="Show progress"><span class="cbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg></span><svg class="tgicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M4 8h16M4 16h16" opacity=".35"/><path d="M4 8h10M4 16h5"/></svg><span class="tglbl">Show progress</span></label>
@@ -2700,16 +2704,29 @@ function MultiSelect(host,opts){
   const clear=document.createElement("button");clear.type="button";clear.className="ms-clear hide";clear.setAttribute("aria-label","Clear filter");clear.innerHTML=MSX;
   const menu=document.createElement("div");menu.className="ms-menu hide";
   let options=[],selected=[];const label=opts.label||(x=>x),render=opts.render||(o=>esc(label(o))),onChange=opts.onChange||function(){},title=opts.title||"Filter";
-  function ph(){input.placeholder=selected.length?(title+" ("+selected.length+")"):title;clear.classList.toggle("hide",!selected.length);host.classList.toggle("has-sel",selected.length>0);}
-  function draw(){const q=norm(input.value);const list=options.filter(o=>!q||norm(label(o)).includes(q));menu.innerHTML="";if(!list.length){menu.classList.add("hide");return;}list.slice(0,150).forEach(o=>{const on=selected.indexOf(o)>=0;const d=document.createElement("div");d.className="ms-opt";d.innerHTML='<span class="cbox'+(on?" on":"")+'">'+MSCHECK+'</span>'+render(o);d.addEventListener("mousedown",e=>{e.preventDefault();const i=selected.indexOf(o);if(i>=0)selected.splice(i,1);else selected.push(o);ph();draw();onChange(selected.slice());});menu.appendChild(d);});menu.classList.remove("hide");}
+  const byName=(a,b)=>String(label(a)).localeCompare(String(label(b)),undefined,{numeric:true,sensitivity:"base"});
+  /* selected values show as removable chips before the text box; the X clears chips and typed text */
+  function sync(){
+    host.querySelectorAll(".ms-chip").forEach(c=>c.remove());
+    selected.forEach(o=>{const c=document.createElement("span");c.className="ms-chip";c.innerHTML='<span class="ms-chip-l">'+render(o)+'</span><button type="button" class="ms-chip-x" aria-label="Remove '+esc(label(o))+'">'+MSX+'</button>';const x=c.lastChild;x.addEventListener("mousedown",e=>e.preventDefault());x.addEventListener("click",e=>{e.stopPropagation();toggle(o);});host.insertBefore(c,input);});
+    input.placeholder=selected.length?"":title;clear.classList.toggle("hide",!selected.length&&!input.value);host.classList.toggle("has-sel",selected.length>0);
+  }
+  function settle(){if(document.activeElement===input)draw();else menu.classList.add("hide");}
+  function toggle(o){const i=selected.indexOf(o);if(i>=0)selected.splice(i,1);else selected.push(o);input.value="";sync();settle();onChange(selected.slice());}
+  function draw(){const q=norm(input.value);const list=options.filter(o=>!q||norm(label(o)).includes(q));menu.innerHTML="";if(!list.length){menu.classList.add("hide");return;}list.slice(0,150).forEach(o=>{const on=selected.indexOf(o)>=0;const d=document.createElement("div");d.className="ms-opt";d.innerHTML='<span class="cbox'+(on?" on":"")+'">'+MSCHECK+'</span>'+render(o);d.addEventListener("mousedown",e=>{e.preventDefault();toggle(o);});menu.appendChild(d);});menu.classList.remove("hide");}
   input.addEventListener("focus",draw);
-  input.addEventListener("input",draw);
-  input.addEventListener("keydown",e=>{if(e.key==="Escape"){menu.classList.add("hide");input.blur();}});
-  clear.addEventListener("mousedown",e=>{e.preventDefault();selected=[];ph();draw();onChange([]);input.focus();});
-  host.addEventListener("click",e=>{if(e.target===host||e.target===input)input.focus();});
+  input.addEventListener("input",()=>{clear.classList.toggle("hide",!selected.length&&!input.value);draw();});
+  input.addEventListener("keydown",e=>{
+    if(e.key==="Escape"){menu.classList.add("hide");input.blur();}
+    else if(e.key==="Enter"){const q=norm(input.value);if(!q)return;e.preventDefault();const m=options.find(o=>selected.indexOf(o)<0&&norm(label(o)).includes(q));if(m)toggle(m);}
+    else if(e.key==="Backspace"&&!input.value&&selected.length)toggle(selected[selected.length-1]);
+  });
+  clear.addEventListener("mousedown",e=>e.preventDefault());
+  clear.addEventListener("click",()=>{const had=selected.length>0;selected=[];input.value="";sync();settle();if(had)onChange([]);});
+  host.addEventListener("click",e=>{if(e.target===host||e.target===input||(e.target.closest(".ms-chip")&&!e.target.closest(".ms-chip-x")))input.focus();});
   document.addEventListener("click",e=>{if(!host.contains(e.target))menu.classList.add("hide");});
-  host.appendChild(input);host.appendChild(clear);host.appendChild(menu);ph();
-  return {setOptions(a){options=a.slice();if(!menu.classList.contains("hide"))draw();},setSelected(a){selected=(a||[]).slice();ph();if(!menu.classList.contains("hide"))draw();},get(){return selected.slice();}};
+  host.appendChild(input);host.appendChild(clear);host.appendChild(menu);sync();
+  return {setOptions(a){options=a.slice().sort(byName);if(!menu.classList.contains("hide"))draw();},setSelected(a){selected=(a||[]).slice();sync();if(!menu.classList.contains("hide"))draw();},get(){return selected.slice();}};
 }
 
 function renderList(){
