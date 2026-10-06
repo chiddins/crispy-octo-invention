@@ -201,11 +201,11 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--hdrh,69px) +
 .metaid{color:var(--muted);font-variant-numeric:tabular-nums}
 .pmeta .lnk{color:var(--link);text-decoration:none}
 .pmeta .lnk:hover{text-decoration:underline}
-.plinks{margin-top:8px;font-size:14.4px;line-height:1.6}
+.plinks{margin-top:8px;font-size:14.4px;line-height:1.6;display:flex;flex-wrap:wrap;align-items:center;margin-left:-21px;clip-path:inset(-8px -8px -8px 21px)}
+.plinks .plg{display:inline-flex;align-items:center;white-space:nowrap}.plinks .plg::before{content:"·";flex:none;width:21px;text-align:center;color:var(--faint)}
 .plinks .lnk{color:var(--link);text-decoration:none}
 .plinks .lnk:hover{text-decoration:underline}
 .copyid{display:inline-grid;place-items:center;width:28px;height:28px;margin:-6px 0 -6px 3px;padding:0;border:0;border-radius:6px;background:transparent;color:var(--muted);vertical-align:middle}.copyid svg{width:15px;height:15px}.copyid:hover{background:var(--surface-2);color:var(--ink)}.copyid.done{color:var(--grab-bright)}
-.plinks .sep{color:var(--faint);margin:0 7px}
 .tag{display:inline-flex;align-items:center;gap:5px;font-size:12.6px;font-weight:700;line-height:1.5;letter-spacing:.02em;color:var(--muted);background:var(--surface-2);border:1px solid var(--line);border-radius:6px;padding:1px 7px;margin-right:8px;vertical-align:middle;white-space:nowrap}
 .tag.cattag{text-transform:uppercase;letter-spacing:.05em}
 .tag.misstag{color:var(--danger);background:var(--danger-soft);border-color:var(--danger);cursor:pointer;font-family:var(--font-ui)}
@@ -323,7 +323,7 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
   #printHead{display:block;margin-bottom:10px}#printHead h2{font-size:21.6px}#printHead .pmeta{color:#333;font-size:14.4px;margin-top:2px}
   .row{break-inside:avoid;border-color:#ccc;padding:6px 0}
   .thumb{width:46px;height:46px;border-color:#ccc}.row.grabbed{opacity:1}
-  .catrow{color:#000;border-color:#000}.pmeta .lnk{display:none}.plinks .lnk,.plinks .sep,.copyid{display:none}
+  .catrow{color:#000;border-color:#000}.pmeta .lnk{display:none}.plinks .pll,.copyid{display:none}
   .grab{display:none}
 }
 </style>
@@ -335,7 +335,7 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
   <div class="wrap hbar">
     <div class="brand">
       <span class="logo" aria-hidden="true"><span></span></span>
-      <div style="min-width:0"><h1>Brick Bag Merge <span class="verwrap"><span class="ver">v0.14.3</span><span class="beta">Beta</span></span></h1><div class="tagline">Pick bags &middot; sum the parts &middot; one pick&#8209;list</div></div>
+      <div style="min-width:0"><h1>Brick Bag Merge <span class="verwrap"><span class="ver">v0.14.4</span><span class="beta">Beta</span></span></h1><div class="tagline">Pick bags &middot; sum the parts &middot; one pick&#8209;list</div></div>
     </div>
     <button class="iconbtn s-none" id="syncBtn" title="Sync: not set up" aria-label="Sync: not set up"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/><path class="ico-ok" d="m8.8 13.6 2.3 2.3 4.4-4.6"/><path class="ico-err" d="m9.9 11.4 4.4 4.4m0-4.4-4.4 4.4"/></svg><span class="synclbl" id="syncLbl"></span></button>
     <label class="toggle hdrtog hide" id="progToggle" title="Show progress"><input type="checkbox" class="cbx" id="progOn" aria-label="Show progress"><span class="cbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg></span><svg class="tgicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M4 8h16M4 16h16" opacity=".35"/><path d="M4 8h10M4 16h5"/></svg><span class="tglbl">Show progress</span></label>
@@ -2739,7 +2739,7 @@ function renderList(){
     const otherTotal=grand-selNeed;const otherBags=sortBags(Object.keys(g.allByBag).filter(b=>!set.selected[b]));
     const colourTag=colorTag(g.color);
     const idHTML=g.id?'<span class="metaid">Part '+esc(g.id)+'</span>':'';
-    const links=g.id?('<a class="lnk" href="'+baLink(g.id)+'" target="_blank" rel="noopener">Brick Architect ↗</a><span class="sep">·</span><a class="lnk" href="'+bsLink(g.id,g.color)+'" target="_blank" rel="noopener">Brickset ↗</a>'):'';
+    const links=g.id?('<span class="plg pll"><a class="lnk" href="'+baLink(g.id)+'" target="_blank" rel="noopener">Brick Architect ↗</a></span><span class="plg pll"><a class="lnk" href="'+bsLink(g.id,g.color)+'" target="_blank" rel="noopener">Brickset ↗</a></span>'):'';
     let qtyBadge,progWord,progCls,cta,grabbtnsHTML,rowCls,onGrab,onGrabAll,missTag='',flagBtnHTML='',nameTick='',hasProg=false;
     {
       const missCnt=missOf(set,g),collQty=collectedQtyOf(set,g);
@@ -2763,7 +2763,7 @@ function renderList(){
       '<div class="rmain"><img class="thumb" loading="lazy" alt="" src="'+esc(g.img||PLACE)+'" onerror="this.onerror=null;this.src=\''+PLACE+'\'">'+
         '<div class="rbody"><div class="pinfo"><div class="pname">'+qtyBadge+esc(g.dispName)+nameTick+missTag+'</div>'+
           '<div class="pmeta">'+colourTag+'<span class="tag cattag">'+esc(g.catLabel)+'</span></div>'+
-          (links?'<div class="plinks">'+idHTML+'<button type="button" class="copyid" title="Copy part number" aria-label="Copy part number '+esc(g.id)+'">'+COPYICON+'</button><span class="sep">·</span>'+links+'</div>':'')+
+          (links?'<div class="plinks"><span class="plg">'+idHTML+'<button type="button" class="copyid" title="Copy part number" aria-label="Copy part number '+esc(g.id)+'">'+COPYICON+'</button></span>'+links+'</div>':'')+
           '<div class="progrow"><div class="prog '+progCls+'">'+prog+'</div></div>'+
         '</div></div>'+
       '</div>'+

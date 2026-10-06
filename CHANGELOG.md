@@ -7,6 +7,11 @@ the last one. It becomes `1.0.0` once it's stable.
 Builds before 0.8.3 showed a plain build number in the header (v39 to v46). Each
 version below lists that old number and the commits it covers.
 
+## 0.14.4 (2026-10-06)
+- "Brick Architect ↗" and "Brickset ↗" no longer split across two lines, and neither
+  does "Part 3001" with its copy button. When the row is too narrow, a whole link
+  moves to the next line, and that line doesn't start with a stray "·".
+
 ## 0.14.3 (2026-10-06)
 - The colour tag now comes before the category tag on part rows, and in the part
   summary at the top of the custom-amount and Flag missing dialogs.
