@@ -7,6 +7,12 @@ the last one. It becomes `1.0.0` once it's stable.
 Builds before 0.8.3 showed a plain build number in the header (v39 to v46). Each
 version below lists that old number and the commits it covers.
 
+## 0.14.0 (2026-10-06)
+- Settings → Keep screen on stops the screen from going to sleep while the app is
+  open. Android lets go of it when you switch away or turn the screen off, and the
+  app takes it back when you return. It's remembered on each device and isn't
+  synced. If the device refuses (battery saver, say), the menu says so.
+
 ## 0.13.0 (2026-10-05)
 - Progress bars are yellow while there's still picking to do and turn green at 100%,
   along with their numbers ("520 / 520 · 0 left"), with the green tick before the
