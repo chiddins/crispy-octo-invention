@@ -7,6 +7,10 @@ the last one. It becomes `1.0.0` once it's stable.
 Builds before 0.8.3 showed a plain build number in the header (v39 to v46). Each
 version below lists that old number and the commits it covers.
 
+## 0.14.3 (2026-10-06)
+- The colour tag now comes before the category tag on part rows, and in the part
+  summary at the top of the custom-amount and Flag missing dialogs.
+
 ## 0.14.2 (2026-10-06)
 - Fixed: the Remaining parts threshold box (and other boxes) offered saved passwords
   and codes. Chrome had grouped every box on the page into one login form with the
