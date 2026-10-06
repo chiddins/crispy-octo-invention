@@ -19,7 +19,8 @@
   --secondary:#127ab8; --secondary-ink:#ffffff; --secondary-soft:#e8f0ff; --secondary-line:#127ab8;
   --danger:#c8102e; --danger-soft:#fbe6ea;
   --link:#1667d6;
-  --grab:#2e7d32; --grab-soft:#e6f2e6; --grab-bright:#12b23a; --grab-bright-ink:#ffffff;
+  --grab:#2e7d32; --grab-soft:#e6f2e6;
+--grab-text:#2e7d32; --grab-bright:#12b23a; --grab-bright-ink:#ffffff;
   --warn:#b8860b;
   --shadow:none;
   --chev:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235c6270' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
@@ -34,7 +35,8 @@
     --accent:#ffcf3f; --accent-ink:#231900; --accent-soft:#332b12; --accent-line:#c99a12; --accent-text:#ffd24a;
     --secondary:#127ab8; --secondary-ink:#ffffff; --secondary-soft:#0a2f5f; --secondary-line:#127ab8;
     --danger:#f04058; --danger-soft:#33141a; --link:#78b0ff;
-    --grab:#54b95f; --grab-soft:#16281a; --grab-bright:#3fe06a; --grab-bright-ink:#08210d;
+    --grab:#54b95f; --grab-soft:#16281a;
+--grab-text:#3fe06a; --grab-bright:#3fe06a; --grab-bright-ink:#08210d;
     --warn:#e8b23a;
     --shadow:none;
     --chev:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239aa0ac' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
@@ -46,7 +48,8 @@
   --accent:#ffcf3f; --accent-ink:#231900; --accent-soft:#332b12; --accent-line:#c99a12; --accent-text:#ffd24a;
   --secondary:#127ab8; --secondary-ink:#ffffff; --secondary-soft:#0a2f5f; --secondary-line:#127ab8;
   --danger:#f04058; --danger-soft:#33141a; --link:#78b0ff;
-  --grab:#54b95f; --grab-soft:#16281a; --grab-bright:#3fe06a; --grab-bright-ink:#08210d;
+  --grab:#54b95f; --grab-soft:#16281a;
+--grab-text:#3fe06a; --grab-bright:#3fe06a; --grab-bright-ink:#08210d;
   --warn:#e8b23a;
   --shadow:none;
   --chev:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239aa0ac' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
@@ -187,7 +190,7 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--hdrh,69px) +
 .rmain{display:flex;align-items:flex-start;gap:12px}
 .row:first-child{border-top:0}
 .row.grabbed .gall{display:none}
-.gcta.gdone{background:var(--grab-bright);border-color:var(--grab-bright);color:var(--grab-bright-ink);pointer-events:none}
+.gcta.gdone{background:transparent;border-color:currentColor;color:var(--grab-text);pointer-events:none}
 .thumb{flex:none;width:var(--thumb);height:var(--thumb);border-radius:8px;background:#fff;border:1px solid var(--line);object-fit:contain;padding:3px;cursor:zoom-in}
 .rbody{flex:1;min-width:0}
 .pinfo{flex:1 1 210px;min-width:0}
@@ -332,7 +335,7 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
   <div class="wrap hbar">
     <div class="brand">
       <span class="logo" aria-hidden="true"><span></span></span>
-      <div style="min-width:0"><h1>Brick Bag Merge <span class="verwrap"><span class="ver">v0.14.0</span><span class="beta">Beta</span></span></h1><div class="tagline">Pick bags &middot; sum the parts &middot; one pick&#8209;list</div></div>
+      <div style="min-width:0"><h1>Brick Bag Merge <span class="verwrap"><span class="ver">v0.14.1</span><span class="beta">Beta</span></span></h1><div class="tagline">Pick bags &middot; sum the parts &middot; one pick&#8209;list</div></div>
     </div>
     <button class="iconbtn s-none" id="syncBtn" title="Sync: not set up" aria-label="Sync: not set up"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/><path class="ico-ok" d="m8.8 13.6 2.3 2.3 4.4-4.6"/><path class="ico-err" d="m9.9 11.4 4.4 4.4m0-4.4-4.4 4.4"/></svg><span class="synclbl" id="syncLbl"></span></button>
     <label class="toggle hdrtog hide" id="progToggle" title="Show progress"><input type="checkbox" class="cbx" id="progOn" aria-label="Show progress"><span class="cbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg></span><svg class="tgicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M4 8h16M4 16h16" opacity=".35"/><path d="M4 8h10M4 16h5"/></svg><span class="tglbl">Show progress</span></label>

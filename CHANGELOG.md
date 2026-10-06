@@ -7,6 +7,11 @@ the last one. It becomes `1.0.0` once it's stable.
 Builds before 0.8.3 showed a plain build number in the header (v39 to v46). Each
 version below lists that old number and the commits it covers.
 
+## 0.14.1 (2026-10-06)
+- The green "Picked" button on finished rows is now a green outline instead of a solid
+  green fill, matching the outlined "Pick remaining" button. In light mode it uses a
+  darker green so the text stays readable.
+
 ## 0.14.0 (2026-10-06)
 - Settings → Keep screen on stops the screen from going to sleep while the app is
   open. Android lets go of it when you switch away or turn the screen off, and the
