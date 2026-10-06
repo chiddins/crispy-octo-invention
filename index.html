@@ -335,7 +335,7 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
   <div class="wrap hbar">
     <div class="brand">
       <span class="logo" aria-hidden="true"><span></span></span>
-      <div style="min-width:0"><h1>Brick Bag Merge <span class="verwrap"><span class="ver">v0.14.1</span><span class="beta">Beta</span></span></h1><div class="tagline">Pick bags &middot; sum the parts &middot; one pick&#8209;list</div></div>
+      <div style="min-width:0"><h1>Brick Bag Merge <span class="verwrap"><span class="ver">v0.14.2</span><span class="beta">Beta</span></span></h1><div class="tagline">Pick bags &middot; sum the parts &middot; one pick&#8209;list</div></div>
     </div>
     <button class="iconbtn s-none" id="syncBtn" title="Sync: not set up" aria-label="Sync: not set up"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/><path class="ico-ok" d="m8.8 13.6 2.3 2.3 4.4-4.6"/><path class="ico-err" d="m9.9 11.4 4.4 4.4m0-4.4-4.4 4.4"/></svg><span class="synclbl" id="syncLbl"></span></button>
     <label class="toggle hdrtog hide" id="progToggle" title="Show progress"><input type="checkbox" class="cbx" id="progOn" aria-label="Show progress"><span class="cbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg></span><svg class="tgicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M4 8h16M4 16h16" opacity=".35"/><path d="M4 8h10M4 16h5"/></svg><span class="tglbl">Show progress</span></label>
@@ -372,14 +372,14 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
       <div class="phead lhead">
         <h2>Combined parts</h2>
         <div class="listhead">
-          <div class="search"><input type="search" id="searchInp" placeholder="Search parts…" aria-label="Search parts"><button type="button" class="ms-clear hide" id="searchClear" aria-label="Clear search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+          <div class="search"><input type="search" id="searchInp" autocomplete="off" placeholder="Search parts…" aria-label="Search parts"><button type="button" class="ms-clear hide" id="searchClear" aria-label="Clear search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
           <select class="ctl" id="sortSel" aria-label="Sort by">
             <option value="cat">Sort: Category</option><option value="name">Sort: Name A–Z</option><option value="qty">Sort: Quantity</option><option value="color">Sort: Colour</option><option value="bag">Sort: First bag</option>
           </select>
           <div class="ms" id="catFilter"></div>
           <div class="ms" id="colorFilter"></div>
           <select class="ctl" id="imgSizeSel" aria-label="Image size"><option value="44">Image size: S</option><option value="64">Image size: M</option><option value="104">Image size: L</option><option value="152">Image size: XL</option></select>
-          <div class="numctl"><label class="numctl-lbl"><input type="checkbox" class="cbx" id="lowThreshOn" checked aria-label="Enable remaining-parts highlight"><span class="cbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg></span>Remaining parts threshold</label><input type="number" id="lowThresh" min="0" max="9999" inputmode="numeric" aria-label="Remaining parts threshold"></div>
+          <div class="numctl"><label class="numctl-lbl"><input type="checkbox" class="cbx" id="lowThreshOn" checked aria-label="Enable remaining-parts highlight"><span class="cbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg></span>Remaining parts threshold</label><input type="number" id="lowThresh" autocomplete="off" min="0" max="9999" inputmode="numeric" aria-label="Remaining parts threshold"></div>
         </div>
       </div>
       <div id="printHead"></div>
@@ -405,17 +405,17 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
       <p class="hint">In <b>BrickStore</b>, export each bag as a <b>.bsx</b> file (one per bag). Pick them all here — the app reads the real parts, colours and quantities. Filenames like <code>…bag-3.bsx</code> set the bag number automatically.</p>
       <div class="field"><label>Choose your .bsx bag files (pick several at once)</label><button class="btn primary" id="bsxChoose" type="button" style="align-self:flex-start">📁 Choose .bsx files</button><input type="file" id="bsxFiles" multiple class="vh"></div>
       <div class="mactions" style="justify-content:flex-start;margin-top:-4px;margin-bottom:4px"><button class="btn" id="bsxDemoBtn">📦 Load example: 76178 (bags 0–4)</button></div>
-      <div class="field"><label for="bsxSetName">Set name</label><input type="text" id="bsxSetName" placeholder="e.g. 76178 Daily Bugle"></div>
+      <div class="field"><label for="bsxSetName">Set name</label><input type="text" id="bsxSetName" autocomplete="off" placeholder="e.g. 76178 Daily Bugle"></div>
       <div class="previewbox" id="bsxPreview" hidden></div>
       <div class="mactions"><button class="btn" id="bsxAddBtn">Add to current set</button><button class="btn primary" id="bsxNewBtn">Import as new set</button></div>
       <details style="margin-top:14px"><summary style="cursor:pointer;font-weight:700;color:var(--muted)">Phone won’t let you pick files? Paste one bag’s BSX text</summary>
-        <div class="field" style="margin-top:10px"><label for="bsxPasteBag">Bag number</label><input type="text" id="bsxPasteBag" placeholder="1" style="max-width:120px"></div>
-        <textarea id="bsxPasteText" rows="6" placeholder="Open a .bsx file, copy everything, paste here"></textarea>
+        <div class="field" style="margin-top:10px"><label for="bsxPasteBag">Bag number</label><input type="text" id="bsxPasteBag" autocomplete="off" placeholder="1" style="max-width:120px"></div>
+        <textarea id="bsxPasteText" autocomplete="off" rows="6" placeholder="Open a .bsx file, copy everything, paste here"></textarea>
         <div class="mactions"><button class="btn" id="bsxPasteBtn">Add this bag</button></div>
       </details>
     </div>
     <div class="tabpane hide" data-pane="edit">
-      <div class="setbar"><div class="field"><label for="setName">Set name</label><input type="text" id="setName" placeholder="Set name"></div><button class="btn" id="newSetBtn">＋ New set</button><button class="btn danger-h" id="delSetBtn">Delete set</button></div>
+      <div class="setbar"><div class="field"><label for="setName">Set name</label><input type="text" id="setName" autocomplete="off" placeholder="Set name"></div><button class="btn" id="newSetBtn">＋ New set</button><button class="btn danger-h" id="delSetBtn">Delete set</button></div>
       <p class="hint">Fix or add rows by hand. One row = one part in one bag; duplicates merge automatically.</p>
       <div class="escroll"><table class="etable"><thead><tr><th>Bag</th><th>Qty</th><th>Part&nbsp;#</th><th>Colour&nbsp;#</th><th></th></tr></thead><tbody id="editBody"></tbody></table></div>
       <div class="mactions"><button class="btn primary" id="addRowBtn">＋ Add row</button></div>
@@ -423,7 +423,7 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
     <div class="tabpane hide" data-pane="backup">
       <p class="hint">Your sets are saved in this browser. Turn on <b>Sync</b> to keep them on GitHub automatically, or save a backup file here and load it on another device.</p>
       <div class="mactions" style="justify-content:flex-start"><button class="btn primary" id="backupDownload">⬇ Save backup file</button><label class="btn" for="backupFile" style="margin:0">⬆ Load backup file</label><input type="file" id="backupFile" accept=".json,application/json" class="hide"></div>
-      <details style="margin-top:14px"><summary style="cursor:pointer;font-weight:700;color:var(--muted)">Or copy / paste as text</summary><textarea id="backupText" rows="8" spellcheck="false" style="margin-top:10px"></textarea><div class="mactions"><button class="btn" id="backupCopy">Copy</button><button class="btn" id="backupRestore">Restore from text</button></div></details>
+      <details style="margin-top:14px"><summary style="cursor:pointer;font-weight:700;color:var(--muted)">Or copy / paste as text</summary><textarea id="backupText" autocomplete="off" rows="8" spellcheck="false" style="margin-top:10px"></textarea><div class="mactions"><button class="btn" id="backupCopy">Copy</button><button class="btn" id="backupRestore">Restore from text</button></div></details>
     </div>
     <div class="tabpane hide" data-pane="sync">
       <div id="syncSetup">
@@ -433,8 +433,10 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
           <li><a href="https://github.com/settings/tokens/new?scopes=gist&amp;description=Brick%20Bag%20Merge%20sync" target="_blank" rel="noopener">Create a GitHub token &#8599;</a>. The <b>gist</b> permission is already ticked. Pick an expiry (<b>No expiration</b> is easiest), tap <b>Generate token</b> and copy it.</li>
           <li>Paste it below and tap <b>Connect</b>. Do the same on each device.</li>
         </ol>
-        <div class="field"><label for="syncToken">GitHub token</label><input type="password" id="syncToken" autocomplete="off" spellcheck="false" placeholder="ghp_&hellip;"></div>
-        <div class="mactions"><button class="btn primary" id="syncConnectBtn">Connect</button></div>
+        <form id="syncForm" autocomplete="on"><input type="text" name="username" autocomplete="username" value="GitHub token" tabindex="-1" aria-hidden="true" style="display:none">
+          <div class="field"><label for="syncToken">GitHub token</label><input type="password" id="syncToken" name="github-token" autocomplete="current-password" spellcheck="false" placeholder="ghp_&hellip;"></div>
+          <div class="mactions"><button type="submit" class="btn primary" id="syncConnectBtn">Connect</button></div>
+        </form>
       </div>
       <div id="syncOn" class="hide">
         <p class="syncstate" id="syncState"></p>
@@ -2694,7 +2696,7 @@ const MSCHECK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
 const MSX='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
 function MultiSelect(host,opts){
   host.innerHTML="";
-  const input=document.createElement("input");input.className="ms-input";input.setAttribute("aria-label",opts.title||"filter");
+  const input=document.createElement("input");input.className="ms-input";input.autocomplete="off";input.setAttribute("aria-label",opts.title||"filter");
   const clear=document.createElement("button");clear.type="button";clear.className="ms-clear hide";clear.setAttribute("aria-label","Clear filter");clear.innerHTML=MSX;
   const menu=document.createElement("div");menu.className="ms-menu hide";
   let options=[],selected=[];const label=opts.label||(x=>x),render=opts.render||(o=>esc(label(o))),onChange=opts.onChange||function(){},title=opts.title||"Filter";
@@ -2794,7 +2796,7 @@ function openAmountDialog(set,g){
   const clampN=(sel,max)=>{let v=parseInt(ov.querySelector(sel).value,10);if(!isFinite(v)||v<0)v=0;if(v>max)v=max;return v;};
   const prefill=got>0?got:selNeed;
   const body='<div class="tabpane">'+
-    '<div class="field"><label for="amtPick">How many have you picked?</label><div class="amtrow"><input type="number" id="amtPick" min="0" max="'+grand+'" inputmode="numeric" value="'+prefill+'"><button class="btn primary" data-a="pick">Pick</button></div>'+(grand>selNeed?'<p class="hint" style="margin:8px 0 0">Up to '+grand+' across all bags. Your selected bags count first.</p>':'')+'</div>'+
+    '<div class="field"><label for="amtPick">How many have you picked?</label><div class="amtrow"><input type="number" id="amtPick" autocomplete="off" min="0" max="'+grand+'" inputmode="numeric" value="'+prefill+'"><button class="btn primary" data-a="pick">Pick</button></div>'+(grand>selNeed?'<p class="hint" style="margin:8px 0 0">Up to '+grand+' across all bags. Your selected bags count first.</p>':'')+'</div>'+
   '</div>';
   ov.innerHTML='<div class="modal" style="max-width:440px">'+
     '<div class="mhead"><h2>'+esc(g.dispName)+'</h2><button class="iconbtn" data-a="cancel" aria-label="Close"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>'+
@@ -2834,7 +2836,7 @@ function openMissingDialog(set,g){
       '</div>'+
     '</div>'+
     '<div class="tabpane">'+
-      '<div class="field"><label for="amtMiss">How many are missing?</label><div class="amtrow"><input type="number" id="amtMiss" min="0" max="'+grand+'" inputmode="numeric" value="'+cur+'"><button class="btn primary" data-a="miss">Save</button></div></div>'+
+      '<div class="field"><label for="amtMiss">How many are missing?</label><div class="amtrow"><input type="number" id="amtMiss" autocomplete="off" min="0" max="'+grand+'" inputmode="numeric" value="'+cur+'"><button class="btn primary" data-a="miss">Save</button></div></div>'+
       (cur>0?'<button class="btn" data-a="clear" style="width:100%;margin-top:8px">Remove flag</button>':'')+
     '</div></div>';
   ov.addEventListener("click",e=>{
@@ -2858,7 +2860,7 @@ function renderEdit(){
   const set=curSet();const body=$("#editBody");body.innerHTML="";$("#setName").value=set?set.name:"";if(!set)return;
   set.entries.forEach((e,i)=>{
     const tr=document.createElement("tr");
-    tr.innerHTML='<td><input class="w-bag" value="'+esc(e.bag)+'" data-f="bag"></td><td><input class="w-qty" type="number" min="0" value="'+(Number(e.qty)||0)+'" data-f="qty"></td><td><input value="'+esc(e.id||"")+'" data-f="id"></td><td><input class="w-qty" value="'+esc(e.color||"")+'" data-f="color"></td><td><button class="del" aria-label="Delete row">✕</button></td>';
+    tr.innerHTML='<td><input class="w-bag" autocomplete="off" value="'+esc(e.bag)+'" data-f="bag"></td><td><input class="w-qty" type="number" autocomplete="off" min="0" value="'+(Number(e.qty)||0)+'" data-f="qty"></td><td><input autocomplete="off" value="'+esc(e.id||"")+'" data-f="id"></td><td><input class="w-qty" autocomplete="off" value="'+esc(e.color||"")+'" data-f="color"></td><td><button class="del" aria-label="Delete row">✕</button></td>';
     $$("input",tr).forEach(inp=>inp.addEventListener("change",()=>{const f=inp.dataset.f;e[f]=f==="qty"?(Number(inp.value)||0):inp.value.trim();if(f==="id"||f==="color")e.img=blImg(e.id,e.color,"P");if(f==="bag"&&!(e.bag in set.selected))set.selected[e.bag]=true;save();renderBags();renderStats();renderList();}));
     tr.querySelector(".del").addEventListener("click",()=>{set.entries.splice(i,1);save();renderEdit();renderBags();renderStats();renderList();});
     body.appendChild(tr);
@@ -3049,8 +3051,7 @@ function init(){
   $(".setwrap").addEventListener("keydown",e=>{const items=$$("#settingsMenu .setitem"),i=items.indexOf(document.activeElement);if(e.key==="Escape"){if($("#settingsMenu").classList.contains("hide"))return;e.preventDefault();setMenu(false);$("#settingsBtn").focus();}else if((e.key==="ArrowDown"||e.key==="ArrowUp")&&!$("#settingsMenu").classList.contains("hide")){e.preventDefault();items[(i<0?(e.key==="ArrowDown"?0:-1):i+(e.key==="ArrowDown"?1:-1)+items.length)%items.length].focus();}else if(e.key==="Tab")setMenu(false);});
   $("#syncBtn").addEventListener("click",()=>openModal("sync"));
   $("#progOn").addEventListener("change",e=>{DB.showProgress=e.target.checked;save();renderProgress();});
-  $("#syncConnectBtn").addEventListener("click",syncConnect);
-  $("#syncToken").addEventListener("keydown",e=>{if(e.key==="Enter")syncConnect();});
+  $("#syncForm").addEventListener("submit",e=>{e.preventDefault();syncConnect();});
   $("#syncNowBtn").addEventListener("click",()=>syncNow());
   $("#syncOffBtn").addEventListener("click",syncDisconnect);
   document.addEventListener("visibilitychange",()=>syncNow());

@@ -7,6 +7,12 @@ the last one. It becomes `1.0.0` once it's stable.
 Builds before 0.8.3 showed a plain build number in the header (v39 to v46). Each
 version below lists that old number and the commits it covers.
 
+## 0.14.2 (2026-10-06)
+- Fixed: the Remaining parts threshold box (and other boxes) offered saved passwords
+  and codes. Chrome had grouped every box on the page into one login form with the
+  GitHub token field. The token field now has a form of its own, so it's the only
+  place passwords are offered, and autofill is off on every other box.
+
 ## 0.14.1 (2026-10-06)
 - The green "Picked" button on finished rows is now a green outline instead of a solid
   green fill, matching the outlined "Pick remaining" button. In light mode it uses a
