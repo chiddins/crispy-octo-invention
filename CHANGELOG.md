@@ -7,6 +7,21 @@ the last one. It becomes `1.0.0` once it's stable.
 Builds before 0.8.3 showed a plain build number in the header (v39 to v46). Each
 version below lists that old number and the commits it covers.
 
+## 0.16.0 (2026-10-07)
+- New "Pick some…" button beside Pick remaining and Pick N. It adds to what you've
+  already picked: "Enter amount to pick", with − / + buttons, starting at the Pick N
+  number. It shows which bag needs how many ("Bag 2 needs 12 · 4 of 59 picked so
+  far") and what the total will be ("Picked will be 5 of 59") before you tap
+  "Add 1". Earlier picks stay in their own bags.
+- Setting the total moved to a pencil right after the "4/59 picked" count ("Edit
+  total picked", same − / + layout, "Save total"). It used to sit among the buttons
+  that add, which made it look like it added too. It's also there on finished parts,
+  so you can fix an over-pick.
+- When the remaining-parts threshold is met, Pick remaining becomes the solid yellow
+  button and Pick N becomes the yellow outline.
+- All text buttons now use the same type as the main Pick button (toolbar and dialog
+  buttons were a little larger and lighter).
+
 ## 0.15.0 (2026-10-06)
 - The Categories and Colours filters show what you've picked as small chips inside the
   field (colours keep their swatch). Each chip has its own × to remove it, and the
