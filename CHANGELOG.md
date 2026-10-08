@@ -7,6 +7,31 @@ the last one. It becomes `1.0.0` once it's stable.
 Builds before 0.8.3 showed a plain build number in the header (v39 to v46). Each
 version below lists that old number and the commits it covers.
 
+## 0.19.0 (2026-10-08)
+- Each part row lists every bag the part is in, with how many you've picked from
+  each: "Bag 1 4/4 · Bag 2 0/6 · Bag 3 0/2". Selected bags are in bold, and a bag
+  whose share is all picked turns green with a tick. This replaces "6 more in
+  bag 2", which only showed bags you hadn't selected.
+- The Categories and Colours lists offer every category and colour in the set, not
+  only the ones in the selected bags, so you can set a filter first. If nothing
+  matches, the list says "No matching parts".
+- The greys have no tint now, in light and dark mode: backgrounds, cards, lines and
+  grey text. They used to be a slightly cool grey.
+- Edit total is a small button labelled "Edit total" (with the pencil), still right
+  after the picked count.
+- The "bags selected" and "total pieces" pills in the Bags panel are much smaller.
+- On phones, Reset and Flag missing (and Remove flag) are the same width.
+- The filters are in three rows: the search box on its own, then Categories and
+  Colours side by side, then Sort, Image size and Remaining parts threshold (these
+  wrap onto more lines on phones).
+- Categories and Colours stay one line high. Picks that don't fit show as "+3" (on
+  narrow phones the field says "4 selected"). The search box in the list shows all
+  your picks, each with its ×. Tapping the box is still the only thing that brings
+  the keyboard up.
+- Fixed: on phones, the Colours list could run off the right edge of the screen.
+- Searching ignores spaces in sizes: "4x4", "4 x 4" and "4×4" all find
+  "Plate 4 x 4". The searches in the Categories and Colours lists do too.
+
 ## 0.18.0 (2026-10-08)
 - Searching parts no longer freezes on big sets. Letters show up as you type and the
   list updates once you pause (a quarter of a second after the last letter), instead
