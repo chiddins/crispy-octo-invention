@@ -7,6 +7,18 @@ the last one. It becomes `1.0.0` once it's stable.
 Builds before 0.8.3 showed a plain build number in the header (v39 to v46). Each
 version below lists that old number and the commits it covers.
 
+## 0.20.0 (2026-10-08)
+- New "Hide completed bags" switch in the Bags panel. Bags with every piece picked
+  drop out of the list, and a bag you finish goes as soon as its last piece is
+  picked. If every bag is done, the list says so. While it's on, Select all only
+  ticks or unticks the bags you can see; the pills still count every bag. The
+  switch is remembered on each device and isn't synced.
+- Reset, Flag missing and Remove flag are now the same width on every screen up to
+  820px wide (tablet portrait and phone landscape too), not just on phones.
+- Fixed: on small phones, a part with all three of those buttons squeezed "Flag
+  missing" until its text spilled out of the button. When they don't fit on one
+  row now, they wrap onto a second row, still the same width.
+
 ## 0.19.0 (2026-10-08)
 - Each part row lists every bag the part is in, with how many you've picked from
   each: "Bag 1 4/4 · Bag 2 0/6 · Bag 3 0/2". Selected bags are in bold, and a bag
