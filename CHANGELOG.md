@@ -7,6 +7,15 @@ the last one. It becomes `1.0.0` once it's stable.
 Builds before 0.8.3 showed a plain build number in the header (v39 to v46). Each
 version below lists that old number and the commits it covers.
 
+## 0.17.0 (2026-10-08)
+- The "Changes on two devices" dialog shows each device as a radio option, with when
+  it last changed things and what it holds. The newer one starts selected and is
+  marked Latest. The button says what will happen ("Use Android phone’s" or "Keep
+  this device’s").
+- The app now notes when this device last changed synced data, so it can tell which
+  version is newer. Changes made before this version have no time, so in that case
+  this device starts selected as before.
+
 ## 0.16.0 (2026-10-07)
 - New "Pick some…" button beside Pick remaining and Pick N. It adds to what you've
   already picked: "Enter amount to pick", with − / + buttons, starting at the Pick N
