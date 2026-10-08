@@ -7,6 +7,11 @@ the last one. It becomes `1.0.0` once it's stable.
 Builds before 0.8.3 showed a plain build number in the header (v39 to v46). Each
 version below lists that old number and the commits it covers.
 
+## 0.22.3 (2026-10-08)
+- Swatch edges are see-through over the swatch's own colour: 30% white in dark mode
+  (each edge is a slightly lighter shade of its colour) and 30% black in light
+  mode (a slightly darker shade).
+
 ## 0.22.2 (2026-10-08)
 - Bag tags with the blue outline (bags selected in the Bags list) use the main text
   colour: white in dark mode, near-black in light mode.

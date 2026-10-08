@@ -14,7 +14,7 @@
 <style>
 :root{
   --bg:#eeeeee; --surface:#ffffff; --surface-2:#f6f6f6; --surface-3:#f0f0f0;
-  --ink:#1d1d1d; --muted:#626262; --faint:#919191; --line:#d5d5d5; --tag-ink:#545454; --swatch-line:rgba(0,0,0,.5);
+  --ink:#1d1d1d; --muted:#626262; --faint:#919191; --line:#d5d5d5; --tag-ink:#545454; --swatch-line:rgba(0,0,0,.3);
   --accent:#f2c200; --accent-ink:#1d1d1d; --accent-soft:#fff4cc; --accent-line:#d9ad00; --accent-text:#8a6d00;
   --secondary:#127ab8; --secondary-ink:#ffffff; --secondary-soft:#e8f0ff; --secondary-line:#127ab8;
   --danger:#c8102e; --danger-soft:#fbe6ea;
@@ -31,7 +31,7 @@
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     --bg:#151515; --surface:#202020; --surface-2:#272727; --surface-3:#2e2e2e;
-    --ink:#ededed; --muted:#a0a0a0; --faint:#777777; --line:#3e3e3e; --tag-ink:#bababa; --swatch-line:rgba(255,255,255,.55);
+    --ink:#ededed; --muted:#a0a0a0; --faint:#777777; --line:#3e3e3e; --tag-ink:#bababa; --swatch-line:rgba(255,255,255,.3);
     --accent:#ffcf3f; --accent-ink:#231900; --accent-soft:#332b12; --accent-line:#c99a12; --accent-text:#ffd24a;
     --secondary:#127ab8; --secondary-ink:#ffffff; --secondary-soft:#0a2f5f; --secondary-line:#127ab8;
     --danger:#f04058; --danger-soft:#33141a; --link:#78b0ff;
@@ -44,7 +44,7 @@
 }
 :root[data-theme="dark"]{
   --bg:#151515; --surface:#202020; --surface-2:#272727; --surface-3:#2e2e2e;
-  --ink:#ededed; --muted:#a0a0a0; --faint:#777777; --line:#3e3e3e; --tag-ink:#bababa; --swatch-line:rgba(255,255,255,.55);
+  --ink:#ededed; --muted:#a0a0a0; --faint:#777777; --line:#3e3e3e; --tag-ink:#bababa; --swatch-line:rgba(255,255,255,.3);
   --accent:#ffcf3f; --accent-ink:#231900; --accent-soft:#332b12; --accent-line:#c99a12; --accent-text:#ffd24a;
   --secondary:#127ab8; --secondary-ink:#ffffff; --secondary-soft:#0a2f5f; --secondary-line:#127ab8;
   --danger:#f04058; --danger-soft:#33141a; --link:#78b0ff;
@@ -215,7 +215,7 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--hdrh,69px) +
 .tag.misstag{color:var(--danger);background:var(--danger-soft);border-color:var(--danger);cursor:pointer;font-family:var(--font-ui)}
 .tag.misstag:hover{filter:brightness(1.08);text-decoration:underline}
 .pname .tag{margin-right:0;margin-left:8px}
-.swatch{display:inline-block;width:14px;height:14px;border-radius:3px;border:1px solid var(--swatch-line);flex:none}
+.swatch{display:inline-block;width:14px;height:14px;border-radius:3px;border:1px solid var(--swatch-line);background-clip:border-box;flex:none}
 .tag .swatch{margin-left:-3.5px}
 .swline{display:inline-flex;align-items:center;gap:7px;min-width:0}
 .prog{margin-top:4px;font-size:14.4px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
@@ -352,7 +352,7 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
   <div class="wrap hbar">
     <div class="brand">
       <span class="logo" aria-hidden="true"><span></span></span>
-      <div style="min-width:0"><h1>Brick Bag Merge <span class="verwrap"><span class="ver">v0.22.2</span><span class="beta">Beta</span></span></h1><div class="tagline">Pick bags &middot; sum the parts &middot; one pick&#8209;list</div></div>
+      <div style="min-width:0"><h1>Brick Bag Merge <span class="verwrap"><span class="ver">v0.22.3</span><span class="beta">Beta</span></span></h1><div class="tagline">Pick bags &middot; sum the parts &middot; one pick&#8209;list</div></div>
     </div>
     <button class="iconbtn s-none" id="syncBtn" title="Sync: not set up" aria-label="Sync: not set up"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/><path class="ico-ok" d="m8.8 13.6 2.3 2.3 4.4-4.6"/><path class="ico-err" d="m9.9 11.4 4.4 4.4m0-4.4-4.4 4.4"/></svg><span class="synclbl" id="syncLbl"></span></button>
     <label class="toggle hdrtog hide" id="progToggle" title="Show progress"><input type="checkbox" class="cbx" id="progOn" aria-label="Show progress"><span class="cbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg></span><svg class="tgicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M4 8h16M4 16h16" opacity=".35"/><path d="M4 8h10M4 16h5"/></svg><span class="tglbl">Show progress</span></label>
