@@ -7,6 +7,14 @@ the last one. It becomes `1.0.0` once it's stable.
 Builds before 0.8.3 showed a plain build number in the header (v39 to v46). Each
 version below lists that old number and the commits it covers.
 
+## 0.22.2 (2026-10-08)
+- Bag tags with the blue outline (bags selected in the Bags list) use the main text
+  colour: white in dark mode, near-black in light mode.
+- Colour swatches have a stronger edge that contrasts with the theme: light in dark
+  mode, dark in light mode. Black now shows up in dark mode, and White in light mode.
+- Grey dividers and outlines (buttons, fields, tags, panels, rows) are a little
+  stronger.
+
 ## 0.22.1 (2026-10-08)
 - "Enter pick amount" is now "Enter amount", with the pencil icon in front (the
   same pencil as Edit total).
