@@ -7,6 +7,10 @@ the last one. It becomes `1.0.0` once it's stable.
 Builds before 0.8.3 showed a plain build number in the header (v39 to v46). Each
 version below lists that old number and the commits it covers.
 
+## 0.22.1 (2026-10-08)
+- "Enter pick amount" is now "Enter amount", with the pencil icon in front (the
+  same pencil as Edit total).
+
 ## 0.22.0 (2026-10-08)
 - The bag toggle beside the picked count says "Show bags", and "Hide bags" once
   it's open.

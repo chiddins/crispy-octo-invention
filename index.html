@@ -253,7 +253,7 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--hdrh,69px) +
 .gflag:hover{border-color:var(--faint)}
 .gtext.gall{color:var(--accent-text);border-color:var(--line);background:var(--surface)}
 .gtext.gall:hover{border-color:var(--faint)}
-.gsome{color:var(--ink);border-color:var(--line);background:var(--surface)}
+.gsome{color:var(--ink);border-color:var(--line);background:var(--surface);display:inline-flex;align-items:center;justify-content:center;gap:7px}.gsome svg{flex:none}
 .gsome:hover{border-color:var(--faint)}
 .gcta.gout{background:transparent;border-color:currentColor;color:var(--warn)}
 .amtrow{display:flex;gap:8px}
@@ -352,7 +352,7 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
   <div class="wrap hbar">
     <div class="brand">
       <span class="logo" aria-hidden="true"><span></span></span>
-      <div style="min-width:0"><h1>Brick Bag Merge <span class="verwrap"><span class="ver">v0.22.0</span><span class="beta">Beta</span></span></h1><div class="tagline">Pick bags &middot; sum the parts &middot; one pick&#8209;list</div></div>
+      <div style="min-width:0"><h1>Brick Bag Merge <span class="verwrap"><span class="ver">v0.22.1</span><span class="beta">Beta</span></span></h1><div class="tagline">Pick bags &middot; sum the parts &middot; one pick&#8209;list</div></div>
     </div>
     <button class="iconbtn s-none" id="syncBtn" title="Sync: not set up" aria-label="Sync: not set up"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/><path class="ico-ok" d="m8.8 13.6 2.3 2.3 4.4-4.6"/><path class="ico-err" d="m9.9 11.4 4.4 4.4m0-4.4-4.4 4.4"/></svg><span class="synclbl" id="syncLbl"></span></button>
     <label class="toggle hdrtog hide" id="progToggle" title="Show progress"><input type="checkbox" class="cbx" id="progOn" aria-label="Show progress"><span class="cbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg></span><svg class="tgicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M4 8h16M4 16h16" opacity=".35"/><path d="M4 8h10M4 16h5"/></svg><span class="tglbl">Show progress</span></label>
@@ -2837,7 +2837,7 @@ function renderList(){
       if(missCnt>0)missTag='<button class="tag misstag" title="Update missing">'+missCnt+' missing</button>';
       flagBtnHTML='<button class="gtext gflag">Flag missing</button>'+(missCnt>0?'<button class="gtext gflag gunflag">Remove flag</button>':'');
       if(grabNow>0){qtyBadge='<span class="qty">'+grabNow+'×</span>';}else{qtyBadge='<span class="qty qtypicked">'+selNeed+'×</span>';nameTick='<span class="nametick">'+OKICON(18)+'</span>';}
-      const some=complete?'':'<button class="gtext gsome">Enter pick amount</button>';
+      const some=complete?'':'<button class="gtext gsome">'+PENCIL+'Enter amount</button>';
       /* when the remaining-parts threshold is met, picking the rest becomes the main action */
       const showRem=toPick>grabNow,lead=showRem&&progCls==="low";const remBtn=showRem?'<button class="'+(lead?'gcta gall':'gtext gall '+progCls)+'">Pick remaining ('+toPick+')</button>':'';
       if(doneView){cta='<button class="gcta gdone">Picked '+got+'/'+grand+'</button>';grabbtnsHTML=some+remBtn+cta;rowCls=complete?" grabbed":" viewdone";}
@@ -2880,7 +2880,7 @@ function renderPrintHead(){const set=curSet();const el=$("#printHead");if(!set){
 
 const MINUS='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14"/></svg>';
 const PLUS='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>';
-/* "Enter pick amount" adds to what's picked; the pencil by the count sets the total. Same dialog, with a −/+ stepper and a preview. */
+/* "Enter amount" adds to what's picked; the pencil by the count sets the total. Same dialog, with a −/+ stepper and a preview. */
 function openPickDialog(set,g,mode){
   const add=mode==="add",got=gotOf(set,g),grand=g.grand,left=Math.max(0,grand-got);
   const col=(set.collected&&set.collected[g.key])||{},need=b=>{const q=bagQ(g,b),c=col[b];return Math.max(0,q-(c===true?q:Math.min(q,Number(c)||0)));};
