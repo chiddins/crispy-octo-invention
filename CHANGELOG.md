@@ -7,6 +7,17 @@ the last one. It becomes `1.0.0` once it's stable.
 Builds before 0.8.3 showed a plain build number in the header (v39 to v46). Each
 version below lists that old number and the commits it covers.
 
+## 0.17.1 (2026-10-08)
+- Fixed: tapping an option in the Categories or Colours list brought the keyboard
+  back. Now the keyboard only comes up when you tap the text box itself. Picking
+  from the list closes the keyboard, and the list stays open for more picks.
+  Tapping the chips or the empty part of the field opens or closes the list without
+  the keyboard.
+- Escape closes an open filter list from anywhere, not only from inside the text
+  box.
+- In the Pick some… and Edit total dialogs, "4 of 59 picked so far" is yellow, or
+  green once the part is complete.
+
 ## 0.17.0 (2026-10-08)
 - The "Changes on two devices" dialog shows each device as a radio option, with when
   it last changed things and what it holds. The newer one starts selected and is
