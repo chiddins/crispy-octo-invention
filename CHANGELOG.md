@@ -7,6 +7,29 @@ the last one. It becomes `1.0.0` once it's stable.
 Builds before 0.8.3 showed a plain build number in the header (v39 to v46). Each
 version below lists that old number and the commits it covers.
 
+## 0.18.0 (2026-10-08)
+- Searching parts no longer freezes on big sets. Letters show up as you type and the
+  list updates once you pause (a quarter of a second after the last letter), instead
+  of after every letter. Rows that haven't changed are reused rather than rebuilt.
+  In a test with 20 bags (640 parts) all selected, on a CPU slowed to tablet speed:
+  each letter used to freeze the app for 1.3 to 2.2 seconds; now the filtered list
+  shows about 0.35 s after you stop. Clearing the search went from 1.5 s to 0.5 s,
+  and a pick from 3 s to 0.3 s.
+- The Categories and Colours fields can't be typed into anymore. Tapping one opens
+  its list, which has its own search box at the top ("Search colours"). That box
+  isn't selected when the list opens, so the keyboard only comes up if you tap it.
+  A search with no results says "No matches". With nothing picked, the field shows a
+  down arrow.
+- On a phone, when the field is near the bottom of the screen, the page scrolls up
+  so the whole list is in view.
+- The Search parts box gets the same blue outline as Categories and Colours while
+  it has text in it.
+- Pick some… and Edit total no longer put the cursor in the amount box, so the
+  keyboard stays down. Use − / +, or tap the number to type one.
+- The X in Search parts clears it without bringing the keyboard up.
+- Backspace no longer removes the last chip, since the field has no text box. Use
+  the chip's × or the X instead.
+
 ## 0.17.1 (2026-10-08)
 - Fixed: tapping an option in the Categories or Colours list brought the keyboard
   back. Now the keyboard only comes up when you tap the text box itself. Picking
