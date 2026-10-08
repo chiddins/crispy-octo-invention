@@ -223,7 +223,7 @@ aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--hdrh,69px) +
 .prog.done{color:var(--grab-bright)}
 .pbags{margin-top:6px;margin-left:-17px;clip-path:inset(-8px -8px -8px 17px);display:none;flex-wrap:wrap;align-items:center;font-size:14.4px;font-weight:600;line-height:1.6;color:var(--muted);font-variant-numeric:tabular-nums}
 .pbag{display:inline-flex;align-items:center;white-space:nowrap}.pbag::before{content:"·";flex:none;width:17px;text-align:center;color:var(--faint)}
-.pbags.open{display:flex}.pbag b{font-weight:700}.pbag svg{flex:none;margin-left:5px}
+.pbags.open{display:flex}.pbag b{font-weight:500}.pbag svg{flex:none;margin-left:5px}
 .bagsacc{display:inline-flex;align-items:center;gap:4px;height:28px;margin-left:-4px;padding:0 6px;border:0;border-radius:7px;background:transparent;color:var(--muted);font-size:14.4px;font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums}@media (hover:hover){.bagsacc:hover{background:var(--surface-2);color:var(--ink)}}.bagsacc svg{flex:none;transition:transform .15s}.bagsacc[aria-expanded="true"] svg{transform:rotate(180deg)}.pbag.sel{color:var(--ink)}.pbag.full{color:var(--grab-bright)}
 .lowinfo{display:inline-flex;align-items:center;vertical-align:-2.5px;margin-right:5px;color:var(--warn)}
 .doneinfo{display:inline-flex;align-items:center;vertical-align:-2.5px;margin-right:5px;color:var(--grab-bright)}
@@ -352,7 +352,7 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
   <div class="wrap hbar">
     <div class="brand">
       <span class="logo" aria-hidden="true"><span></span></span>
-      <div style="min-width:0"><h1>Brick Bag Merge <span class="verwrap"><span class="ver">v0.21.0</span><span class="beta">Beta</span></span></h1><div class="tagline">Pick bags &middot; sum the parts &middot; one pick&#8209;list</div></div>
+      <div style="min-width:0"><h1>Brick Bag Merge <span class="verwrap"><span class="ver">v0.21.1</span><span class="beta">Beta</span></span></h1><div class="tagline">Pick bags &middot; sum the parts &middot; one pick&#8209;list</div></div>
     </div>
     <button class="iconbtn s-none" id="syncBtn" title="Sync: not set up" aria-label="Sync: not set up"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/><path class="ico-ok" d="m8.8 13.6 2.3 2.3 4.4-4.6"/><path class="ico-err" d="m9.9 11.4 4.4 4.4m0-4.4-4.4 4.4"/></svg><span class="synclbl" id="syncLbl"></span></button>
     <label class="toggle hdrtog hide" id="progToggle" title="Show progress"><input type="checkbox" class="cbx" id="progOn" aria-label="Show progress"><span class="cbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg></span><svg class="tgicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M4 8h16M4 16h16" opacity=".35"/><path d="M4 8h10M4 16h5"/></svg><span class="tglbl">Show progress</span></label>
@@ -2847,7 +2847,7 @@ function renderList(){
     const row=document.createElement("div");row.className="row"+rowCls;
     const prog=(progCls==="done"?DONEINFO:progCls==="low"?LOWINFO:"")+'<span>'+got+'/'+grand+' '+progWord+'</span>';
     /* every bag the part is in, with how many are picked from each; selected bags stand out, finished ones are green */
-    const bagsHTML=sortBags(Object.keys(g.allByBag)).map(b=>{const q=bagQ(g,b),c=col[b],have=Math.min(q,c===true?q:(Number(c)||0)),full=have>=q;return '<span class="pbag'+(set.selected[b]?' sel':'')+(full?' full':'')+'"><span>Bag '+esc(b)+' <b>'+have+'/'+q+'</b></span>'+(full?OKICON(16):'')+'</span>';}).join("");
+    const bagsHTML=sortBags(Object.keys(g.allByBag)).map(b=>{const q=bagQ(g,b),c=col[b],have=Math.min(q,c===true?q:(Number(c)||0)),full=have>=q;return '<span class="pbag'+(set.selected[b]?' sel':'')+(full?' full':'')+'"><span>Bag '+esc(b)+': <b>'+have+'/'+q+'</b></span>'+(full?OKICON(16):'')+'</span>';}).join("");
     /* the bags sit behind a "3 bags" toggle next to the picked count, closed until opened */
     const nb=Object.keys(g.allByBag).length,open=openBags.has(g.key);
     row.innerHTML=

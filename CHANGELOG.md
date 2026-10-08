@@ -7,6 +7,10 @@ the last one. It becomes `1.0.0` once it's stable.
 Builds before 0.8.3 showed a plain build number in the header (v39 to v46). Each
 version below lists that old number and the commits it covers.
 
+## 0.21.1 (2026-10-08)
+- The bag list reads "Bag 9: 0/1", with a colon after each bag, and the counts are
+  a step lighter than the bag names.
+
 ## 0.21.0 (2026-10-08)
 - Part rows show how many bags the part is in ("4 bags") with a small arrow, right
   after the picked count. Tap it to open the bag list ("Bag 2 0/4 · Bag 3 2/2 ✓ …").
