@@ -7,6 +7,16 @@ the last one. It becomes `1.0.0` once it's stable.
 Builds before 0.8.3 showed a plain build number in the header (v39 to v46). Each
 version below lists that old number and the commits it covers.
 
+## 0.21.0 (2026-10-08)
+- Part rows show how many bags the part is in ("4 bags") with a small arrow, right
+  after the picked count. Tap it to open the bag list ("Bag 2 0/4 · Bag 3 2/2 ✓ …").
+  It starts closed, and stays open while you pick or search until you close it.
+  Edit total sits right after it, on the same line where there's room.
+- In the bag list, the green tick now comes after the count ("Bag 3 2/2 ✓"), as in
+  the Bags panel, so every line starts with a bag name.
+- "Pick some…" is now "Enter pick amount".
+- Printing still shows every bag for each part.
+
 ## 0.20.0 (2026-10-08)
 - New "Hide completed bags" switch in the Bags panel. Bags with every piece picked
   drop out of the list, and a bag you finish goes as soon as its last piece is
