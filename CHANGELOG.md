@@ -7,6 +7,17 @@ the last one. It becomes `1.0.0` once it's stable.
 Builds before 0.8.3 showed a plain build number in the header (v39 to v46). Each
 version below lists that old number and the commits it covers.
 
+## 0.22.0 (2026-10-08)
+- The bag toggle beside the picked count says "Show bags", and "Hide bags" once
+  it's open.
+- Edit total moved inside it, as the first thing you see when it opens.
+- Each bag is a tag like the page's other tags ("Bag 2: 0/4"). A bag you've
+  selected in the Bags list gets a blue outline; the rest keep the normal outline.
+  A finished bag adds a green tick, and its text stays the usual tag colour.
+- Grey text on tags is a little stronger: lighter in dark mode, a touch darker in
+  light mode. That covers the colour and category tags, the bag tags, the counts
+  on the view filters and the pills in the Bags panel.
+
 ## 0.21.1 (2026-10-08)
 - The bag list reads "Bag 9: 0/1", with a colon after each bag, and the counts are
   a step lighter than the bag names.
