@@ -7,6 +7,13 @@ the last one. It becomes `1.0.0` once it's stable.
 Builds before 0.8.3 showed a plain build number in the header (v39 to v46). Each
 version below lists that old number and the commits it covers.
 
+## 0.22.4 (2026-10-08)
+- Fixed: Keep screen on could stay active after you'd turned it off. With the app
+  open in two windows (a Chrome tab and the installed app, say), a window that was
+  in the background still thought it was on. When it came back to the front it
+  kept the screen on again, and anything it saved switched the setting back on.
+  Every window now follows the saved setting straight away.
+
 ## 0.22.3 (2026-10-08)
 - Swatch edges are see-through over the swatch's own colour: 30% white in dark mode
   (each edge is a slightly lighter shade of its colour) and 30% black in light

@@ -352,7 +352,7 @@ small.foot{display:block;color:var(--faint);text-align:center;padding:8px 0 26px
   <div class="wrap hbar">
     <div class="brand">
       <span class="logo" aria-hidden="true"><span></span></span>
-      <div style="min-width:0"><h1>Brick Bag Merge <span class="verwrap"><span class="ver">v0.22.3</span><span class="beta">Beta</span></span></h1><div class="tagline">Pick bags &middot; sum the parts &middot; one pick&#8209;list</div></div>
+      <div style="min-width:0"><h1>Brick Bag Merge <span class="verwrap"><span class="ver">v0.22.4</span><span class="beta">Beta</span></span></h1><div class="tagline">Pick bags &middot; sum the parts &middot; one pick&#8209;list</div></div>
     </div>
     <button class="iconbtn s-none" id="syncBtn" title="Sync: not set up" aria-label="Sync: not set up"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/><path class="ico-ok" d="m8.8 13.6 2.3 2.3 4.4-4.6"/><path class="ico-err" d="m9.9 11.4 4.4 4.4m0-4.4-4.4 4.4"/></svg><span class="synclbl" id="syncLbl"></span></button>
     <label class="toggle hdrtog hide" id="progToggle" title="Show progress"><input type="checkbox" class="cbx" id="progOn" aria-label="Show progress"><span class="cbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg></span><svg class="tgicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M4 8h16M4 16h16" opacity=".35"/><path d="M4 8h10M4 16h5"/></svg><span class="tglbl">Show progress</span></label>
@@ -2991,6 +2991,9 @@ async function applyWake(){
   syncSetMenu();
 }
 function toggleWake(){DB.keepAwake=!DB.keepAwake;if(DB.keepAwake)wakeNote="";save();applyWake();syncSetMenu();}
+/* two windows of the app (a Chrome tab and the installed app, say) share the saved setting: follow it, so a window that
+   was in the background doesn't take the lock back (or save the old setting over the new one) after it's been turned off */
+function followSavedWake(json){try{const d=JSON.parse(json||"null");if(!d)return;const on=!!d.keepAwake;if(on!==!!DB.keepAwake){DB.keepAwake=on;if(on)wakeNote="";}}catch(e){}}
 function setMenu(open,focusFirst){const m=$("#settingsMenu");if(open===undefined)open=m.classList.contains("hide");m.classList.toggle("hide",!open);$("#settingsBtn").setAttribute("aria-expanded",open);if(open){syncSetMenu();if(focusFirst)m.querySelector(".setitem").focus();}}
 /* reload to pick up a new version; pending sync changes go up first (they would also go up after the reload) */
 async function refreshApp(){const it=$("#setRefresh"),wait=ms=>new Promise(r=>setTimeout(r,ms));it.disabled=true;it.querySelector(".sil").textContent="Refreshing…";try{if(syncOn()&&SYNC.dirty&&navigator.onLine)await Promise.race([syncNow(),wait(4000)]);}catch(e){}try{const r=navigator.serviceWorker&&await navigator.serviceWorker.getRegistration();if(r)await Promise.race([r.update(),wait(3000)]);}catch(e){}location.reload();}
@@ -3150,7 +3153,8 @@ function init(){
   $("#settingsBtn").addEventListener("click",e=>setMenu(undefined,e.detail===0));
   $("#setDark").addEventListener("click",toggleTheme);
   $("#setAwake").addEventListener("click",toggleWake);
-  document.addEventListener("visibilitychange",applyWake);
+  document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")followSavedWake(localStorage.getItem(LS));applyWake();});
+  window.addEventListener("storage",e=>{if(e.key!==LS||!e.newValue)return;const was=!!DB.keepAwake;followSavedWake(e.newValue);if(was!==!!DB.keepAwake)applyWake();});
   applyWake();
   $("#setRefresh").addEventListener("click",refreshApp);
   document.addEventListener("click",e=>{if(!e.target.closest(".setwrap"))setMenu(false);});
